@@ -1,4 +1,4 @@
-package fr.raphoulfifou.cyanlib.util;
+package fr.aeldit.cyanlib.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import static fr.raphoulfifou.cyanlib.util.ChatUtil.sendPlayerMessage;
 
 public class LanguageFilesUtils
 {
@@ -33,7 +31,7 @@ public class LanguageFilesUtils
                 try
                 {
                     Files.createDirectory(Paths.get(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(folderName))));
-                    sendPlayerMessage(player,
+                    ChatUtil.sendPlayerMessage(player,
                             "Folder created : config/" + folderName + "/",
                             folderName,
                             "cyanlib.message.folderCreated",
@@ -49,7 +47,7 @@ public class LanguageFilesUtils
                 File langFile = new File(String.valueOf(FabricLoader.getInstance().getConfigDir().resolve(folderName + "\\" + langName + ".properties")));
                 if (langFile.createNewFile())
                 {
-                    sendPlayerMessage(player,
+                    ChatUtil.sendPlayerMessage(player,
                             "File created : " + langFile.getName(),
                             langFile.getName(),
                             "cyanlib.message.fileCreated",
@@ -58,7 +56,7 @@ public class LanguageFilesUtils
                 } else
                 {
                     player.sendMessage(Text.translatable("File already exists."), false);
-                    sendPlayerMessage(player,
+                    ChatUtil.sendPlayerMessage(player,
                             "File already exists.",
                             null,
                             "cyanlib.message.fileAlreadyExists",
@@ -67,7 +65,7 @@ public class LanguageFilesUtils
                 }
             } catch (IOException e)
             {
-                sendPlayerMessage(player,
+                ChatUtil.sendPlayerMessage(player,
                         "Could not create the language file",
                         null,
                         "cyanlib.message.error.createFile",
@@ -77,7 +75,7 @@ public class LanguageFilesUtils
             }
         } else
         {
-            sendPlayerMessage(player,
+            ChatUtil.sendPlayerMessage(player,
                     "This functionnality only works if you are on a server",
                     null,
                     "cyanlib.message.error.notOnServer",

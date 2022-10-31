@@ -1,4 +1,4 @@
-package fr.raphoulfifou.cyanlib;
+package fr.aeldit.cyanlib;
 
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;

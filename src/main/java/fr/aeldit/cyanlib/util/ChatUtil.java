@@ -1,4 +1,4 @@
-package fr.raphoulfifou.cyanlib.util;
+package fr.aeldit.cyanlib.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ChatUtil
 {
-
     public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, Object args, String trad_path, boolean actionbar, boolean use_one_language)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
@@ -28,5 +27,4 @@ public class ChatUtil
             player.sendMessage(Text.translatable(trad_path, args), actionbar);
         }
     }
-
 }

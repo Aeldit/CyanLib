@@ -5,23 +5,23 @@
   "name": "CyanLib",
   "description": "This is a library for small utilities",
   "authors": [
-    "Raphoulfifou"
+    "Aeldit"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/user/Raphoulfifou",
-    "sources": "https://github.com/Raphoulfifou/CyanLib",
-    "issues": "https://github.com/Raphoulfifou/CyanLib/issues"
+    "homepage": "https://modrinth.com/user/Aeldit",
+    "sources": "https://github.com/Aeldit/CyanLib",
+    "issues": "https://github.com/Aeldit/CyanLib/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/cyanlib/icon.png",
   "environment": "*",
   "entrypoints": {
     "*": [
-      "fr.raphoulfifou.cyanlib.CyanLibCore"
+      "fr.aeldit.cyanlib.CyanLibCore"
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.6",
+    "fabricloader": ">=0.14.10",
     "fabric-resource-loader-v0": "*",
     "minecraft": "1.19.x",
     "java": ">=17"
@@ -30,8 +30,8 @@
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/W4secTP",
-        "midnightlib.modrinth": "https://modrinth.com/user/Raphoulfifou",
-        "midnightlib.wiki": "https://github.com/Raphoulfifou/CyanLib/wiki"
+        "midnightlib.modrinth": "https://modrinth.com/user/Aeldit",
+        "midnightlib.wiki": "https://github.com/Aeldit/CyanLib/wiki"
       },
       "badges": [
         "library"
