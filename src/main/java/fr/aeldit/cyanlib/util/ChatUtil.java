@@ -1,4 +1,4 @@
-package fr.raphoulfifou.cyanlib.util;
+package fr.aeldit.cyanlib.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
