@@ -17,7 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "server": [
-      "fr.aeldit.cyanlib.CyanLibServerCore"
+      "fr.aeldit.cyanlib.CyanLibCore"
     ],
     "client": [
       "fr.aeldit.cyanlib.CyanLibClientCore"
