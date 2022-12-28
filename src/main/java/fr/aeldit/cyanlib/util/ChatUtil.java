@@ -11,22 +11,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ChatUtil
 {
-
-    public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, Object args, String trad_path, boolean actionbar, boolean use_one_language)
+    public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, Object args, String tradPath, boolean actionBar, boolean useTranslations)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
         {
-            if (use_one_language)
+            if (useTranslations)
             {
-                player.sendMessage(new TranslatableText(msg, args), actionbar);
+                player.sendMessage(new TranslatableText(tradPath, args), actionBar);
             } else
             {
-                player.sendMessage(new TranslatableText(trad_path, args), actionbar);
+                player.sendMessage(new TranslatableText(msg, args), actionBar);
             }
         } else
         {
-            player.sendMessage(new TranslatableText(trad_path, args), actionbar);
+            player.sendMessage(new TranslatableText(tradPath, args), actionBar);
         }
     }
-
 }
