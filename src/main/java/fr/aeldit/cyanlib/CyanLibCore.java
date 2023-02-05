@@ -4,12 +4,8 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @since 0.0.1
- */
 public class CyanLibCore implements ModInitializer
 {
-
     public static final String MODID = "cyanlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static final String MODNAME = "[CyanLib]";
@@ -20,5 +16,4 @@ public class CyanLibCore implements ModInitializer
     {
         LOGGER.info("{} Successfuly initialized", MODNAME);
     }
-
 }
