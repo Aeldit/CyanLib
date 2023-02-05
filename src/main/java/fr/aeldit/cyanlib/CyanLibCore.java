@@ -1,12 +1,9 @@
 package fr.aeldit.cyanlib;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Environment(EnvType.SERVER)
 public class CyanLibCore implements ModInitializer
 {
     public static final String MODID = "cyanlib";
