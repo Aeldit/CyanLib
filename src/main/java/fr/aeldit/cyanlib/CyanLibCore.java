@@ -6,9 +6,6 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @since 0.0.1
- */
 @Environment(EnvType.SERVER)
 public class CyanLibCore implements ModInitializer
 {
