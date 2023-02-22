@@ -15,12 +15,12 @@ public class ChatUtil
      *
      * @param player the player to whom the message will be sent
      * @param msg the default translation
-     * @param args the arguments to pass to the message (can be null)
      * @param tradPath the traduction path (requires the player to have the mod/resource pack)
      * @param actionBar if the message will be sent to the action bar
      * @param useTranslations if the translations will be used (if true, tradPath is used | if false, msg is used)
+     * @param args the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, Object args, String tradPath, boolean actionBar, boolean useTranslations)
+    public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean actionBar, boolean useTranslations, Object ...args)
     {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
         {
