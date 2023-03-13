@@ -13,13 +13,12 @@ import java.util.Properties;
 public class LanguageUtils
 {
     public static LinkedHashMap<String, LinkedHashMap<String, String>> translations = new LinkedHashMap<>();
-    public static LinkedHashMap<String, String> defaultTranslations = new LinkedHashMap<>();
     public static final String DESC = "desc.";
     public static final String GETCFG = "getCfg.";
     public static final String SET = "set.";
     public static final String ERROR = "error.";
 
-    public static void loadLanguage(String modid)
+    public static void loadLanguage(String modid, LinkedHashMap<String, String> defaultTranslations)
     {
         if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(modid)))
         {
