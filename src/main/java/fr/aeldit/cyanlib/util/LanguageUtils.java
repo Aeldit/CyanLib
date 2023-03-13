@@ -13,24 +13,26 @@ import java.util.Properties;
 public class LanguageUtils
 {
     public static LinkedHashMap<String, LinkedHashMap<String, String>> translations = new LinkedHashMap<>();
-    public static final String DESC = "desc.";
-    public static final String GETCFG = "getCfg.";
-    public static final String SET = "set.";
-    public static final String ERROR = "error.";
+    public String MODID;
 
-    public static void loadLanguage(String modid, LinkedHashMap<String, String> defaultTranslations)
+    public LanguageUtils(String modid)
     {
-        if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(modid)))
+        this.MODID = modid;
+    }
+
+    public void loadLanguage(LinkedHashMap<String, String> defaultTranslations)
+    {
+        if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(this.MODID)))
         {
             try
             {
-                Files.createDirectory(FabricLoader.getInstance().getConfigDir().resolve(modid));
+                Files.createDirectory(FabricLoader.getInstance().getConfigDir().resolve(this.MODID));
             } catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
         }
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(modid + "/translations.properties");
+        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.properties");
         if (!Files.exists(languagePath))
         {
             try
@@ -50,7 +52,7 @@ public class LanguageUtils
             properties.load(new FileInputStream(languagePath.toFile()));
             for (String key : properties.stringPropertyNames())
             {
-                translations.get(modid).put(key, properties.getProperty(key));
+                translations.get(this.MODID).put(key, properties.getProperty(key));
             }
         } catch (IOException e)
         {
@@ -58,8 +60,8 @@ public class LanguageUtils
         }
     }
 
-    public static String getTranslation(String modid, String key)
+    public String getTranslation(String key)
     {
-        return translations.get(modid).get(key) != null ? translations.get(modid).get(key) : "null";
+        return translations.get(this.MODID).get(key) != null ? translations.get(this.MODID).get(key) : "null";
     }
 }
