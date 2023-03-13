@@ -12,8 +12,8 @@ import java.util.Properties;
 
 public class LanguageUtils
 {
-    public static LinkedHashMap<String, LinkedHashMap<String, String>> translations = new LinkedHashMap<>();
-    public String MODID;
+    String MODID;
+    LinkedHashMap<String, String> translations = new LinkedHashMap<>();
 
     public LanguageUtils(String modid)
     {
@@ -52,7 +52,7 @@ public class LanguageUtils
             properties.load(new FileInputStream(languagePath.toFile()));
             for (String key : properties.stringPropertyNames())
             {
-                translations.get(this.MODID).put(key, properties.getProperty(key));
+                translations.put(key, properties.getProperty(key));
             }
         } catch (IOException e)
         {
@@ -62,6 +62,6 @@ public class LanguageUtils
 
     public String getTranslation(String key)
     {
-        return translations.get(this.MODID).get(key) != null ? translations.get(this.MODID).get(key) : "null";
+        return translations.get(key) != null ? translations.get(key) : "null";
     }
 }
