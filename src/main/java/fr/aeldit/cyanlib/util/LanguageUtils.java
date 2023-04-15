@@ -20,7 +20,6 @@ package fr.aeldit.cyanlib.util;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,14 +28,19 @@ import java.util.Properties;
 
 public class LanguageUtils
 {
-    String MODID;
-    LinkedHashMap<String, String> translations = new LinkedHashMap<>();
+    private final String MODID;
+    public LinkedHashMap<String, String> translations = new LinkedHashMap<>();
 
     public LanguageUtils(String modid)
     {
         this.MODID = modid;
     }
 
+    /**
+     * Loads the custom translations into this class translations
+     *
+     * @param defaultTranslations The default translations if the file does not exist
+     */
     public void loadLanguage(LinkedHashMap<String, String> defaultTranslations)
     {
         if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(this.MODID)))
@@ -52,28 +56,35 @@ public class LanguageUtils
         Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.properties");
         if (!Files.exists(languagePath))
         {
+            this.translations = defaultTranslations;
+        } else
+        {
+            FileInputStream fis = null;
             try
             {
-                Files.createFile(languagePath);
                 Properties properties = new Properties();
-                properties.putAll(defaultTranslations);
-                properties.store(new FileOutputStream(languagePath.toFile()), null);
+                fis = new FileInputStream(languagePath.toFile());
+                properties.load(fis);
+                for (String key : properties.stringPropertyNames())
+                {
+                    this.translations.put(key, properties.getProperty(key));
+                }
             } catch (IOException e)
             {
                 throw new RuntimeException(e);
-            }
-        }
-        try
-        {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(languagePath.toFile()));
-            for (String key : properties.stringPropertyNames())
+            } finally
             {
-                translations.put(key, properties.getProperty(key));
+                if (fis != null)
+                {
+                    try
+                    {
+                        fis.close();
+                    } catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
             }
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
         }
     }
 
