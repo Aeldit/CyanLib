@@ -17,19 +17,21 @@
 
 package fr.aeldit.cyanlib.util;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LanguageUtils
 {
     private final String MODID;
-    public LinkedHashMap<String, String> translations = new LinkedHashMap<>();
+    private Map<String, String> translations = new HashMap<>();
 
     public LanguageUtils(String modid)
     {
@@ -41,49 +43,39 @@ public class LanguageUtils
      *
      * @param defaultTranslations The default translations if the file does not exist
      */
-    public void loadLanguage(LinkedHashMap<String, String> defaultTranslations)
+    public void loadLanguage(Map<String, String> defaultTranslations)
     {
         if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(this.MODID)))
         {
             try
             {
                 Files.createDirectory(FabricLoader.getInstance().getConfigDir().resolve(this.MODID));
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
         }
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.properties");
+
+        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.json");
+
         if (!Files.exists(languagePath))
         {
             this.translations = defaultTranslations;
-        } else
+        }
+        else
         {
-            FileInputStream fis = null;
             try
             {
-                Properties properties = new Properties();
-                fis = new FileInputStream(languagePath.toFile());
-                properties.load(fis);
-                for (String key : properties.stringPropertyNames())
-                {
-                    this.translations.put(key, properties.getProperty(key));
-                }
-            } catch (IOException e)
+                Gson gsonReader = new Gson();
+                Reader reader = Files.newBufferedReader(languagePath);
+                TypeToken<Map<String, String>> mapType = new TypeToken<>() {};
+                this.translations = gsonReader.fromJson(reader, mapType);
+                reader.close();
+            }
+            catch (IOException e)
             {
                 throw new RuntimeException(e);
-            } finally
-            {
-                if (fis != null)
-                {
-                    try
-                    {
-                        fis.close();
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
     }

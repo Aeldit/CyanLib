@@ -40,9 +40,10 @@ public class FileUtils
                 if (Files.exists(path) && Files.readAllLines(path).size() <= 1)
                 {
                     Files.delete(path);
-                    CyanLibCore.LOGGER.info("{} Deleted the file {} because it was empty", CyanLibCore.MODNAME, path);
+                    CyanLibCore.LOGGER.info("[CyanLib] Deleted the file {} because it was empty", path);
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
