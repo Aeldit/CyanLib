@@ -51,7 +51,11 @@ public class CyanLibUtils
         this.useCustomTranslations = value;
     }
 
-    // Redundant checks
+    /**
+     * Returns whether the source is a player or not, and sends a message if this condition is {@code false}
+     *
+     * @param source the source of the command (usually {@code context.getSource()})
+     */
     public boolean isPlayer(@NotNull ServerCommandSource source)
     {
         if (source.getPlayer() == null)
@@ -62,6 +66,13 @@ public class CyanLibUtils
         return true;
     }
 
+    /**
+     * Returns whether the player has the required OP level or not, and sends a message if this condition is
+     * {@code false}
+     *
+     * @param player     the player
+     * @param permission the OP level ({@code 0 <= permission <= 4})
+     */
     public boolean hasPermission(@NotNull ServerPlayerEntity player, int permission)
     {
         if (!player.hasPermissionLevel(permission))
@@ -75,6 +86,14 @@ public class CyanLibUtils
         return true;
     }
 
+    /**
+     * Returns whether the player the option is allowed or not, and sends a message if this condition is {@code false}
+     *
+     * @param player  the player
+     * @param option  the option you want to test
+     * @param msgPath the path to the translation ({@code "MODID.message.OPTION"},
+     *                "message" must be in your translations paths)
+     */
     public boolean isOptionAllowed(@NotNull ServerPlayerEntity player, boolean option, String msgPath)
     {
         if (!option)
