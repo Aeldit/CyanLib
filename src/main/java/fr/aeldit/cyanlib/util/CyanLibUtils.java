@@ -24,6 +24,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 import static fr.aeldit.cyanlib.util.Constants.ERROR;
 
 public class CyanLibUtils
@@ -39,6 +41,11 @@ public class CyanLibUtils
         this.languageUtils = languageUtils;
         this.msgToActionBar = msgToActionBar;
         this.useCustomTranslations = useCustomTranslations;
+
+        if (!this.useCustomTranslations)
+        {
+            this.languageUtils.setTranslations(new HashMap<>());
+        }
     }
 
     public void setMsgToActionBar(boolean value)
@@ -49,10 +56,18 @@ public class CyanLibUtils
     public void setUseCustomTranslations(boolean value)
     {
         this.useCustomTranslations = value;
+
+        if (!value)
+        {
+            this.languageUtils.setTranslations(new HashMap<>());
+        }
     }
 
     /**
      * Returns whether the source is a player or not, and sends a message if this condition is {@code false}
+     * <p>
+     * If the {@code useCustomTranslations} options is set to {@code true}, your translations map must contain the key
+     * {@code "error.playerOnlyCmd"}
      *
      * @param source the source of the command (usually {@code context.getSource()})
      */
@@ -60,7 +75,14 @@ public class CyanLibUtils
     {
         if (source.getPlayer() == null)
         {
-            source.getServer().sendMessage(Text.of(this.languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
+            if (this.useCustomTranslations)
+            {
+                source.getServer().sendMessage(Text.of(this.languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
+            }
+            else
+            {
+                source.getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+            }
             return false;
         }
         return true;
@@ -91,8 +113,8 @@ public class CyanLibUtils
      *
      * @param player  the player
      * @param option  the option you want to test
-     * @param msgPath the path to the translation ({@code "MODID.message.OPTION"},
-     *                "message" must be in your translations paths)
+     * @param msgPath the path to the translation (in the method, the traductions path is {@code "MODID.message.OPTION"},
+     *                where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code msgPath})
      */
     public boolean isOptionAllowed(@NotNull ServerPlayerEntity player, boolean option, String msgPath)
     {
@@ -141,7 +163,7 @@ public class CyanLibUtils
      * the player to have the mod or the resource pack with translations installed), or use the default without needing
      * the player to have them installed.
      * <p>
-     * This method allows to force the message to be or not in the action bar
+     * This method allows to force the message to be or not in the action bar, independently of this class attributes
      *
      * @param player      the player to whom the message will be sent
      * @param msg         the default translation

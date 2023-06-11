@@ -25,13 +25,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LanguageUtils
 {
     private final String MODID;
-    private Map<String, String> translations = new HashMap<>();
+    private Map<String, String> translations;
 
     public LanguageUtils(String modid)
     {
@@ -45,18 +44,6 @@ public class LanguageUtils
      */
     public void loadLanguage(Map<String, String> defaultTranslations)
     {
-        if (!Files.exists(FabricLoader.getInstance().getConfigDir().resolve(this.MODID)))
-        {
-            try
-            {
-                Files.createDirectory(FabricLoader.getInstance().getConfigDir().resolve(this.MODID));
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
         Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.json");
 
         if (!Files.exists(languagePath))
@@ -80,8 +67,18 @@ public class LanguageUtils
         }
     }
 
+    /**
+     * Returns the value associated with the key {@code key} if it exists, the String "null" otherwise
+     *
+     * @param key the key of the translation
+     */
     public String getTranslation(String key)
     {
         return translations.get(key) != null ? translations.get(key) : "null";
+    }
+
+    public void setTranslations(Map<String, String> translations)
+    {
+        this.translations = translations;
     }
 }
