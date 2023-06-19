@@ -17,8 +17,6 @@
 
 package fr.aeldit.cyanlib.util;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -141,16 +139,9 @@ public class CyanLibUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        if (this.useCustomTranslations)
         {
-            if (this.useCustomTranslations)
-            {
-                player.sendMessage(Text.translatable(msg, args), this.msgToActionBar);
-            }
-            else
-            {
-                player.sendMessage(Text.translatable(tradPath, args), this.msgToActionBar);
-            }
+            player.sendMessage(Text.translatable(msg, args), this.msgToActionBar);
         }
         else
         {
@@ -173,16 +164,9 @@ public class CyanLibUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+        if (this.useCustomTranslations)
         {
-            if (this.useCustomTranslations)
-            {
-                player.sendMessage(Text.translatable(msg, args), toActionBar);
-            }
-            else
-            {
-                player.sendMessage(Text.translatable(tradPath, args), toActionBar);
-            }
+            player.sendMessage(Text.translatable(msg, args), toActionBar);
         }
         else
         {
