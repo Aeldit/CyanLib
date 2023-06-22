@@ -23,13 +23,13 @@
   "depends": {
     "fabricloader": ">=0.14.21",
     "fabric-resource-loader-v0": "*",
-    "minecraft": "1.20",
+    "minecraft": "1.20.x",
     "java": ">=17"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/W4secTP",
+        "modmenu.discord": "https://discord.gg/JJMnf62Kuj",
         "midnightlib.modrinth": "https://modrinth.com/user/Aeldit",
         "midnightlib.wiki": "https://github.com/Aeldit/CyanLib/wiki"
       },
