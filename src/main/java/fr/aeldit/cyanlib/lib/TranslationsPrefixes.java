@@ -15,12 +15,19 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.util;
+package fr.aeldit.cyanlib.lib;
 
-public interface Constants
+import fr.aeldit.cyanlib.core.utils.Utils;
+
+/**
+ * Contains some prefixes for the translations
+ * <p>
+ * For examples, see {@link Utils#getDefaultTranslations()}
+ */
+public class TranslationsPrefixes
 {
-    String DESC = "desc.";
-    String GETCFG = "getCfg.";
-    String SET = "set.";
-    String ERROR = "error.";
+    public static final String ERROR = "error.";
+    public static final String SET = "set.";
+    public static final String DESC = "desc.";
+    public static final String GETCFG = "getCfg.";
 }

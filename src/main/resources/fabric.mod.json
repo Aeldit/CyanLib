@@ -3,7 +3,7 @@
   "id": "cyanlib",
   "version": "${version}",
   "name": "CyanLib",
-  "description": "This is a library for small utilities",
+  "description": "This is a library for small utilities like custom translations for the mods that use this library or config",
   "authors": [
     "Aeldit"
   ],
@@ -16,8 +16,11 @@
   "icon": "assets/cyanlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "*": [
-      "fr.aeldit.cyanlib.CyanLibCore"
+    "client": [
+      "fr.aeldit.cyanlib.core.CyanLibClientCore"
+    ],
+    "server": [
+      "fr.aeldit.cyanlib.core.CyanLibServerCore"
     ]
   },
   "depends": {

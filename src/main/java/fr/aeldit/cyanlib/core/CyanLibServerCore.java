@@ -15,21 +15,25 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib;
+package fr.aeldit.cyanlib.core;
 
-import net.fabricmc.api.ModInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fr.aeldit.cyanlib.core.commands.ConfigCommands;
+import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
-public class CyanLibCore implements ModInitializer
+import static fr.aeldit.cyanlib.core.utils.Utils.*;
+
+public class CyanLibServerCore implements DedicatedServerModInitializer
 {
-    public static final String MODID = "cyanlib";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-
     @Override
-    // Initialize the differents parts of the mod when lauched on server
-    public void onInitialize()
+    public void onInitializeServer()
     {
+        if (LibConfig.getBoolOption("useCustomTranslations"))
+        {
+            LanguageUtils.loadLanguage(getDefaultTranslations());
+        }
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> ConfigCommands.register(dispatcher));
         LOGGER.info("[CyanLib] Successfuly initialized");
     }
 }
