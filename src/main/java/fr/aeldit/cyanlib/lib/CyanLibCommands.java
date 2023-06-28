@@ -71,7 +71,7 @@ public class CyanLibCommands
      *
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.error.wrongType"}</li>
+     *      <li>{@code "modid.msg.wrongType"}</li>
      * </ul>
      *
      * <ul><h2>Required config options :</h2>
@@ -140,7 +140,7 @@ public class CyanLibCommands
                         {
                             sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                     cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                    "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                    "%s.msg.wrongType".formatted(cyanLib.getMODID()),
                                     Formatting.YELLOW + "boolean"
                             );
                         }
@@ -149,7 +149,7 @@ public class CyanLibCommands
                     {
                         sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                 cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                "%s.msg.wrongType".formatted(cyanLib.getMODID()),
                                 Formatting.YELLOW + "integer"
                         );
                     }
@@ -158,7 +158,7 @@ public class CyanLibCommands
                 {
                     CyanLibLanguageUtils.sendPlayerMessage(source.getPlayer(),
                             cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
+                            "%s.msg.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
@@ -170,8 +170,8 @@ public class CyanLibCommands
      *
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.error.wrongType"}</li>
-     *      <li>{@code "modid.msg.error.optionNotFound"}</li>
+     *      <li>{@code "modid.msg.wrongType"}</li>
+     *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2>
@@ -233,7 +233,7 @@ public class CyanLibCommands
                         {
                             sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                     cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                    "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                    "%s.msg.wrongType".formatted(cyanLib.getMODID()),
                                     Formatting.YELLOW + "integer"
                             );
                         }
@@ -242,7 +242,7 @@ public class CyanLibCommands
                     {
                         sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                 cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                "%s.msg.wrongType".formatted(cyanLib.getMODID()),
                                 Formatting.YELLOW + "boolean"
                         );
                     }
@@ -251,7 +251,7 @@ public class CyanLibCommands
                 {
                     CyanLibLanguageUtils.sendPlayerMessage(source.getPlayer(),
                             cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
+                            "%s.msg.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
@@ -267,7 +267,7 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.getDescription.option"} (option is the parameter of the function)</li>
      *      <li>{@code "modid.msg.currentValue"}</li>
      *      <li>{@code "modid.msg.setValue"}</li>
-     *      <li>{@code "modid.msg.error.optionNotFound"}</li>
+     *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2>
@@ -405,7 +405,7 @@ public class CyanLibCommands
                 {
                     CyanLibLanguageUtils.sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                             cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
+                            "%s.msg.msg.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
