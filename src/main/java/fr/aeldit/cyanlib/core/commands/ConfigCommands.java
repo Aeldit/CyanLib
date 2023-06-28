@@ -139,7 +139,7 @@ public class ConfigCommands
     /**
      * Called by the command {@code /cyanlib config <optionName>}
      * <p>
-     * Send a message in the player's chat with a description of the option {@code optionName} and its value
+     * Sends a message in the player's chat with a description of the option {@code optionName} and its value
      */
     public static int getOptionChatConfig(@NotNull CommandContext<ServerCommandSource> context)
     {
@@ -151,7 +151,7 @@ public class ConfigCommands
     /**
      * Called by the command {@code /cyanlib getConfig}
      * <p>
-     * Send a messsage in the player's chat with all the mod's options and their values
+     * Sends a message in the player's chat with all the mod's options and their values
      */
     public static int getConfigOptions(@NotNull CommandContext<ServerCommandSource> context)
     {

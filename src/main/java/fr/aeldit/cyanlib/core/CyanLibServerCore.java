@@ -34,6 +34,6 @@ public class CyanLibServerCore implements DedicatedServerModInitializer
         }
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> ConfigCommands.register(dispatcher));
-        LOGGER.info("[CyanLib] Successfuly initialized");
+        LOGGER.info("[CyanLib] Successfully initialized");
     }
 }

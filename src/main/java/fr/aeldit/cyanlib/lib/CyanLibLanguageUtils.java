@@ -87,9 +87,9 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * Returns the value associated with the key {@code key} if it exists, the String "null" otherwise
-     *
      * @param key the key of the translation
+     * @return The {@code String "null"} if the translations are {@code null} or if the translations don't contain the {@code key},
+     *         and the value associated with the {@code key} otherwise
      */
     public String getTranslation(String key)
     {
@@ -101,9 +101,14 @@ public class CyanLibLanguageUtils
      * the player to have the mod or the resource pack with translations installed), or use the default without needing
      * the player to have them installed
      *
+     * <ul><h2>Required config options :</h2>
+     *      <li>{@code useCustomTranslations}</li>
+     *      <li>{@code msgToActionBar}</li>
+     * </ul>
+     *
      * @param player   the player to whom the message will be sent
      * @param msg      the default translation
-     * @param tradPath the traduction path (requires the player to have the mod/resource pack)
+     * @param tradPath the translation path (requires the player to have the mod/resource pack)
      * @param args     the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
     public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
@@ -124,6 +129,10 @@ public class CyanLibLanguageUtils
      * the player to have them installed.
      * <p>
      * This method allows to force the message to be or not in the action bar, independently of this class attributes
+     *
+     * <ul><h2>Required config options :</h2>
+     *      <li>{@code useCustomTranslations}</li>
+     * </ul>
      *
      * @param player      the player to whom the message will be sent
      * @param msg         the default translation

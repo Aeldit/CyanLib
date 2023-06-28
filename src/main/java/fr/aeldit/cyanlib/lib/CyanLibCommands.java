@@ -74,6 +74,12 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.wrongType"}</li>
      * </ul>
      *
+     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
+     *      <li>{@link TranslationsPrefixes#SET} + {@code "option"} (option is the parameter of the function)</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
+     * </ul>
+     *
      * <ul><h2>Required config options :</h2>
      *      <li>{@code minOpLevelExeEditConfig}</li>
      * </ul>
@@ -174,7 +180,7 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
-     * <ul><h2>Custom translations :</h2>
+     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@link TranslationsPrefixes#SET} + {@code "option"} (option is the parameter of the function)</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
@@ -270,7 +276,7 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
-     * <ul><h2>Custom translations :</h2>
+     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@code "dashSeparation"}</li>
      *      <li>{@link TranslationsPrefixes#DESC} + {@code "option"} (option is the parameter of the function)</li>
      *      <li>{@code "currentValue"}</li>
@@ -421,7 +427,7 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.getCfg.option"} (option is the parameter of the function)</li>
      * </ul>
      *
-     * <ul><h2>Custom translations :</h2>
+     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@code "dashSeparation"}</li>
      *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "header"}</li>
      *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "option"} (option is the parameter of the function)</li>

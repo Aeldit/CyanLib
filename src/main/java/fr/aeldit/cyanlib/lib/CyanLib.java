@@ -75,9 +75,10 @@ public class CyanLib
 
     /**
      * Returns whether the source is a player or not, and sends a message if this condition is {@code false}
-     * <p>
-     * If the {@code useCustomTranslations} options is set to {@code true}, your translations map must contain the key
-     * {@code "error.playerOnlyCmd"}
+     *
+     * <ul><h2>Custom translations</h2> Required only if the option useCustomTranslations is set to true
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "playerOnlyCmd"}</li>
+     * </ul>
      *
      * @param source the source of the command (usually {@code context.getSource()})
      */
@@ -102,6 +103,14 @@ public class CyanLib
      * Returns whether the player has the required OP level or not, and sends a message if this condition is
      * {@code false}
      *
+     * <ul><h2>Translations paths :</h2>
+     *      <li>{@code "modid.msg.notOp"}</li>
+     * </ul>
+     *
+     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
+     *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "notOp"}</li>
+     * </ul>
+     *
      * @param player     the player
      * @param permission the OP level ({@code 0 <= permission <= 4})
      */
@@ -111,7 +120,7 @@ public class CyanLib
         {
             sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + "notOp"),
-                    "%s.message.notOp".formatted(this.MODID)
+                    "%s.msg.notOp".formatted(this.MODID)
             );
             return false;
         }
@@ -123,7 +132,7 @@ public class CyanLib
      *
      * @param player  the player
      * @param option  the option you want to test
-     * @param msgPath the path to the translation (in the method, the traductions path is {@code "MODID.message.OPTION"},
+     * @param msgPath the path to the translation (in the method, the translations path is {@code "MODID.message.OPTION"},
      *                where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code msgPath})
      */
     public boolean isOptionAllowed(@NotNull ServerPlayerEntity player, boolean option, String msgPath)
@@ -132,7 +141,7 @@ public class CyanLib
         {
             sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + msgPath),
-                    "%s.message.%s".formatted(this.MODID, msgPath)
+                    "%s.msg.%s".formatted(this.MODID, msgPath)
             );
             return false;
         }

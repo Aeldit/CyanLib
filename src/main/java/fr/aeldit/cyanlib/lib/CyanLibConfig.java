@@ -57,7 +57,7 @@ public class CyanLibConfig
     }
 
     /**
-     * Sets the option {@code option} to the value {@code value} (without checking its type)
+     * Sets {@code option} to the value {@code value} (without checking its type)
      */
     public void setOption(String option, Object value)
     {
@@ -86,6 +86,9 @@ public class CyanLibConfig
         return this.options.containsKey(option);
     }
 
+    /**
+     * @return Whether the option is a {@code boolean} or not | {@code false} if the option does not exist
+     */
     public boolean isBoolean(String option)
     {
         if (this.options.containsKey(option))
@@ -95,6 +98,9 @@ public class CyanLibConfig
         return false;
     }
 
+    /**
+     * @return Whether the option is an {@code int} or not | {@code false} if the option does not exist
+     */
     public boolean isInteger(String option)
     {
         if (this.options.containsKey(option))
@@ -105,7 +111,7 @@ public class CyanLibConfig
     }
 
     /**
-     * @return The boolean value associated with {@code option} if it is a boolean
+     * @return The {@code boolean} value associated with {@code option} if it is a {@code boolean} | {@code false} if the option does not exist
      */
     public boolean getBoolOption(String option)
     {
@@ -120,7 +126,7 @@ public class CyanLibConfig
     }
 
     /**
-     * @return The integer value associated with {@code option} if it is an integer
+     * @return The {@code int} value associated with {@code option} if it is an {@code int} | {@code 0} if the option does not exist
      */
     public int getIntOption(String option)
     {
@@ -225,7 +231,7 @@ public class CyanLibConfig
 
             if (!couldWrite)
             {
-                LOGGER.info("[CyanLib] Could not write the file %s because it is already beeing written (for more than 1 sec)".formatted(path.getFileName().toString()));
+                LOGGER.info("[CyanLib] Could not write the file %s because it is already being written (for more than 1 sec)".formatted(path.getFileName().toString()));
             }
         }
     }

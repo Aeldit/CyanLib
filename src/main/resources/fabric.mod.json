@@ -33,8 +33,7 @@
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/JJMnf62Kuj",
-        "midnightlib.modrinth": "https://modrinth.com/user/Aeldit",
-        "midnightlib.wiki": "https://github.com/Aeldit/CyanLib/wiki"
+        "modmenu.wiki": "https://github.com/Aeldit/CyanLib/wiki"
       },
       "badges": [
         "library"
