@@ -96,41 +96,52 @@ public class CyanLibCommands
         {
             if (cyanLib.hasPermission(Objects.requireNonNull(source.getPlayer()), cyanLib.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
             {
-                if (cyanLib.getConfigUtils().isBoolean(option))
+                if (cyanLib.getConfigUtils().optionExists(option))
                 {
-                    if (value instanceof Boolean)
+                    if (cyanLib.getConfigUtils().isBoolean(option))
                     {
-                        cyanLib.getConfigUtils().setOption(option, value);
-
-                        if (option.equals("useCustomTranslations"))
+                        if (value instanceof Boolean)
                         {
-                            if ((Boolean) value)
+                            cyanLib.getConfigUtils().setOption(option, value);
+
+                            if (option.equals("useCustomTranslations"))
                             {
-                                cyanLib.getLanguageUtils().loadLanguage(defaultTranslations);
+                                if ((Boolean) value)
+                                {
+                                    cyanLib.getLanguageUtils().loadLanguage(defaultTranslations);
+                                }
+                                else
+                                {
+                                    cyanLib.getLanguageUtils().unload();
+                                }
+                            }
+
+                            if (!fromCmd)
+                            {
+                                if (mode)
+                                {
+                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
+                                }
+                                else
+                                {
+                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(cyanLib.getMODID(), option));
+                                }
                             }
                             else
                             {
-                                cyanLib.getLanguageUtils().unload();
-                            }
-                        }
-
-                        if (!fromCmd)
-                        {
-                            if (mode)
-                            {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
-                            }
-                            else
-                            {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(cyanLib.getMODID(), option));
+                                sendPlayerMessage(source.getPlayer(),
+                                        cyanLib.getLanguageUtils().getTranslation(SET + option),
+                                        "%s.msg.set.%s".formatted(cyanLib.getMODID(), option),
+                                        (Boolean) value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
+                                );
                             }
                         }
                         else
                         {
-                            sendPlayerMessage(source.getPlayer(),
-                                    cyanLib.getLanguageUtils().getTranslation(SET + option),
-                                    "%s.msg.set.%s".formatted(cyanLib.getMODID(), option),
-                                    (Boolean) value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
+                            sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
+                                    cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
+                                    "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                    Formatting.YELLOW + "boolean"
                             );
                         }
                     }
@@ -139,16 +150,15 @@ public class CyanLibCommands
                         sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                 cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
                                 "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
-                                Formatting.YELLOW + "boolean"
+                                Formatting.YELLOW + "integer"
                         );
                     }
                 }
                 else
                 {
-                    sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                            cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                            "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
-                            Formatting.YELLOW + "integer"
+                    CyanLibLanguageUtils.sendPlayerMessage(source.getPlayer(),
+                            cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
+                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
@@ -161,6 +171,13 @@ public class CyanLibCommands
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
      *      <li>{@code "modid.msg.error.wrongType"}</li>
+     *      <li>{@code "modid.msg.error.optionNotFound"}</li>
+     * </ul>
+     *
+     * <ul><h2>Custom translations :</h2>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code "option"} (option is the parameter of the function)</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Required config options :</h2>
@@ -184,29 +201,40 @@ public class CyanLibCommands
         {
             if (cyanLib.hasPermission(Objects.requireNonNull(source.getPlayer()), cyanLib.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
             {
-                if (cyanLib.getConfigUtils().isInteger(option))
+                if (cyanLib.getConfigUtils().optionExists(option))
                 {
-                    if (value instanceof Integer)
+                    if (cyanLib.getConfigUtils().isInteger(option))
                     {
-                        cyanLib.getConfigUtils().setOption(option, value);
-
-                        if (!fromCmd)
+                        if (value instanceof Integer)
                         {
-                            if (mode)
+                            cyanLib.getConfigUtils().setOption(option, value);
+
+                            if (!fromCmd)
                             {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
+                                if (mode)
+                                {
+                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
+                                }
+                                else
+                                {
+                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(cyanLib.getMODID(), option));
+                                }
                             }
                             else
                             {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(cyanLib.getMODID(), option));
+                                sendPlayerMessage(source.getPlayer(),
+                                        cyanLib.getLanguageUtils().getTranslation(SET + option),
+                                        "%s.msg.set.%s".formatted(cyanLib.getMODID(), option),
+                                        Formatting.GOLD + String.valueOf(value)
+                                );
                             }
                         }
                         else
                         {
-                            sendPlayerMessage(source.getPlayer(),
-                                    cyanLib.getLanguageUtils().getTranslation(SET + option),
-                                    "%s.msg.set.%s".formatted(cyanLib.getMODID(), option),
-                                    Formatting.GOLD + String.valueOf(value)
+                            sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
+                                    cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
+                                    "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
+                                    Formatting.YELLOW + "integer"
                             );
                         }
                     }
@@ -215,16 +243,15 @@ public class CyanLibCommands
                         sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                                 cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
                                 "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
-                                Formatting.YELLOW + "integer"
+                                Formatting.YELLOW + "boolean"
                         );
                     }
                 }
                 else
                 {
-                    sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                            cyanLib.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                            "%s.msg.error.wrongType".formatted(cyanLib.getMODID()),
-                            Formatting.YELLOW + "boolean"
+                    CyanLibLanguageUtils.sendPlayerMessage(source.getPlayer(),
+                            cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
+                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
@@ -240,6 +267,7 @@ public class CyanLibCommands
      *      <li>{@code "modid.msg.getDescription.option"} (option is the parameter of the function)</li>
      *      <li>{@code "modid.msg.currentValue"}</li>
      *      <li>{@code "modid.msg.setValue"}</li>
+     *      <li>{@code "modid.msg.error.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2>
@@ -247,6 +275,7 @@ public class CyanLibCommands
      *      <li>{@link TranslationsPrefixes#DESC} + {@code "option"} (option is the parameter of the function)</li>
      *      <li>{@code "currentValue"}</li>
      *      <li>{@code "setValue"}</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Required config options :</h2>
@@ -370,6 +399,13 @@ public class CyanLibCommands
                             cyanLib.getLanguageUtils().getTranslation("dashSeparation"),
                             "%s.msg.getDescription.dashSeparation".formatted(cyanLib.getMODID()),
                             false
+                    );
+                }
+                else
+                {
+                    CyanLibLanguageUtils.sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
+                            cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
+                            "%s.msg.error.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
