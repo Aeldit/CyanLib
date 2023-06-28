@@ -263,7 +263,7 @@ public class CyanLibCommands
      * presets the player can click on to change the value of the option
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.getDescription.dashSeparation"}</li>
+     *      <li>{@code "modid.msg.dashSeparation"}</li>
      *      <li>{@code "modid.msg.getDescription.option"} (option is the parameter of the function)</li>
      *      <li>{@code "modid.msg.currentValue"}</li>
      *      <li>{@code "modid.msg.setValue"}</li>
@@ -305,7 +305,7 @@ public class CyanLibCommands
 
                     sendPlayerMessageActionBar(player,
                             cyanLib.getLanguageUtils().getTranslation("dashSeparation"),
-                            "%s.msg.getDescription.dashSeparation".formatted(cyanLib.getMODID()),
+                            "%s.msg.dashSeparation".formatted(cyanLib.getMODID()),
                             false
                     );
                     sendPlayerMessageActionBar(player,
@@ -397,7 +397,7 @@ public class CyanLibCommands
                     }
                     sendPlayerMessageActionBar(player,
                             cyanLib.getLanguageUtils().getTranslation("dashSeparation"),
-                            "%s.msg.getDescription.dashSeparation".formatted(cyanLib.getMODID()),
+                            "%s.msg.dashSeparation".formatted(cyanLib.getMODID()),
                             false
                     );
                 }
@@ -416,7 +416,7 @@ public class CyanLibCommands
      * Sends a message in the player's chat with the current value of every option of your mod
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.getDescription.dashSeparation"}</li>
+     *      <li>{@code "modid.msg.dashSeparation"}</li>
      *      <li>{@code "modid.msg.getCfg.header"}</li>
      *      <li>{@code "modid.msg.getCfg.option"} (option is the parameter of the function)</li>
      * </ul>
@@ -448,7 +448,7 @@ public class CyanLibCommands
             {
                 sendPlayerMessageActionBar(player,
                         cyanLib.getLanguageUtils().getTranslation("dashSeparation"),
-                        "%s.msg.getDescription.dashSeparation".formatted(cyanLib.getMODID()),
+                        "%s.msg.dashSeparation".formatted(cyanLib.getMODID()),
                         false
                 );
                 sendPlayerMessageActionBar(player,
@@ -487,7 +487,7 @@ public class CyanLibCommands
 
                 sendPlayerMessageActionBar(player,
                         cyanLib.getLanguageUtils().getTranslation("dashSeparation"),
-                        "%s.msg.getDescription.dashSeparation".formatted(cyanLib.getMODID()),
+                        "%s.msg.dashSeparation".formatted(cyanLib.getMODID()),
                         false
                 );
             }
