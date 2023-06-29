@@ -38,7 +38,7 @@ public class CyanLib
      * @param configUtils   The instance of {@link CyanLibConfig}
      * @param languageUtils The instance of {@link CyanLibLanguageUtils}
      */
-    public CyanLib(String modid, @NotNull CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils)
+    public CyanLib(String modid, CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils)
     {
         this.MODID = modid;
         this.configUtils = configUtils;
@@ -54,8 +54,18 @@ public class CyanLib
         }
         else
         {
-            this.languageUtils = null;
+            this.languageUtils = new CyanLibLanguageUtils(modid);
         }
+    }
+
+    /**
+     * Main class of this library but without the language utils
+     */
+    public CyanLib(String modid, CyanLibConfig configUtils)
+    {
+        this.MODID = modid;
+        this.configUtils = configUtils;
+        this.languageUtils = new CyanLibLanguageUtils(modid);
     }
 
     public String getMODID()

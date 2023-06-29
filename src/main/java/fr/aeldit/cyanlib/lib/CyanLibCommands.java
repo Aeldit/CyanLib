@@ -92,7 +92,7 @@ public class CyanLibCommands
      * @param fromCmd             If the function is called from a command. If you don't have the {@code /modid getConfig} and {@code /modid config <optionName>} commands,
      *                            you have to put this parameter to true
      * @param mode                The mode to use (to call again {@code /modid getConfig} or {@code /modid config <optionName>}).
-     *                            If {@code fromCmd} is {@code false}, you can put {@code mode} to either {@code true} or {@code false}, it won't change anything
+     *                            If {@code fromCmd} is {@code true}, you can put {@code mode} to either {@code true} or {@code false}, it won't change anything
      */
     public static void setBoolOption(@NotNull CommandContext<ServerCommandSource> context, Map<String, String> defaultTranslations, @NotNull CyanLib cyanLib, String option, Object value, boolean fromCmd, boolean mode)
     {
@@ -197,7 +197,7 @@ public class CyanLibCommands
      * @param fromCmd If the function is called from a command. If you don't have the {@code /modid getConfig} and {@code /modid config <optionName>} commands,
      *                you have to put this parameter to true
      * @param mode    The mode to use (to call again {@code /modid getConfig} or {@code /modid config <optionName>}).
-     *                If {@code fromCmd} is {@code false}, you can put {@code mode} to either {@code true} or {@code false}, it won't change anything
+     *                If {@code fromCmd} is {@code true}, you can put {@code mode} to either {@code true} or {@code false}, it won't change anything
      */
     public static void setIntOption(@NotNull CommandContext<ServerCommandSource> context, @NotNull CyanLib cyanLib, String option, Object value, boolean fromCmd, boolean mode)
     {
@@ -316,7 +316,7 @@ public class CyanLibCommands
                     );
                     sendPlayerMessageActionBar(player,
                             cyanLib.getLanguageUtils().getTranslation(DESC + option),
-                            "%s.msg.getDescription.%s".formatted(cyanLib.getMODID(), option),
+                            "%s.msg.%s".formatted(cyanLib.getMODID(), option),
                             false
                     );
 
@@ -411,7 +411,7 @@ public class CyanLibCommands
                 {
                     CyanLibLanguageUtils.sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
                             cyanLib.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.msg.optionNotFound".formatted(cyanLib.getMODID())
+                            "%s.msg.optionNotFound".formatted(cyanLib.getMODID())
                     );
                 }
             }
