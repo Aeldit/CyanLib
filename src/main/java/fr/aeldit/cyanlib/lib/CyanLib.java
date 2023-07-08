@@ -17,13 +17,13 @@
 
 package fr.aeldit.cyanlib.lib;
 
+import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import static fr.aeldit.cyanlib.lib.CyanLibLanguageUtils.sendPlayerMessage;
-import static fr.aeldit.cyanlib.lib.TranslationsPrefixes.ERROR;
+import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
 public class CyanLib
 {
@@ -54,7 +54,7 @@ public class CyanLib
         }
         else
         {
-            this.languageUtils = new CyanLibLanguageUtils(modid);
+            this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
         }
     }
 
@@ -65,7 +65,7 @@ public class CyanLib
     {
         this.MODID = modid;
         this.configUtils = configUtils;
-        this.languageUtils = new CyanLibLanguageUtils(modid);
+        this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
     }
 
     public String getMODID()
@@ -128,7 +128,7 @@ public class CyanLib
     {
         if (!player.hasPermissionLevel(permission))
         {
-            sendPlayerMessage(player,
+            this.languageUtils.sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + "notOp"),
                     "%s.msg.notOp".formatted(this.MODID)
             );
@@ -149,7 +149,7 @@ public class CyanLib
     {
         if (!option)
         {
-            sendPlayerMessage(player,
+            this.languageUtils.sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + msgPath),
                     "%s.msg.%s".formatted(this.MODID, msgPath)
             );

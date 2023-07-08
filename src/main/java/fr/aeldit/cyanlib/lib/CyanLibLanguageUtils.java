@@ -36,11 +36,13 @@ import static fr.aeldit.cyanlib.core.utils.Utils.LibConfig;
 public class CyanLibLanguageUtils
 {
     private final String MODID;
+    private final CyanLibConfig libConfig;
     private Map<String, String> translations;
 
-    public CyanLibLanguageUtils(String modid)
+    public CyanLibLanguageUtils(String modid, CyanLibConfig libConfig)
     {
         this.MODID = modid;
+        this.libConfig = libConfig;
     }
 
     /**
@@ -97,7 +99,7 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * Sends a message to the player but with the possibility of using the traductions (which will require
+     * Sends a message to the player but with the possibility of using the translation (which will require
      * the player to have the mod or the resource pack with translations installed), or use the default without needing
      * the player to have them installed
      *
@@ -111,9 +113,9 @@ public class CyanLibLanguageUtils
      * @param tradPath the translation path (requires the player to have the mod/resource pack)
      * @param args     the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public static void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
+    public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (LibConfig.getBoolOption("useCustomTranslations"))
+        if (this.libConfig.getBoolOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), LibConfig.getBoolOption("msgToActionBar"));
         }
@@ -124,7 +126,7 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * Sends a message to the player but with the possibility of using the traductions (which will require
+     * Sends a message to the player but with the possibility of using the translation (which will require
      * the player to have the mod or the resource pack with translations installed), or use the default without needing
      * the player to have them installed.
      * <p>
@@ -136,13 +138,13 @@ public class CyanLibLanguageUtils
      *
      * @param player      the player to whom the message will be sent
      * @param msg         the default translation
-     * @param tradPath    the traduction path (requires the player to have the mod/resource pack)
+     * @param tradPath    the translation path (requires the player to have the mod/resource pack)
      * @param toActionBar whether the message will be sent in the action bar or not
      * @param args        the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public static void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
+    public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (LibConfig.getBoolOption("useCustomTranslations"))
+        if (this.libConfig.getBoolOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }
