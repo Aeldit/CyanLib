@@ -32,7 +32,7 @@ public class Utils
 {
     public static final String MODID = "cyanlib";
     public static Logger LOGGER = LoggerFactory.getLogger(MODID);
-    public static Map<String, String> defaultTranslations;
+    private static Map<String, String> defaultTranslations;
 
     public static CyanLibConfig LibConfig = new CyanLibConfig(MODID, getOptions(), getRules());
     public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibConfig);
