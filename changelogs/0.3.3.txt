@@ -1,6 +1,4 @@
 ✏️ Added :
-- In CyanLibCommands#setIntOption(), if the option name starts with "minOpLevelExe" and the value is not between 0 and 4 included,
-  an error message is send to the player ("modid.msg.incorrectIntOp")
 - Rules for options, like a minimum and / or maximum value for the integer options
 
 🚧 Fixed :
