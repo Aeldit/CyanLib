@@ -31,7 +31,7 @@ import static fr.aeldit.cyanlib.core.utils.Utils.LibConfig;
 public final class ArgumentSuggestion
 {
     /**
-     * Called for the command {@code /cyansh config <optionName>}
+     * Called for the command {@code /cyanlib config <optionName>}
      *
      * @return a suggestion with the available options
      */
@@ -41,7 +41,7 @@ public final class ArgumentSuggestion
     }
 
     /**
-     * Called for the command {@code /cyansh config optionName [integer]}
+     * Called for the command {@code /cyanlib config optionName [integer]}
      *
      * @return a suggestion with all the available integers for the configurations
      */
