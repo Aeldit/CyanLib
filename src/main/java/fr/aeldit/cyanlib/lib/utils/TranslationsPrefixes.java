@@ -15,7 +15,7 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib;
+package fr.aeldit.cyanlib.lib.utils;
 
 import fr.aeldit.cyanlib.core.utils.Utils;
 
@@ -30,4 +30,5 @@ public class TranslationsPrefixes
     public static final String SET = "set.";
     public static final String DESC = "desc.";
     public static final String GETCFG = "getCfg.";
+    public static final String RULE = "rule.";
 }

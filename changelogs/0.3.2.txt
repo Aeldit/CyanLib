@@ -1,0 +1,6 @@
+✏️ Added :
+- The possibility to instantiate the CyanLib class without the language utils
+
+🚧 Fixed :
+- Some typos in the javadocs
+- A translation issue
