@@ -17,11 +17,15 @@
 
 package fr.aeldit.cyanlib.lib.utils;
 
+/**
+ * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option
+ */
 public enum RULES
 {
     MAX_VALUE,
     MIN_VALUE,
     OP_LEVELS,
     POSITIVE_VALUE,
-    NEGATIVE_VALUE
+    NEGATIVE_VALUE,
+    LOAD_CUSTOM_TRANSLATIONS
 }
