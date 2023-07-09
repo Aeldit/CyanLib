@@ -20,6 +20,7 @@ package fr.aeldit.cyanlib.core.utils;
 import fr.aeldit.cyanlib.lib.CyanLib;
 import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
+import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class Utils
     public static CyanLibConfig LibConfig = new CyanLibConfig(MODID, getOptions(), getRules());
     public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibConfig);
     public static CyanLib LibUtils = new CyanLib(MODID, LibConfig, LanguageUtils);
+    public static CyanLibConfigCommands LibConfigCommands = new CyanLibConfigCommands(MODID, LibUtils, getDefaultTranslations());
 
     public static @NotNull Map<String, Object> getOptions()
     {
@@ -54,6 +56,7 @@ public class Utils
     {
         Map<String, Object> rules = new HashMap<>();
 
+        rules.put("useCustomTranslations", RULES.LOAD_CUSTOM_TRANSLATIONS);
         rules.put("minOpLevelExeEditConfig", RULES.OP_LEVELS);
 
         return rules;

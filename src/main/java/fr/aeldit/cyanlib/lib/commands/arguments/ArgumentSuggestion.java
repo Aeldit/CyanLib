@@ -12,48 +12,39 @@
  * This version of the GNU Lesser General Public License incorporates
  * the terms and conditions of version 3 of the GNU General Public
  * License, supplemented by the additional permissions listed in the LICENSE.txt file
- * in the repo of this mod (https://github.com/Aeldit/CyanSetHome)
+ * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core.commands.arguments;
+package fr.aeldit.cyanlib.lib.commands.arguments;
 
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import net.minecraft.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
-
-import static fr.aeldit.cyanlib.core.utils.Utils.LibConfig;
 
 public final class ArgumentSuggestion
 {
     /**
-     * Called for the command {@code /cyansh config <optionName>}
+     * Called for the command {@code /modid config <optionName>}
      *
      * @return a suggestion with the available options
      */
-    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder)
+    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder, @NotNull CyanLibConfig libConfig)
     {
-        return CommandSource.suggestMatching(LibConfig.getOptions(), builder);
+        return CommandSource.suggestMatching(libConfig.getOptions(), builder);
     }
 
     /**
-     * Called for the command {@code /cyansh config optionName [integer]}
+     * Called for the command {@code /modid config <optionName> [integer]}
      *
-     * @return a suggestion with all the available integers for the configurations
+     * @return a suggestion with all the available OP levels
      */
     public static CompletableFuture<Suggestions> getOPLevels(@NotNull SuggestionsBuilder builder)
     {
-        List<String> ints = new ArrayList<>();
-        ints.add("0");
-        ints.add("1");
-        ints.add("2");
-        ints.add("3");
-        ints.add("4");
-
-        return CommandSource.suggestMatching(ints, builder);
+        return CommandSource.suggestMatching(Arrays.asList("0", "1", "2", "3", "4"), builder);
     }
 }

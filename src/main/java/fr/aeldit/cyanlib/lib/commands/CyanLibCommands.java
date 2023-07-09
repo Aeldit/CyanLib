@@ -15,9 +15,11 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib;
+package fr.aeldit.cyanlib.lib.commands;
 
 import com.mojang.brigadier.context.CommandContext;
+import fr.aeldit.cyanlib.lib.CyanLib;
+import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -125,7 +127,7 @@ public class CyanLibCommands
                             {
                                 if (mode)
                                 {
-                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
+                                    source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(cyanLib.getMODID()));
                                 }
                                 else
                                 {
@@ -214,7 +216,7 @@ public class CyanLibCommands
                     {
                         if (value instanceof Integer)
                         {
-                            if (config.isRuleValid(option, (Integer) value, cyanLib, source.getPlayer()))
+                            if (config.isIntegerRuleValid(option, (Integer) value, cyanLib, source.getPlayer()))
                             {
                                 config.setOption(option, value);
 
@@ -222,7 +224,7 @@ public class CyanLibCommands
                                 {
                                     if (mode)
                                     {
-                                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s getConfig".formatted(cyanLib.getMODID()));
+                                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(cyanLib.getMODID()));
                                     }
                                     else
                                     {

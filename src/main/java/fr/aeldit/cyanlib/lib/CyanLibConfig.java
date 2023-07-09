@@ -143,6 +143,7 @@ public class CyanLibConfig
      *     <li>{@link RULES#OP_LEVELS} : none</li>
      *     <li>{@link RULES#POSITIVE_VALUE} : none</li>
      *     <li>{@link RULES#NEGATIVE_VALUE} : none</li>
+     *     <li>{@link RULES#LOAD_CUSTOM_TRANSLATIONS} : none</li>
      * </ul>
      * <p>
      * For more info,
@@ -177,7 +178,7 @@ public class CyanLibConfig
      *
      * @return Whether the rule is respected for the option if the option has a rule, {@code true} otherwise
      */
-    public boolean isRuleValid(String option, int value, CyanLib cyanLib, ServerPlayerEntity player)
+    public boolean isIntegerRuleValid(String option, int value, CyanLib cyanLib, ServerPlayerEntity player)
     {
         if (this.rules.containsKey(option))
         {
@@ -228,7 +229,19 @@ public class CyanLibConfig
     }
 
     /**
-     * @return Whether the option is a {@code boolean} or not | {@code false} if the option does not exist
+     * @return Whether the given {@code option} has the given {@code rule}
+     */
+    public boolean hasRule(String option, RULES rule)
+    {
+        if (this.rules.containsKey(option))
+        {
+            return this.rules.get(option).equals(rule);
+        }
+        return false;
+    }
+
+    /**
+     * @return Whether the {@code option} is a {@code boolean} or not | {@code false} if the {@code option} does not exist
      */
     public boolean isBoolean(String option)
     {
@@ -240,7 +253,7 @@ public class CyanLibConfig
     }
 
     /**
-     * @return Whether the option is an {@code int} or not | {@code false} if the option does not exist
+     * @return Whether the {@code option} is an {@code int} or not | {@code false} if the {@code option} does not exist
      */
     public boolean isInteger(String option)
     {
@@ -252,7 +265,7 @@ public class CyanLibConfig
     }
 
     /**
-     * @return The {@code boolean} value associated with {@code option} if it is a {@code boolean} | {@code false} if the option does not exist
+     * @return The {@code boolean} value associated with {@code option} if it is a {@code boolean} | {@code false} if the {@code option} does not exist
      */
     public boolean getBoolOption(String option)
     {
@@ -267,7 +280,7 @@ public class CyanLibConfig
     }
 
     /**
-     * @return The {@code int} value associated with {@code option} if it is an {@code int} | {@code 0} if the option does not exist
+     * @return The {@code int} value associated with {@code option} if it is an {@code int} | {@code 0} if the {@code option} does not exist
      */
     public int getIntOption(String option)
     {
