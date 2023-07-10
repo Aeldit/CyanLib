@@ -100,7 +100,17 @@ public class CyanLibConfig
     {
         if (this.options.containsKey(option))
         {
-            this.options.put(option, value);
+            if (isInteger(option))
+            {
+                if (isIntegerRuleValid(option, (Integer) value))
+                {
+                    this.options.put(option, value);
+                }
+            }
+            else
+            {
+                this.options.put(option, value);
+            }
             write();
         }
     }
@@ -223,6 +233,37 @@ public class CyanLibConfig
                         "%s.msg.rule.negativeValue".formatted(cyanLib.getMODID())
                 );
                 return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Same as above but without sending messages to the player
+     */
+    public boolean isIntegerRuleValid(String option, int value)
+    {
+        if (this.rules.containsKey(option))
+        {
+            if (getRule(option).equals(RULES.MAX_VALUE) && (value > getRuleArguments(option)))
+            {
+                return false;
+            }
+            else if (getRule(option).equals(RULES.MIN_VALUE) && (value < getRuleArguments(option)))
+            {
+                return false;
+            }
+            else if (getRule(option).equals(RULES.OP_LEVELS) && (value < 0 || value > 4))
+            {
+                return false;
+            }
+            else if (getRule(option).equals(RULES.POSITIVE_VALUE) && (value < 0))
+            {
+                return false;
+            }
+            else
+            {
+                return !getRule(option).equals(RULES.NEGATIVE_VALUE) || (value <= 0);
             }
         }
         return true;
