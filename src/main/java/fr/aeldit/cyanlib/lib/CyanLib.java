@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.lib;
 
+import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,18 +44,20 @@ public class CyanLib
         this.MODID = modid;
         this.configUtils = configUtils;
 
-        if (this.configUtils.optionExists("useCustomTranslations"))
-        {
-            this.languageUtils = languageUtils;
+        String option = this.configUtils.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS).get(0);
 
-            if (!this.configUtils.getBoolOption("useCustomTranslations"))
-            {
-                this.languageUtils.unload();
-            }
+        if (option.isEmpty())
+        {
+            this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
         }
         else
         {
-            this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
+            this.languageUtils = languageUtils;
+
+            if (!this.configUtils.getBoolOption(option))
+            {
+                this.languageUtils.unload();
+            }
         }
     }
 
@@ -70,17 +73,17 @@ public class CyanLib
 
     public String getMODID()
     {
-        return this.MODID;
+        return MODID;
     }
 
     public CyanLibConfig getConfigUtils()
     {
-        return this.configUtils;
+        return configUtils;
     }
 
     public CyanLibLanguageUtils getLanguageUtils()
     {
-        return this.languageUtils;
+        return languageUtils;
     }
 
     /**

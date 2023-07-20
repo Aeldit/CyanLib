@@ -32,6 +32,19 @@ public class CyanLibClientCore implements ClientModInitializer
             LanguageUtils.loadLanguage(getDefaultTranslations());
         }
 
+        /*KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "cyan.key.openScreen.locations",
+                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C,
+                "category.cyan"
+        ));
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (mainScreenKey.wasPressed())
+            {
+                CyanScreen.open();
+            }
+        });*/
+
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> LibConfigCommands.register(dispatcher));
         LOGGER.info("[CyanLib] Successfully initialized");
     }

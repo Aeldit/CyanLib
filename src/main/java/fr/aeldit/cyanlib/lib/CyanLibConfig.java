@@ -63,6 +63,23 @@ public class CyanLibConfig
             this.options.putAll(defaultOptions);
         }
 
+        for (String option : this.options.keySet())
+        {
+            if (!defaultOptions.containsKey(option))
+            {
+                this.options.remove(option);
+                LOGGER.info("[%s] Removed the option %s from the options because it is no present in the default options".formatted(modid, option));
+            }
+        }
+
+        defaultOptions.forEach((s, o) -> {
+            if (!this.options.containsKey(s))
+            {
+                this.options.put(s, o);
+                LOGGER.info("[%s] Added the option %s from the options because it is no present in the options file".formatted(modid, s));
+            }
+        });
+
         this.rules = null;
     }
 
@@ -89,6 +106,23 @@ public class CyanLibConfig
         {
             this.options.putAll(defaultOptions);
         }
+
+        for (String option : this.options.keySet())
+        {
+            if (!defaultOptions.containsKey(option))
+            {
+                this.options.remove(option);
+                LOGGER.info("[%s] Removed the option %s from the options because it is no present in the default options".formatted(modid, option));
+            }
+        }
+
+        defaultOptions.forEach((s, o) -> {
+            if (!this.options.containsKey(s))
+            {
+                this.options.put(s, o);
+                LOGGER.info("[%s] Added the option %s from the options because it is no present in the options file".formatted(modid, s));
+            }
+        });
 
         this.rules = rules;
     }
@@ -279,6 +313,20 @@ public class CyanLibConfig
             return this.rules.get(option).equals(rule);
         }
         return false;
+    }
+
+    public ArrayList<String> getOptionsWithRule(RULES rule)
+    {
+        ArrayList<String> validOptions = new ArrayList<>(this.rules.size());
+
+        for (Map.Entry<String, Object> entry : this.rules.entrySet())
+        {
+            if (entry.getValue().equals(rule))
+            {
+                validOptions.add(entry.getKey());
+            }
+        }
+        return validOptions;
     }
 
     /**

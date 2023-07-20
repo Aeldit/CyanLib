@@ -1,0 +1,29 @@
+0.3.2 :
+    ✏️ Added :
+    - The possibility to instantiate the CyanLib class without the language utils
+
+    🚧 Fixed :
+    - Some typos in the javadocs
+    - A translation issue
+
+0.3.3 :
+    ✏️ Added :
+    - Rules for options, like a minimum and / or maximum value for the integer options
+
+    🚧 Fixed :
+    - Translation errors + some typos in javadocs
+    - Translation path to get the options descriptions was missing 'getDesc' in CyanLibCommands#getOptionChatConfig()
+
+0.3.5 :
+    ✏️ Added :
+    - The config commands are now instanciated in this library instead of in each mod
+    - The rule `LOAD_CUSTOM_TRANSLATIONS`, which can be held by only 1 option and will tell
+      the mod when to load / unload the custom translations (when this option is changed)
+
+0.3.6 :
+    🚧 Fixed :
+    - If an option file was present (for a mod using this library) and contained options that were not in the default options,
+      they were kept in the options
+    - If an option was in the default options but not in the options file, it was not added to the options
+    - When an option with the rule LOAD_CUSTOM_TRANSLATIONS was not exactly named "useCustomTranslations",
+      the instances were not created correctly and the custom translations were not loaded correctly
