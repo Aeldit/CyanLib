@@ -47,12 +47,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OptionsStorage
 {
     protected String MODID;
-    private final Map<String, RULES> rules;
+    private final Class<?> configClass;
+    private static final ArrayList<String> optionsNames = new ArrayList<>();
 
-    public OptionsStorage(String modid, Map<String, RULES> rules)
+    public OptionsStorage(String modid, Class<?> configClass)
     {
         MODID = modid;
-        this.rules = rules;
+        this.configClass = configClass;
     }
 
     public class BooleanOption implements SimpleOptionConverter
@@ -96,20 +97,87 @@ public class OptionsStorage
         private final String optionName;
         private final int min;
         private final int max;
+        private final RULES rule;
 
+        /**
+         * Use when no rules are given (makes this integer option store just the value)
+         */
         public IntegerOption(String optionName, int value)
         {
             this.optionName = optionName;
             this.min = 0;
             this.max = 4;
+            this.rule = RULES.NONE;
             setIntegerOption(value);
         }
 
-        public IntegerOption(String optionName, int value, int min, int max)
+        /**
+         * Used with :
+         * <ul>
+         *     <li>{@link RULES#POSITIVE_VALUE}</li>
+         *     <li>{@link RULES#NEGATIVE_VALUE}</li>
+         *     <li>{@link RULES#OP_LEVELS}</li>
+         * </ul>
+         */
+        public IntegerOption(String optionName, int value, @NotNull RULES rule)
+        {
+            this.optionName = optionName;
+            if (rule.equals(RULES.OP_LEVELS))
+            {
+                this.min = 0;
+                this.max = 4;
+            }
+            else
+            {
+                this.min = 0;
+                this.max = 0;
+            }
+            this.rule = rule;
+            setIntegerOption(value);
+        }
+
+        /**
+         * Used with :
+         * <ul>
+         *     <li>{@link RULES#MAX_VALUE}</li>
+         *     <li>{@link RULES#MIN_VALUE}</li>
+         * </ul>
+         */
+        public IntegerOption(String optionName, int value, @NotNull RULES rule, int minOrMax)
+        {
+            this.optionName = optionName;
+
+            if (rule.equals(RULES.MIN_VALUE))
+            {
+                this.min = minOrMax;
+                this.max = 0;
+            }
+            else if (rule.equals(RULES.MAX_VALUE))
+            {
+                this.min = 0;
+                this.max = minOrMax;
+            }
+            else
+            {
+                this.min = 0;
+                this.max = 0;
+            }
+            this.rule = rule;
+            setIntegerOption(value);
+        }
+
+        /**
+         * Used with :
+         * <ul>
+         *     <li>{@link RULES#RANGE}</li>
+         * </ul>
+         */
+        public IntegerOption(String optionName, int value, RULES rule, int min, int max)
         {
             this.optionName = optionName;
             this.min = min;
             this.max = max;
+            this.rule = rule;
             setIntegerOption(value);
         }
 
@@ -123,12 +191,21 @@ public class OptionsStorage
             return integerOptions.get(optionName);
         }
 
-        public void setIntegerOption(int value)
+        public boolean setIntegerOption(int value)
         {
-            if (value >= min && value <= max)
+            if (rule.equals(RULES.NONE)
+                    || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
+                    || (rule.equals(RULES.NEGATIVE_VALUE) && value < 0)
+                    || (rule.equals(RULES.OP_LEVELS) && value >= 0 && value <= 4)
+                    || (rule.equals(RULES.MAX_VALUE) && value <= max)
+                    || (rule.equals(RULES.MIN_VALUE) && value >= min)
+                    || (rule.equals(RULES.RANGE) && value >= min && value <= max)
+            )
             {
                 integerOptions.put(optionName, value);
+                return true;
             }
+            return false;
         }
 
         @Override
@@ -189,7 +266,7 @@ public class OptionsStorage
             );
             addDrawableChild(
                     ButtonWidget.builder(Text.translatable("%s.screen.config.save&quit".formatted(MODID)), button -> {
-                                saveConfig(configOptionsClass);
+                                saveConfig();
                                 close();
                             })
                             .dimensions(width / 2 + 4, height - 28, 150, 20)
@@ -232,11 +309,39 @@ public class OptionsStorage
     public void setBooleanOption(String optionName, boolean value)
     {
         booleanOptions.put(optionName, value);
+        saveConfig();
     }
 
-    public void setIntegerOption(String optionName, int value)
+    public boolean setIntegerOption(String optionName, int value)
     {
-        integerOptions.put(optionName, value);
+        for (Field field : configClass.getDeclaredFields())
+        {
+            if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+            {
+                if (IntegerOption.class.isAssignableFrom(field.getType()))
+                {
+                    try
+                    {
+                        IntegerOption integerOption = (IntegerOption) field.get(null);
+
+                        if (integerOption.getOptionName().equals(optionName))
+                        {
+                            if (integerOption.setIntegerOption(value))
+                            {
+                                saveConfig();
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean booleanOptionExists(String optionName)
@@ -263,19 +368,62 @@ public class OptionsStorage
         return false;
     }
 
+    public boolean optionExists(String optionName)
+    {
+        return booleanOptionExists(optionName) || integerOptionExists(optionName);
+    }
+
+    public Object getOption(String optionName)
+    {
+        if (booleanOptions.containsKey(optionName))
+        {
+            return booleanOptions.get(optionName);
+        }
+        else if (integerOptions.containsKey(optionName))
+        {
+            return integerOptions.get(optionName);
+        }
+        return null;
+    }
+
+    public ArrayList<String> getOptionsNames()
+    {
+        if (optionsNames.isEmpty())
+        {
+            optionsNames.addAll(booleanOptions.keySet());
+            optionsNames.addAll(integerOptions.keySet());
+        }
+        return optionsNames;
+    }
+
     public boolean hasRule(String optionName, RULES rule)
     {
-        for (Map.Entry<String, RULES> entry : rules.entrySet())
+        for (Field field : configClass.getDeclaredFields())
         {
-            if (optionName.equals(entry.getKey()) && rule.equals(entry.getValue()))
+            if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
             {
-                return true;
+                if (IntegerOption.class.isAssignableFrom(field.getType()))
+                {
+                    try
+                    {
+                        IntegerOption integerOption = (IntegerOption) field.get(null);
+
+                        if (optionName.equals(integerOption.getOptionName()))
+                        {
+                            return rule.equals(integerOption.rule);
+                        }
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
         return false;
     }
 
-    public void saveConfig(@NotNull Class<?> configClass)
+    public void saveConfig()
     {
         Map<String, Object> config = new HashMap<>();
 
@@ -309,7 +457,6 @@ public class OptionsStorage
                 }
             }
         }
-        System.out.println(config);
 
         Path path = FabricLoader.getInstance().getConfigDir().resolve(MODID + ".json");
 

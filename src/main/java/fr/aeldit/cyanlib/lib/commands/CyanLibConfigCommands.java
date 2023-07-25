@@ -24,9 +24,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import fr.aeldit.cyanlib.lib.CyanLib;
-import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.commands.arguments.ArgumentSuggestion;
-import fr.aeldit.cyanlib.lib.config.OptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.CommandManager;
@@ -61,7 +59,7 @@ public class CyanLibConfigCommands
         dispatcher.register(CommandManager.literal(this.MODID)
                 .then(CommandManager.literal("config")
                         .then(CommandManager.argument("optionName", StringArgumentType.string())
-                                .suggests((context, builder) -> ArgumentSuggestion.getOptions(builder, LibUtils.getConfigUtils()))
+                                .suggests((context, builder) -> ArgumentSuggestion.getOptions(builder, LibUtils.getOptionsStorage()))
                                 .then(CommandManager.literal("set")
                                         .then(CommandManager.argument("booleanValue", BoolArgumentType.bool())
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
@@ -284,20 +282,16 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(source))
         {
-            OptionsStorage config = this.LibUtils.getOptionsStorage();
-
             if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (config.integerOptionExists(option))
+                if (this.LibUtils.getOptionsStorage().integerOptionExists(option))
                 {
                     int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                    if (config.isIntegerRuleValid(option, value, this.LibUtils, source.getPlayer()))
+                    if (this.LibUtils.getOptionsStorage().setIntegerOption(option, value))
                     {
-                        config.setIntegerOption(option, value);
-
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
                             source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(this.MODID));
@@ -306,6 +300,13 @@ public class CyanLibConfigCommands
                         {
                             source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(this.MODID, option));
                         }
+                    }
+                    else
+                    {
+                        this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
+                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "incorrectInteger"),
+                                "%s.msg.incorrectInteger".formatted(this.MODID)
+                        );
                     }
                 }
                 else
@@ -347,35 +348,27 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(source))
         {
-            CyanLibConfig config = this.LibUtils.getConfigUtils();
-
             if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (config.optionExists(option))
+                if (this.LibUtils.getOptionsStorage().integerOptionExists(option))
                 {
-                    if (config.isInteger(option))
+                    int value = IntegerArgumentType.getInteger(context, "integerValue");
+
+                    if (this.LibUtils.getOptionsStorage().setIntegerOption(option, value))
                     {
-                        int value = IntegerArgumentType.getInteger(context, "integerValue");
-
-                        if (config.isIntegerRuleValid(option, value, this.LibUtils, source.getPlayer()))
-                        {
-                            config.setOption(option, value);
-
-                            this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                                    this.LibUtils.getLanguageUtils().getTranslation(SET + option),
-                                    "%s.msg.set.%s".formatted(this.MODID, option),
-                                    Formatting.GOLD + String.valueOf(value)
-                            );
-                        }
+                        this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
+                                this.LibUtils.getLanguageUtils().getTranslation(SET + option),
+                                "%s.msg.set.%s".formatted(this.MODID, option),
+                                Formatting.GOLD + String.valueOf(value)
+                        );
                     }
                     else
                     {
-                        this.LibUtils.getLanguageUtils().sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.wrongType".formatted(this.MODID),
-                                Formatting.YELLOW + "boolean"
+                        this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
+                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "incorrectInteger"),
+                                "%s.msg.incorrectInteger".formatted(this.MODID)
                         );
                     }
                 }
@@ -432,9 +425,10 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (this.LibUtils.getConfigUtils().optionExists(option))
+                if (this.LibUtils.getOptionsStorage().optionExists(option))
                 {
-                    Object value = this.LibUtils.getConfigUtils().getOption(option);
+                    Object value = this.LibUtils.getOptionsStorage().getOption(option);
+                    System.out.println(value);
 
                     this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                             this.LibUtils.getLanguageUtils().getTranslation("dashSeparation"),
@@ -471,7 +465,7 @@ public class CyanLibConfigCommands
                                 Formatting.GOLD + String.valueOf(value)
                         );
 
-                        if (this.LibUtils.getConfigUtils().hasRule(option, RULES.OP_LEVELS))
+                        if (this.LibUtils.getOptionsStorage().hasRule(option, RULES.OP_LEVELS))
                         {
                             this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                                     this.LibUtils.getLanguageUtils().getTranslation("setValue"),
@@ -499,7 +493,10 @@ public class CyanLibConfigCommands
                                             )
                             );
                         }
-                        else if (!this.LibUtils.getConfigUtils().hasRule(option, RULES.MAX_VALUE) && !this.LibUtils.getConfigUtils().hasRule(option, RULES.MIN_VALUE) && !this.LibUtils.getConfigUtils().hasRule(option, RULES.NEGATIVE_VALUE))
+                        else if (!this.LibUtils.getOptionsStorage().hasRule(option, RULES.MAX_VALUE)
+                                && !this.LibUtils.getOptionsStorage().hasRule(option, RULES.MIN_VALUE)
+                                && !this.LibUtils.getOptionsStorage().hasRule(option, RULES.NEGATIVE_VALUE)
+                        )
                         {
                             this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                                     this.LibUtils.getLanguageUtils().getTranslation("setValue"),
@@ -590,9 +587,9 @@ public class CyanLibConfigCommands
                         false
                 );
 
-                for (String option : this.LibUtils.getConfigUtils().getOptions())
+                for (String option : this.LibUtils.getOptionsStorage().getOptionsNames())
                 {
-                    if (this.LibUtils.getConfigUtils().isBoolean(option))
+                    if (this.LibUtils.getOptionsStorage().booleanOptionExists(option))
                     {
                         this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                                 this.LibUtils.getLanguageUtils().getTranslation(GETCFG + option),
@@ -607,13 +604,13 @@ public class CyanLibConfigCommands
                                         )
                         );
                     }
-                    else if (this.LibUtils.getConfigUtils().isInteger(option))
+                    else if (this.LibUtils.getOptionsStorage().integerOptionExists(option))
                     {
                         this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                                 this.LibUtils.getLanguageUtils().getTranslation(GETCFG + option),
                                 "%s.msg.getCfg.%s".formatted(this.MODID, option),
                                 false,
-                                Formatting.GOLD + Integer.toString(this.LibUtils.getConfigUtils().getIntOption(option))
+                                Formatting.GOLD + Integer.toString(this.LibUtils.getOptionsStorage().getIntegerOption(option))
                         );
                     }
                 }

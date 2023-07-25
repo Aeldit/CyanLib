@@ -19,7 +19,7 @@ package fr.aeldit.cyanlib.lib.commands.arguments;
 
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import fr.aeldit.cyanlib.lib.CyanLibConfig;
+import fr.aeldit.cyanlib.lib.config.OptionsStorage;
 import net.minecraft.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +33,9 @@ public final class ArgumentSuggestion
      *
      * @return a suggestion with the available options
      */
-    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder, @NotNull CyanLibConfig libConfig)
+    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder, @NotNull OptionsStorage optionsStorage)
     {
-        return CommandSource.suggestMatching(libConfig.getOptions(), builder);
+        return CommandSource.suggestMatching(optionsStorage.getOptionsNames(), builder);
     }
 
     /**

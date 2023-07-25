@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.core.utils;
 
+import fr.aeldit.cyanlib.core.CoreConfig;
 import fr.aeldit.cyanlib.lib.CyanLib;
 import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
@@ -37,7 +38,7 @@ public class Utils
     private static Map<String, String> defaultTranslations;
 
     public static CyanLibConfig LibConfig = new CyanLibConfig(MODID, getOptions(), getRules());
-    public static OptionsStorage LibOptionsStorage = new OptionsStorage(MODID, getRules());
+    public static OptionsStorage LibOptionsStorage = new OptionsStorage(MODID, CoreConfig.class);
     public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibConfig);
     public static CyanLib LibUtils = new CyanLib(MODID, LibConfig, LanguageUtils, LibOptionsStorage);
     public static CyanLibConfigCommands LibConfigCommands = new CyanLibConfigCommands(MODID, LibUtils, getDefaultTranslations());
@@ -71,7 +72,8 @@ public class Utils
             defaultTranslations = new HashMap<>();
 
             defaultTranslations.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type");
-            defaultTranslations.put("error.wrongType", "§cThis option can only be set to the %s §ctype");
+            defaultTranslations.put("error.optionNotFoundOrWrongInt", "§cThis option does not exist or you tried to set it to an invalid number");
+            defaultTranslations.put("error.incorrectInteger", "§cThe number you entered is invalid for this option");
 
             defaultTranslations.put("currentValue", "§7Current value : %s");
             defaultTranslations.put("setValue", "§7Set value to : %s  %s  %s  %s  %s");
