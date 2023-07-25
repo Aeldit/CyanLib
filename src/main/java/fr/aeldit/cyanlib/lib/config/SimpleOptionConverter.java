@@ -15,18 +15,11 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib.utils;
+package fr.aeldit.cyanlib.lib.config;
 
-/**
- * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option
- */
-public enum RULES
+import net.minecraft.client.option.SimpleOption;
+
+public interface SimpleOptionConverter
 {
-    NONE,
-    MAX_VALUE,
-    MIN_VALUE,
-    OP_LEVELS,
-    POSITIVE_VALUE,
-    NEGATIVE_VALUE,
-    LOAD_CUSTOM_TRANSLATIONS
+    SimpleOption<?> asConfigOption();
 }

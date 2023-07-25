@@ -18,7 +18,11 @@
 package fr.aeldit.cyanlib.core;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 
 import static fr.aeldit.cyanlib.core.utils.Utils.*;
 
@@ -27,21 +31,23 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
+        //CyanConfig.initialize(CoreConfig.class, MODID);
+
         if (LibConfig.getBoolOption("useCustomTranslations"))
         {
             LanguageUtils.loadLanguage(getDefaultTranslations());
         }
 
-        /*KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "cyan.key.openScreen.locations",
                 InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C,
                 "category.cyan"
         ));
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        /*ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (mainScreenKey.wasPressed())
             {
-                CyanScreen.open();
+                CyanLibConfigScreen.open();
             }
         });*/
 

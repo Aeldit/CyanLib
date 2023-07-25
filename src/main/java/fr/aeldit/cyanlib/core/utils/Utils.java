@@ -21,6 +21,7 @@ import fr.aeldit.cyanlib.lib.CyanLib;
 import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
 import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
+import fr.aeldit.cyanlib.lib.config.OptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -36,8 +37,9 @@ public class Utils
     private static Map<String, String> defaultTranslations;
 
     public static CyanLibConfig LibConfig = new CyanLibConfig(MODID, getOptions(), getRules());
+    public static OptionsStorage LibOptionsStorage = new OptionsStorage(MODID, getRules());
     public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibConfig);
-    public static CyanLib LibUtils = new CyanLib(MODID, LibConfig, LanguageUtils);
+    public static CyanLib LibUtils = new CyanLib(MODID, LibConfig, LanguageUtils, LibOptionsStorage);
     public static CyanLibConfigCommands LibConfigCommands = new CyanLibConfigCommands(MODID, LibUtils, getDefaultTranslations());
 
     public static @NotNull Map<String, Object> getOptions()
@@ -52,9 +54,9 @@ public class Utils
         return options;
     }
 
-    public static @NotNull Map<String, Object> getRules()
+    public static @NotNull Map<String, RULES> getRules()
     {
-        Map<String, Object> rules = new HashMap<>();
+        Map<String, RULES> rules = new HashMap<>();
 
         rules.put("useCustomTranslations", RULES.LOAD_CUSTOM_TRANSLATIONS);
         rules.put("minOpLevelExeEditConfig", RULES.OP_LEVELS);
@@ -68,7 +70,7 @@ public class Utils
         {
             defaultTranslations = new HashMap<>();
 
-            defaultTranslations.put("error.optionNotFound", "§cThis option does not exist");
+            defaultTranslations.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type");
             defaultTranslations.put("error.wrongType", "§cThis option can only be set to the %s §ctype");
 
             defaultTranslations.put("currentValue", "§7Current value : %s");

@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.lib;
 
+import fr.aeldit.cyanlib.lib.config.OptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
@@ -30,6 +31,7 @@ public class CyanLib
 {
     private final String MODID;
     private final CyanLibConfig configUtils;
+    private final OptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
 
     /**
@@ -39,10 +41,11 @@ public class CyanLib
      * @param configUtils   The instance of {@link CyanLibConfig}
      * @param languageUtils The instance of {@link CyanLibLanguageUtils}
      */
-    public CyanLib(String modid, CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils)
+    public CyanLib(String modid, CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils, OptionsStorage optionsStorage)
     {
         this.MODID = modid;
         this.configUtils = configUtils;
+        this.optionsStorage = optionsStorage;
 
         String option = this.configUtils.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS).get(0);
 
@@ -68,6 +71,7 @@ public class CyanLib
     {
         this.MODID = modid;
         this.configUtils = configUtils;
+        this.optionsStorage = new OptionsStorage(MODID, null);
         this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
     }
 
@@ -81,9 +85,9 @@ public class CyanLib
         return configUtils;
     }
 
-    public CyanLibLanguageUtils getLanguageUtils()
+    public OptionsStorage getOptionsStorage()
     {
-        return languageUtils;
+        return optionsStorage;
     }
 
     /**
@@ -110,6 +114,11 @@ public class CyanLib
             return false;
         }
         return true;
+    }
+
+    public CyanLibLanguageUtils getLanguageUtils()
+    {
+        return languageUtils;
     }
 
     /**

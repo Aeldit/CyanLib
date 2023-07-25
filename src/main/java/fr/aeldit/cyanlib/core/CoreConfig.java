@@ -15,18 +15,15 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib.utils;
+package fr.aeldit.cyanlib.core;
 
-/**
- * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option
- */
-public enum RULES
+import fr.aeldit.cyanlib.lib.config.OptionsStorage;
+
+import static fr.aeldit.cyanlib.core.utils.Utils.LibOptionsStorage;
+
+public class CoreConfig
 {
-    NONE,
-    MAX_VALUE,
-    MIN_VALUE,
-    OP_LEVELS,
-    POSITIVE_VALUE,
-    NEGATIVE_VALUE,
-    LOAD_CUSTOM_TRANSLATIONS
+    public static final OptionsStorage.BooleanOption USE_CUSTOM_TRANSLATIONS = LibOptionsStorage.new BooleanOption("useCustomTranslations", false);
+    public static final OptionsStorage.BooleanOption MSG_TO_ACTION_BAR = LibOptionsStorage.new BooleanOption("msgToActionBar", true);
+    public static final OptionsStorage.IntegerOption MIN_OP_LVL_EDIT_CONFIG = LibOptionsStorage.new IntegerOption("minOpLvlEditConfig", 4);
 }

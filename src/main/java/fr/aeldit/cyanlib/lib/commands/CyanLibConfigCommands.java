@@ -26,6 +26,7 @@ import com.mojang.brigadier.context.CommandContext;
 import fr.aeldit.cyanlib.lib.CyanLib;
 import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.commands.arguments.ArgumentSuggestion;
+import fr.aeldit.cyanlib.lib.config.OptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.CommandManager;
@@ -104,7 +105,7 @@ public class CyanLibConfigCommands
     {
         if (this.LibUtils.isPlayer(context.getSource()))
         {
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), this.LibUtils.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 this.LibUtils.getLanguageUtils().loadLanguage(defaultTranslations);
 
@@ -146,45 +147,34 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(source))
         {
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), this.LibUtils.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (this.LibUtils.getConfigUtils().optionExists(option))
+                if (this.LibUtils.getOptionsStorage().booleanOptionExists(option))
                 {
-                    if (this.LibUtils.getConfigUtils().isBoolean(option))
+                    boolean value = BoolArgumentType.getBool(context, "booleanValue");
+                    this.LibUtils.getOptionsStorage().setBooleanOption(option, value);
+
+                    if (this.LibUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
                     {
-                        boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                        this.LibUtils.getConfigUtils().setOption(option, value);
-
-                        if (this.LibUtils.getConfigUtils().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
+                        if (value)
                         {
-                            if (value)
-                            {
-                                this.LibUtils.getLanguageUtils().loadLanguage(defaultTranslations);
-                            }
-                            else
-                            {
-                                this.LibUtils.getLanguageUtils().unload();
-                            }
-                        }
-
-                        if (BoolArgumentType.getBool(context, "mode"))
-                        {
-                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(this.MODID));
+                            this.LibUtils.getLanguageUtils().loadLanguage(defaultTranslations);
                         }
                         else
                         {
-                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(this.MODID, option));
+                            this.LibUtils.getLanguageUtils().unload();
                         }
+                    }
+
+                    if (BoolArgumentType.getBool(context, "mode"))
+                    {
+                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(this.MODID));
                     }
                     else
                     {
-                        this.LibUtils.getLanguageUtils().sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.wrongType".formatted(this.MODID),
-                                Formatting.YELLOW + "integer"
-                        );
+                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(this.MODID, option));
                     }
                 }
                 else
@@ -226,43 +216,32 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(source))
         {
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), this.LibUtils.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (this.LibUtils.getConfigUtils().optionExists(option))
+                if (this.LibUtils.getOptionsStorage().booleanOptionExists(option))
                 {
-                    if (this.LibUtils.getConfigUtils().isBoolean(option))
-                    {
-                        boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                        this.LibUtils.getConfigUtils().setOption(option, value);
+                    boolean value = BoolArgumentType.getBool(context, "booleanValue");
+                    this.LibUtils.getOptionsStorage().setBooleanOption(option, value);
 
-                        if (this.LibUtils.getConfigUtils().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
+                    if (this.LibUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
+                    {
+                        if (value)
                         {
-                            if (value)
-                            {
-                                this.LibUtils.getLanguageUtils().loadLanguage(defaultTranslations);
-                            }
-                            else
-                            {
-                                this.LibUtils.getLanguageUtils().unload();
-                            }
+                            this.LibUtils.getLanguageUtils().loadLanguage(defaultTranslations);
                         }
+                        else
+                        {
+                            this.LibUtils.getLanguageUtils().unload();
+                        }
+                    }
 
-                        this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                                this.LibUtils.getLanguageUtils().getTranslation(SET + option),
-                                "%s.msg.set.%s".formatted(this.MODID, option),
-                                value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
-                        );
-                    }
-                    else
-                    {
-                        this.LibUtils.getLanguageUtils().sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.wrongType".formatted(this.MODID),
-                                Formatting.YELLOW + "integer"
-                        );
-                    }
+                    this.LibUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
+                            this.LibUtils.getLanguageUtils().getTranslation(SET + option),
+                            "%s.msg.set.%s".formatted(this.MODID, option),
+                            value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
+                    );
                 }
                 else
                 {
@@ -305,39 +284,28 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(source))
         {
-            CyanLibConfig config = this.LibUtils.getConfigUtils();
+            OptionsStorage config = this.LibUtils.getOptionsStorage();
 
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), config.getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (config.optionExists(option))
+                if (config.integerOptionExists(option))
                 {
-                    if (config.isInteger(option))
-                    {
-                        int value = IntegerArgumentType.getInteger(context, "integerValue");
+                    int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                        if (config.isIntegerRuleValid(option, value, this.LibUtils, source.getPlayer()))
+                    if (config.isIntegerRuleValid(option, value, this.LibUtils, source.getPlayer()))
+                    {
+                        config.setIntegerOption(option, value);
+
+                        if (BoolArgumentType.getBool(context, "mode"))
                         {
-                            config.setOption(option, value);
-
-                            if (BoolArgumentType.getBool(context, "mode"))
-                            {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(this.MODID));
-                            }
-                            else
-                            {
-                                source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(this.MODID, option));
-                            }
+                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(this.MODID));
                         }
-                    }
-                    else
-                    {
-                        this.LibUtils.getLanguageUtils().sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                                this.LibUtils.getLanguageUtils().getTranslation(ERROR + "wrongType"),
-                                "%s.msg.wrongType".formatted(this.MODID),
-                                Formatting.YELLOW + "boolean"
-                        );
+                        else
+                        {
+                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(this.MODID, option));
+                        }
                     }
                 }
                 else
@@ -381,7 +349,7 @@ public class CyanLibConfigCommands
         {
             CyanLibConfig config = this.LibUtils.getConfigUtils();
 
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), config.getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -460,7 +428,7 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(context.getSource()))
         {
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(player), this.LibUtils.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(player), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -609,7 +577,7 @@ public class CyanLibConfigCommands
 
         if (this.LibUtils.isPlayer(context.getSource()))
         {
-            if (this.LibUtils.hasPermission(Objects.requireNonNull(player), this.LibUtils.getConfigUtils().getIntOption("minOpLevelExeEditConfig")))
+            if (this.LibUtils.hasPermission(Objects.requireNonNull(player), LibUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
                 this.LibUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                         this.LibUtils.getLanguageUtils().getTranslation("dashSeparation"),

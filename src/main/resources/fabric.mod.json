@@ -21,6 +21,9 @@
     ],
     "server": [
       "fr.aeldit.cyanlib.core.CyanLibServerCore"
+    ],
+    "modmenu": [
+      "fr.aeldit.cyanlib.core.gui.ModMenuApiImpl"
     ]
   },
   "depends": {

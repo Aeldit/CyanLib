@@ -3,7 +3,7 @@
   "language.region": "United States",
   "language.code": "en_us",
   "----------------------------------------------------ERRORS-----------------------------------------------------": "",
-  "cyanlib.msg.optionNotFound": "§cThis option does not exist",
+  "cyanlib.msg.optionNotFound": "§cThis option does not exist or you tried to set it to the wrong type",
   "cyanlib.msg.wrongType": "§cThis option can only be set to the %s §ctype",
   "cyanlib.msg.rule.opLevels": "§cThe OP level must be between 0 and 4 (both included)",
   "---------------------------------------------------MESSAGES----------------------------------------------------": "",
@@ -24,5 +24,11 @@
   "cyanlib.msg.getCfg.header": "§6CyanLib - OPTIONS\n",
   "cyanlib.msg.getCfg.useCustomTranslations": "§6- §3Use custom translations : %s",
   "cyanlib.msg.getCfg.msgToActionBar": "§6- §3Messages to action bar : %s",
-  "cyanlib.msg.getCfg.minOpLevelExeEditConfig": "§6- §3Minimum OP level required to edit the config : %s"
+  "cyanlib.msg.getCfg.minOpLevelExeEditConfig": "§6- §3Minimum OP level required to edit the config : %s",
+  "----------------------------------------------------SCREENS----------------------------------------------------": "",
+  "cyanlib.screen.options.title": "CyanLib Options",
+  "cyanlib.screen.config.save&quit": "Save & Quit",
+  "cyanlib.config.option.useCustomTranslations": "UseCustomTranslations",
+  "cyanlib.config.option.msgToActionBar": "MsgToActionBar",
+  "cyanlib.config.option.minOpLvlEditConfig": "MinOpLvlEditConfig"
 }

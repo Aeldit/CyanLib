@@ -32,7 +32,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,8 +42,8 @@ import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.RULE;
 public class CyanLibConfig
 {
     private final Path path;
-    private final ConcurrentHashMap<String, Object> options = new ConcurrentHashMap<>();
-    private final Map<String, Object> rules;
+    protected final ConcurrentHashMap<String, Object> options = new ConcurrentHashMap<>();
+    private final Map<String, RULES> rules;
     private boolean isEditing = false;
 
     /**
@@ -97,7 +96,7 @@ public class CyanLibConfig
      * @param defaultOptions The default options to use if the options file doesn't exist
      * @param rules          The rules that take effect on some options
      */
-    public CyanLibConfig(String modid, Map<String, Object> defaultOptions, Map<String, Object> rules)
+    public CyanLibConfig(String modid, Map<String, Object> defaultOptions, Map<String, RULES> rules)
     {
         this.path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
         read();
@@ -172,11 +171,7 @@ public class CyanLibConfig
      */
     public RULES getRule(String option)
     {
-        if (this.rules.get(option) instanceof List<?>)
-        {
-            return (RULES) ((List<?>) this.rules.get(option)).get(0);
-        }
-        return (RULES) this.rules.get(option);
+        return this.rules.get(option);
     }
 
     /**
@@ -196,10 +191,6 @@ public class CyanLibConfig
      */
     public int getRuleArguments(String option)
     {
-        if (this.rules.get(option) instanceof List<?>)
-        {
-            return (Integer) ((List<?>) this.rules.get(option)).get(1);
-        }
         return 0;
     }
 
@@ -319,7 +310,7 @@ public class CyanLibConfig
     {
         ArrayList<String> validOptions = new ArrayList<>(this.rules.size());
 
-        for (Map.Entry<String, Object> entry : this.rules.entrySet())
+        for (Map.Entry<String, RULES> entry : this.rules.entrySet())
         {
             if (entry.getValue().equals(rule))
             {

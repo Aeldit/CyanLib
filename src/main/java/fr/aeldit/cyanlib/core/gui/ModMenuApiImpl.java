@@ -15,18 +15,19 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib.utils;
+package fr.aeldit.cyanlib.core.gui;
 
-/**
- * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option
- */
-public enum RULES
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import fr.aeldit.cyanlib.core.CoreConfig;
+
+import static fr.aeldit.cyanlib.core.utils.Utils.LibOptionsStorage;
+
+public class ModMenuApiImpl implements ModMenuApi
 {
-    NONE,
-    MAX_VALUE,
-    MIN_VALUE,
-    OP_LEVELS,
-    POSITIVE_VALUE,
-    NEGATIVE_VALUE,
-    LOAD_CUSTOM_TRANSLATIONS
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory()
+    {
+        return parent -> LibOptionsStorage.new CyanLibConfigScreen(parent, CoreConfig.class);
+    }
 }
