@@ -21,13 +21,13 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import fr.aeldit.cyanlib.core.CoreConfig;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.LibOptionsStorage;
+import static fr.aeldit.cyanlib.core.utils.Utils.OPTIONS_STORAGE;
 
 public class ModMenuApiImpl implements ModMenuApi
 {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory()
     {
-        return parent -> LibOptionsStorage.new CyanLibConfigScreen(parent, CoreConfig.class);
+        return parent -> OPTIONS_STORAGE.new CyanLibConfigScreen(parent, CoreConfig.class);
     }
 }

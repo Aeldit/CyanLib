@@ -26,6 +26,8 @@
   "cyanlib.msg.getCfg.msgToActionBar": "§6- §3Messages to action bar : %s",
   "cyanlib.msg.getCfg.minOpLvlEditConfig": "§6- §3Minimum OP level required to edit the config : %s",
   "----------------------------------------------------SCREENS----------------------------------------------------": "",
+  "cyanlib.keybindings.category": "CyanLib",
+  "cyanlib.keybindings.openScreen.config": "Config Screen",
   "cyanlib.screen.options.title": "CyanLib Options",
   "cyanlib.screen.config.save&quit": "Save & Quit",
   "cyanlib.screen.config.reset": "Reset",

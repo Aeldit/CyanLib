@@ -27,12 +27,12 @@ public class CyanLibServerCore implements DedicatedServerModInitializer
     @Override
     public void onInitializeServer()
     {
-        if (LibOptionsStorage.getBooleanOption("useCustomTranslations"))
+        if (OPTIONS_STORAGE.getBooleanOption("useCustomTranslations"))
         {
-            LanguageUtils.loadLanguage(getDefaultTranslations());
+            LANGUAGE_UTILS.loadLanguage(getDefaultTranslations());
         }
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> LibConfigCommands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
         LOGGER.info("[CyanLib] Successfully initialized");
     }
 }

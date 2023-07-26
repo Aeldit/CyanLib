@@ -18,6 +18,7 @@
 package fr.aeldit.cyanlib.core;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.option.KeyBinding;
@@ -31,27 +32,27 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LibUtils.init();
+        LIB_UTILS.init();
 
-        if (LibOptionsStorage.getBooleanOption("useCustomTranslations"))
+        if (OPTIONS_STORAGE.getBooleanOption("useCustomTranslations"))
         {
-            LanguageUtils.loadLanguage(getDefaultTranslations());
+            LANGUAGE_UTILS.loadLanguage(getDefaultTranslations());
         }
 
         KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "cyan.key.openScreen.locations",
+                "cyanlib.keybindings.openScreen.config",
                 InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C,
-                "category.cyan"
+                "cyanlib.keybindings.category"
         ));
 
-        /*ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (mainScreenKey.wasPressed())
             {
-                CyanLibConfigScreen.open();
+                client.setScreen(OPTIONS_STORAGE.new CyanLibConfigScreen(null, CoreConfig.class));
             }
-        });*/
+        });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> LibConfigCommands.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
         LOGGER.info("[CyanLib] Successfully initialized");
     }
 }

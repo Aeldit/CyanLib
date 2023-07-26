@@ -33,44 +33,44 @@ public class Utils
 {
     public static final String MODID = "cyanlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-    private static Map<String, String> defaultTranslations;
+    private static Map<String, String> DEFAULT_TRANSLATIONS;
 
-    public static CyanLibOptionsStorage LibOptionsStorage = new CyanLibOptionsStorage(MODID, CoreConfig.class);
-    public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibOptionsStorage);
-    public static CyanLib LibUtils = new CyanLib(MODID, LibOptionsStorage, LanguageUtils);
-    public static CyanLibConfigCommands LibConfigCommands = new CyanLibConfigCommands(MODID, LibUtils, getDefaultTranslations());
+    public static CyanLibOptionsStorage OPTIONS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
+    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, OPTIONS_STORAGE);
+    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTIONS_STORAGE, LANGUAGE_UTILS);
+    public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS, getDefaultTranslations());
 
     public static @NotNull Map<String, String> getDefaultTranslations()
     {
-        if (defaultTranslations == null)
+        if (DEFAULT_TRANSLATIONS == null)
         {
-            defaultTranslations = new HashMap<>();
+            DEFAULT_TRANSLATIONS = new HashMap<>();
 
-            defaultTranslations.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type");
-            defaultTranslations.put("error.optionNotFoundOrWrongInt", "§cThis option does not exist or you tried to set it to an invalid number");
-            defaultTranslations.put("error.incorrectInteger", "§cThe number you entered is invalid for this option");
+            DEFAULT_TRANSLATIONS.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type");
+            DEFAULT_TRANSLATIONS.put("error.optionNotFoundOrWrongInt", "§cThis option does not exist or you tried to set it to an invalid number");
+            DEFAULT_TRANSLATIONS.put("error.incorrectInteger", "§cThe number you entered is invalid for this option");
 
-            defaultTranslations.put("currentValue", "§7Current value : %s");
-            defaultTranslations.put("setValue", "§7Set value to : %s  %s  %s  %s  %s");
-            defaultTranslations.put("translationsReloaded", "§3Custom translations have been reloaded");
+            DEFAULT_TRANSLATIONS.put("currentValue", "§7Current value : %s");
+            DEFAULT_TRANSLATIONS.put("setValue", "§7Set value to : %s  %s  %s  %s  %s");
+            DEFAULT_TRANSLATIONS.put("translationsReloaded", "§3Custom translations have been reloaded");
 
-            defaultTranslations.put("set.useCustomTranslations", "§3Toggled custom translations %s");
-            defaultTranslations.put("set.msgToActionBar", "§3Toggled messages to action bar %s");
-            defaultTranslations.put("set.minOpLevelExeEditConfig", "§3The minimum OP level to edit the config is now %s");
+            DEFAULT_TRANSLATIONS.put("set.useCustomTranslations", "§3Toggled custom translations %s");
+            DEFAULT_TRANSLATIONS.put("set.msgToActionBar", "§3Toggled messages to action bar %s");
+            DEFAULT_TRANSLATIONS.put("set.minOpLevelExeEditConfig", "§3The minimum OP level to edit the config is now %s");
 
-            defaultTranslations.put("dashSeparation", "§6------------------------------------");
-            defaultTranslations.put("headerDescCmd", "§6CyanLib - DESCRIPTION (commands)\n");
-            defaultTranslations.put("headerDescOptions", "§6CyanLib - DESCRIPTION (options) :\n");
+            DEFAULT_TRANSLATIONS.put("dashSeparation", "§6------------------------------------");
+            DEFAULT_TRANSLATIONS.put("headerDescCmd", "§6CyanLib - DESCRIPTION (commands)\n");
+            DEFAULT_TRANSLATIONS.put("headerDescOptions", "§6CyanLib - DESCRIPTION (options) :\n");
 
-            defaultTranslations.put("desc.useCustomTranslations", "§3The §duseCustomTranslations §3option defines whether the custom translation will be used or not");
-            defaultTranslations.put("desc.msgToActionBar", "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar or not");
-            defaultTranslations.put("desc.minOpLevelExeEditConfig", "§3The §dminOpLevelExeEditConfig §3option defines the OP level required to edit the config");
+            DEFAULT_TRANSLATIONS.put("desc.useCustomTranslations", "§3The §duseCustomTranslations §3option defines whether the custom translation will be used or not");
+            DEFAULT_TRANSLATIONS.put("desc.msgToActionBar", "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar or not");
+            DEFAULT_TRANSLATIONS.put("desc.minOpLevelExeEditConfig", "§3The §dminOpLevelExeEditConfig §3option defines the OP level required to edit the config");
 
-            defaultTranslations.put("getCfg.header", "§6CyanLib - OPTIONS\n");
-            defaultTranslations.put("getCfg.useCustomTranslations", "§6- §3Use custom translations : %s");
-            defaultTranslations.put("getCfg.msgToActionBar", "§6- §3Messages to action bar : %s");
-            defaultTranslations.put("getCfg.minOpLevelExeEditConfig", "§6- §3Minimum OP level required to edit the config : %s");
+            DEFAULT_TRANSLATIONS.put("getCfg.header", "§6CyanLib - OPTIONS\n");
+            DEFAULT_TRANSLATIONS.put("getCfg.useCustomTranslations", "§6- §3Use custom translations : %s");
+            DEFAULT_TRANSLATIONS.put("getCfg.msgToActionBar", "§6- §3Messages to action bar : %s");
+            DEFAULT_TRANSLATIONS.put("getCfg.minOpLevelExeEditConfig", "§6- §3Minimum OP level required to edit the config : %s");
         }
-        return defaultTranslations;
+        return DEFAULT_TRANSLATIONS;
     }
 }
