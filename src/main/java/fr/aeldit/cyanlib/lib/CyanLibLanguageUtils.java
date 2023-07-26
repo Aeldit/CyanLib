@@ -19,6 +19,7 @@ package fr.aeldit.cyanlib.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -31,18 +32,16 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.LibConfig;
-
 public class CyanLibLanguageUtils
 {
     private final String MODID;
-    private final CyanLibConfig libConfig;
+    private final CyanLibOptionsStorage optionsStorage;
     private Map<String, String> translations;
 
-    public CyanLibLanguageUtils(String modid, CyanLibConfig libConfig)
+    public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage)
     {
         this.MODID = modid;
-        this.libConfig = libConfig;
+        this.optionsStorage = optionsStorage;
     }
 
     /**
@@ -52,7 +51,7 @@ public class CyanLibLanguageUtils
      */
     public void loadLanguage(Map<String, String> defaultTranslations)
     {
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.json");
+        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(MODID + "/translations.json");
 
         if (this.translations == null)
         {
@@ -115,13 +114,13 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (this.libConfig.getBoolOption("useCustomTranslations"))
+        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
         {
-            player.sendMessage(Text.translatable(msg, args), LibConfig.getBoolOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(msg, args), this.optionsStorage.getBooleanOption("msgToActionBar"));
         }
         else
         {
-            player.sendMessage(Text.translatable(tradPath, args), LibConfig.getBoolOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(tradPath, args), this.optionsStorage.getBooleanOption("msgToActionBar"));
         }
     }
 
@@ -144,7 +143,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (this.libConfig.getBoolOption("useCustomTranslations"))
+        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }

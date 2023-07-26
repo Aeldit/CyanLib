@@ -28,6 +28,8 @@
   "----------------------------------------------------SCREENS----------------------------------------------------": "",
   "cyanlib.screen.options.title": "CyanLib Options",
   "cyanlib.screen.config.save&quit": "Save & Quit",
+  "cyanlib.screen.config.reset": "Reset",
+  "cyanlib.screen.config.reset.tooltip": "Reset the options and close the screen",
   "cyanlib.config.option.useCustomTranslations": "UseCustomTranslations",
   "cyanlib.config.option.msgToActionBar": "MsgToActionBar",
   "cyanlib.config.option.minOpLvlEditConfig": "MinOpLvlEditConfig"

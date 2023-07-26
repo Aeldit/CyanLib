@@ -19,11 +19,9 @@ package fr.aeldit.cyanlib.core.utils;
 
 import fr.aeldit.cyanlib.core.CoreConfig;
 import fr.aeldit.cyanlib.lib.CyanLib;
-import fr.aeldit.cyanlib.lib.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
 import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
-import fr.aeldit.cyanlib.lib.config.OptionsStorage;
-import fr.aeldit.cyanlib.lib.utils.RULES;
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,36 +32,13 @@ import java.util.Map;
 public class Utils
 {
     public static final String MODID = "cyanlib";
-    public static Logger LOGGER = LoggerFactory.getLogger(MODID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     private static Map<String, String> defaultTranslations;
 
-    public static CyanLibConfig LibConfig = new CyanLibConfig(MODID, getOptions(), getRules());
-    public static OptionsStorage LibOptionsStorage = new OptionsStorage(MODID, CoreConfig.class);
-    public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibConfig);
-    public static CyanLib LibUtils = new CyanLib(MODID, LibConfig, LanguageUtils, LibOptionsStorage);
+    public static CyanLibOptionsStorage LibOptionsStorage = new CyanLibOptionsStorage(MODID, CoreConfig.class);
+    public static CyanLibLanguageUtils LanguageUtils = new CyanLibLanguageUtils(MODID, LibOptionsStorage);
+    public static CyanLib LibUtils = new CyanLib(MODID, LibOptionsStorage, LanguageUtils);
     public static CyanLibConfigCommands LibConfigCommands = new CyanLibConfigCommands(MODID, LibUtils, getDefaultTranslations());
-
-    public static @NotNull Map<String, Object> getOptions()
-    {
-        Map<String, Object> options = new HashMap<>();
-
-        options.put("useCustomTranslations", false);
-        options.put("msgToActionBar", true);
-
-        options.put("minOpLevelExeEditConfig", 4);
-
-        return options;
-    }
-
-    public static @NotNull Map<String, RULES> getRules()
-    {
-        Map<String, RULES> rules = new HashMap<>();
-
-        rules.put("useCustomTranslations", RULES.LOAD_CUSTOM_TRANSLATIONS);
-        rules.put("minOpLevelExeEditConfig", RULES.OP_LEVELS);
-
-        return rules;
-    }
 
     public static @NotNull Map<String, String> getDefaultTranslations()
     {

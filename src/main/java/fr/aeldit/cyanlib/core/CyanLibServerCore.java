@@ -27,7 +27,7 @@ public class CyanLibServerCore implements DedicatedServerModInitializer
     @Override
     public void onInitializeServer()
     {
-        if (LibConfig.getBoolOption("useCustomTranslations"))
+        if (LibOptionsStorage.getBooleanOption("useCustomTranslations"))
         {
             LanguageUtils.loadLanguage(getDefaultTranslations());
         }

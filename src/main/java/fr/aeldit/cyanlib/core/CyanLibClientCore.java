@@ -31,9 +31,9 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        //CyanConfig.initialize(CoreConfig.class, MODID);
+        LibUtils.init();
 
-        if (LibConfig.getBoolOption("useCustomTranslations"))
+        if (LibOptionsStorage.getBooleanOption("useCustomTranslations"))
         {
             LanguageUtils.loadLanguage(getDefaultTranslations());
         }

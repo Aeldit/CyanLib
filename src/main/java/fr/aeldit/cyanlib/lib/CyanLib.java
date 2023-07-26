@@ -17,7 +17,7 @@
 
 package fr.aeldit.cyanlib.lib;
 
-import fr.aeldit.cyanlib.lib.config.OptionsStorage;
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
@@ -25,67 +25,60 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
 public class CyanLib
 {
-    private final String MODID;
-    private final CyanLibConfig configUtils;
-    private final OptionsStorage optionsStorage;
+    private final String modid;
+    private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
 
     /**
      * Main class of this library
      *
-     * @param modid         The modid of your mod
-     * @param configUtils   The instance of {@link CyanLibConfig}
-     * @param languageUtils The instance of {@link CyanLibLanguageUtils}
+     * @param modid          The modid of your mod
+     * @param optionsStorage The instance of {@link CyanLibOptionsStorage}
+     * @param languageUtils  The instance of {@link CyanLibLanguageUtils}
      */
-    public CyanLib(String modid, CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils, OptionsStorage optionsStorage)
+    public CyanLib(String modid, @NotNull CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
     {
-        this.MODID = modid;
-        this.configUtils = configUtils;
+        this.modid = modid;
         this.optionsStorage = optionsStorage;
+        this.languageUtils = languageUtils;
+    }
 
-        String option = this.configUtils.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS).get(0);
+    /**
+     * Main class of this library but without the language utils
+     */
+    public CyanLib(String modid, CyanLibOptionsStorage optionsStorage)
+    {
+        this.modid = modid;
+        this.optionsStorage = optionsStorage;
+        this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage);
+    }
 
-        if (option.isEmpty())
+    public void init()
+    {
+        optionsStorage.init();
+        ArrayList<String> option = optionsStorage.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
+
+        if (!option.isEmpty())
         {
-            this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
-        }
-        else
-        {
-            this.languageUtils = languageUtils;
-
-            if (!this.configUtils.getBoolOption(option))
+            if (!optionsStorage.getBooleanOption(option.get(0)))
             {
                 this.languageUtils.unload();
             }
         }
     }
 
-    /**
-     * Main class of this library but without the language utils
-     */
-    public CyanLib(String modid, CyanLibConfig configUtils)
+    public String getModid()
     {
-        this.MODID = modid;
-        this.configUtils = configUtils;
-        this.optionsStorage = new OptionsStorage(MODID, null);
-        this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
+        return modid;
     }
 
-    public String getMODID()
-    {
-        return MODID;
-    }
-
-    public CyanLibConfig getConfigUtils()
-    {
-        return configUtils;
-    }
-
-    public OptionsStorage getOptionsStorage()
+    public CyanLibOptionsStorage getOptionsStorage()
     {
         return optionsStorage;
     }
@@ -103,7 +96,7 @@ public class CyanLib
     {
         if (source.getPlayer() == null)
         {
-            if (this.configUtils.getBoolOption("useCustomTranslations"))
+            if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
             {
                 source.getServer().sendMessage(Text.of(this.languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
             }
@@ -142,7 +135,7 @@ public class CyanLib
         {
             this.languageUtils.sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + "notOp"),
-                    "%s.msg.notOp".formatted(this.MODID)
+                    "%s.msg.notOp".formatted(this.modid)
             );
             return false;
         }
@@ -163,7 +156,7 @@ public class CyanLib
         {
             this.languageUtils.sendPlayerMessage(player,
                     this.languageUtils.getTranslation(ERROR + msgPath),
-                    "%s.msg.%s".formatted(this.MODID, msgPath)
+                    "%s.msg.%s".formatted(this.modid, msgPath)
             );
             return false;
         }
