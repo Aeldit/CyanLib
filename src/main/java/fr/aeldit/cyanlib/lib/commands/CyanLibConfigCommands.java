@@ -36,7 +36,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.*;
@@ -45,13 +44,11 @@ public class CyanLibConfigCommands
 {
     private final String modid;
     private final CyanLib libUtils;
-    private final Map<String, String> defaultTranslations;
 
-    public CyanLibConfigCommands(String modid, CyanLib libUtils, Map<String, String> defaultTranslations)
+    public CyanLibConfigCommands(String modid, CyanLib libUtils)
     {
         this.modid = modid;
         this.libUtils = libUtils;
-        this.defaultTranslations = defaultTranslations;
     }
 
     public void register(@NotNull CommandDispatcher<ServerCommandSource> dispatcher)
@@ -105,7 +102,7 @@ public class CyanLibConfigCommands
         {
             if (this.libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
             {
-                this.libUtils.getLanguageUtils().loadLanguage(defaultTranslations);
+                this.libUtils.getLanguageUtils().loadLanguage();
 
                 this.libUtils.getLanguageUtils().sendPlayerMessage(context.getSource().getPlayer(),
                         this.libUtils.getLanguageUtils().getTranslation("translationsReloaded"),
@@ -158,7 +155,7 @@ public class CyanLibConfigCommands
                     {
                         if (value)
                         {
-                            this.libUtils.getLanguageUtils().loadLanguage(defaultTranslations);
+                            this.libUtils.getLanguageUtils().loadLanguage();
                         }
                         else
                         {
@@ -227,7 +224,7 @@ public class CyanLibConfigCommands
                     {
                         if (value)
                         {
-                            this.libUtils.getLanguageUtils().loadLanguage(defaultTranslations);
+                            this.libUtils.getLanguageUtils().loadLanguage();
                         }
                         else
                         {

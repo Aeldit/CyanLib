@@ -15,19 +15,25 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core.gui;
+package fr.aeldit.cyanlib.lib.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import fr.aeldit.cyanlib.core.CoreConfig;
-
-import static fr.aeldit.cyanlib.core.utils.Utils.OPTIONS_STORAGE;
 
 public class ModMenuApiImpl implements ModMenuApi
 {
+    private final Class<?> configClass;
+    private final CyanLibOptionsStorage optionsStorage;
+
+    public ModMenuApiImpl(Class<?> configClass, CyanLibOptionsStorage optionsStorage)
+    {
+        this.configClass = configClass;
+        this.optionsStorage = optionsStorage;
+    }
+
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory()
     {
-        return parent -> OPTIONS_STORAGE.new CyanLibConfigScreen(parent, CoreConfig.class);
+        return parent -> optionsStorage.new CyanLibConfigScreen(parent, configClass);
     }
 }

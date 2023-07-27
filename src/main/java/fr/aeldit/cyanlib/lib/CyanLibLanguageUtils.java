@@ -37,11 +37,13 @@ public class CyanLibLanguageUtils
     private final String MODID;
     private final CyanLibOptionsStorage optionsStorage;
     private Map<String, String> translations;
+    private final Map<String, String> defaultTranslations;
 
-    public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage)
+    public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage, Map<String, String> defaultTranslations)
     {
         this.MODID = modid;
         this.optionsStorage = optionsStorage;
+        this.defaultTranslations = defaultTranslations;
     }
 
     /**
@@ -49,18 +51,18 @@ public class CyanLibLanguageUtils
      *
      * @param defaultTranslations The default translations if the file does not exist
      */
-    public void loadLanguage(Map<String, String> defaultTranslations)
+    public void loadLanguage()
     {
         Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(MODID + "/translations.json");
 
-        if (this.translations == null)
+        if (translations == null)
         {
-            this.translations = new HashMap<>();
+            translations = new HashMap<>();
         }
 
         if (!Files.exists(languagePath))
         {
-            this.translations = defaultTranslations;
+            translations = defaultTranslations;
         }
         else
         {
@@ -69,7 +71,7 @@ public class CyanLibLanguageUtils
                 Gson gsonReader = new Gson();
                 Reader reader = Files.newBufferedReader(languagePath);
                 TypeToken<Map<String, String>> mapType = new TypeToken<>() {};
-                this.translations = gsonReader.fromJson(reader, mapType);
+                translations = gsonReader.fromJson(reader, mapType);
                 reader.close();
             }
             catch (IOException e)

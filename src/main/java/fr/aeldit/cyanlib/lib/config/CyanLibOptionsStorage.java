@@ -41,13 +41,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
+import static fr.aeldit.cyanlib.lib.CyanLib.CONFIG_CLASS_INSTANCES;
 
 public class CyanLibOptionsStorage
 {
@@ -248,6 +246,74 @@ public class CyanLibOptionsStorage
                     new SimpleOption.ValidatingIntSliderCallbacks(min, max),
                     getValue(),
                     this::setValue
+            );
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public class CyanLibModsScreen extends Screen
+    {
+        private final Screen parent;
+        private final CyanLibOptionsStorage optionsStorage;
+
+        public CyanLibModsScreen(Screen parent, CyanLibOptionsStorage optionsStorage)
+        {
+            super(Text.translatable("%s.screen.mods.title".formatted(modid)));
+            this.parent = parent;
+            this.optionsStorage = optionsStorage;
+        }
+
+        @Override
+        public void close()
+        {
+            Objects.requireNonNull(client).setScreen(parent);
+        }
+
+        @Override
+        public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
+        {
+            this.renderBackgroundTexture(DrawContext);
+            DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+            super.render(DrawContext, mouseX, mouseY, delta);
+        }
+
+        @Override
+        protected void init()
+        {
+            int i = 0;
+            List<String> sortedNames = new ArrayList<>(CONFIG_CLASS_INSTANCES.keySet());
+            Collections.sort(sortedNames);
+
+            for (String modId : sortedNames)
+            {
+                // Temporary, will add a page system at some point
+                if (i < 6)
+                {
+                    addDrawableChild(
+                            ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
+                                            button -> Objects.requireNonNull(client).setScreen(optionsStorage.new CyanLibConfigScreen(null, CONFIG_CLASS_INSTANCES.get(modId)))
+                                    )
+                                    .dimensions(30, 30 + 20 * i + 10 * i, 150, 20)
+                                    .build()
+                    );
+                }
+                else
+                {
+                    addDrawableChild(
+                            ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
+                                            button -> Objects.requireNonNull(client).setScreen(optionsStorage.new CyanLibConfigScreen(null, CONFIG_CLASS_INSTANCES.get(modId)))
+                                    )
+                                    .dimensions(width - 180, 30 + 30 * (i - 6), 150, 20)
+                                    .build()
+                    );
+                }
+                i++;
+            }
+
+            addDrawableChild(
+                    ButtonWidget.builder(ScreenTexts.DONE, button -> close())
+                            .dimensions(width / 2 - 100, height - 28, 200, 20)
+                            .build()
             );
         }
     }
@@ -648,6 +714,10 @@ public class CyanLibOptionsStorage
                                     {
                                         booleanOptions.put(booleanOption.optionName, (Boolean) config.get(booleanOption.optionName));
                                     }
+                                    else
+                                    {
+                                        booleanOptions.put(booleanOption.optionName, booleanOption.getValue());
+                                    }
                                 }
                             }
                             catch (IllegalAccessException e)
@@ -666,6 +736,10 @@ public class CyanLibOptionsStorage
                                     if ((Integer) config.get(integerOption.optionName) != integerOption.getValue())
                                     {
                                         integerOptions.put(integerOption.optionName, (Integer) config.get(integerOption.optionName));
+                                    }
+                                    else
+                                    {
+                                        integerOptions.put(integerOption.optionName, integerOption.getValue());
                                     }
                                 }
                             }

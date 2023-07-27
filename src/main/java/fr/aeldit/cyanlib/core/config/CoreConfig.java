@@ -15,7 +15,7 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core;
+package fr.aeldit.cyanlib.core.config;
 
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;

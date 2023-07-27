@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.core;
 
+import fr.aeldit.cyanlib.core.config.CoreConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -32,12 +33,14 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LIB_UTILS.init();
-
-        if (OPTIONS_STORAGE.getBooleanOption("useCustomTranslations"))
-        {
-            LANGUAGE_UTILS.loadLanguage(getDefaultTranslations());
-        }
+        LIB_UTILS.init(MODID, CoreConfig.class);
+        LIB_UTILS.init("test1", CoreConfig.class);
+        LIB_UTILS.init("test2", CoreConfig.class);
+        LIB_UTILS.init("test3", CoreConfig.class);
+        LIB_UTILS.init("test4", CoreConfig.class);
+        LIB_UTILS.init("test5", CoreConfig.class);
+        LIB_UTILS.init("test6", CoreConfig.class);
+        LIB_UTILS.init("test7", CoreConfig.class);
 
         KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "cyanlib.keybindings.openScreen.config",
@@ -48,7 +51,7 @@ public class CyanLibClientCore implements ClientModInitializer
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (mainScreenKey.wasPressed())
             {
-                client.setScreen(OPTIONS_STORAGE.new CyanLibConfigScreen(null, CoreConfig.class));
+                client.setScreen(OPTIONS_STORAGE.new CyanLibModsScreen(null, OPTIONS_STORAGE));
             }
         });
 

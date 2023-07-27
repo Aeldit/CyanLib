@@ -26,6 +26,8 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
@@ -34,6 +36,7 @@ public class CyanLib
     private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
+    public static final Map<String, Class<?>> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
      * Main class of this library
@@ -56,26 +59,26 @@ public class CyanLib
     {
         this.modid = modid;
         this.optionsStorage = optionsStorage;
-        this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage);
+        this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>());
     }
 
-    public void init()
+    public void init(String modid, Class<?> CyanLibConfigInstanceClass)
     {
+        CONFIG_CLASS_INSTANCES.put(modid, CyanLibConfigInstanceClass);
         optionsStorage.init();
         ArrayList<String> option = optionsStorage.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
 
         if (!option.isEmpty())
         {
-            if (!optionsStorage.getBooleanOption(option.get(0)))
+            if (optionsStorage.getBooleanOption(option.get(0)))
             {
-                this.languageUtils.unload();
+                languageUtils.loadLanguage();
+            }
+            else
+            {
+                languageUtils.unload();
             }
         }
-    }
-
-    public String getModid()
-    {
-        return modid;
     }
 
     public CyanLibOptionsStorage getOptionsStorage()
