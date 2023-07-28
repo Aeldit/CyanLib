@@ -17,13 +17,15 @@
 
 package fr.aeldit.cyanlib.core.config;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import fr.aeldit.cyanlib.lib.config.CyanLibModsScreen;
 
 public class ModMenuApiImpl implements ModMenuApi
 {
-    /*@Override
+    @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory()
     {
-        return parent -> OPTIONS_STORAGE.new CyanLibModsScreen(parent, OPTIONS_STORAGE);
-    }*/
+        return CyanLibModsScreen::new;
+    }
 }

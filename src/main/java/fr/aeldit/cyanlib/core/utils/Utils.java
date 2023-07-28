@@ -22,7 +22,6 @@ import fr.aeldit.cyanlib.lib.CyanLib;
 import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
 import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
-import fr.aeldit.cyanlib.lib.config.ModMenuApiImpl;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +31,14 @@ import java.util.Map;
 
 public class Utils
 {
-    public static final String MODID = "cyanlib";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+    public static final String CYANLIB_MODID = "cyanlib";
+    public static final Logger LOGGER = LoggerFactory.getLogger(CYANLIB_MODID);
     private static Map<String, String> DEFAULT_TRANSLATIONS;
 
-    public static CyanLibOptionsStorage OPTIONS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
-    public static ModMenuApiImpl MODMENU_IMPL = new ModMenuApiImpl(CoreConfig.class, OPTIONS_STORAGE);
-    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, OPTIONS_STORAGE, getDefaultTranslations());
-    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTIONS_STORAGE, LANGUAGE_UTILS);
-    public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS);
+    public static CyanLibOptionsStorage OPTIONS_STORAGE = new CyanLibOptionsStorage(CYANLIB_MODID, CoreConfig.class);
+    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(CYANLIB_MODID, OPTIONS_STORAGE, getDefaultTranslations());
+    public static CyanLib LIB_UTILS = new CyanLib(CYANLIB_MODID, OPTIONS_STORAGE, LANGUAGE_UTILS);
+    public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(CYANLIB_MODID, LIB_UTILS);
 
     public static @NotNull Map<String, String> getDefaultTranslations()
     {

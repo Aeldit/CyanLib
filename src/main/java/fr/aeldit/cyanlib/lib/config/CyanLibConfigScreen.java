@@ -1,0 +1,115 @@
+/*
+ * Copyright (c) 2023  -  Made by Aeldit
+ *
+ *              GNU LESSER GENERAL PUBLIC LICENSE
+ *                  Version 3, 29 June 2007
+ *
+ *  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ *  Everyone is permitted to copy and distribute verbatim copies
+ *  of this license document, but changing it is not allowed.
+ *
+ *
+ * This version of the GNU Lesser General Public License incorporates
+ * the terms and conditions of version 3 of the GNU General Public
+ * License, supplemented by the additional permissions listed in the LICENSE.txt file
+ * in the repo of this mod (https://github.com/Aeldit/CyanLib)
+ */
+
+package fr.aeldit.cyanlib.lib.config;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
+import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.Objects;
+
+@Environment(EnvType.CLIENT)
+public class CyanLibConfigScreen extends Screen
+{
+    private final CyanLibOptionsStorage cyanLibOptionsStorage;
+    private final Screen parent;
+    private final Class<?> configOptionsClass;
+    private OptionListWidget optionList;
+
+    public CyanLibConfigScreen(@NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, Class<?> configOptionsClass)
+    {
+        super(Text.translatable("%s.screen.options.title".formatted(cyanLibOptionsStorage.getModid())));
+        this.cyanLibOptionsStorage = cyanLibOptionsStorage;
+        this.parent = parent;
+        this.configOptionsClass = configOptionsClass;
+    }
+
+    @Override
+    public void close()
+    {
+        cyanLibOptionsStorage.writeConfig();
+        Objects.requireNonNull(client).setScreen(parent);
+    }
+
+    public void closeWithoutSaving()
+    {
+        System.out.println("CloseWithoutSaving : " + cyanLibOptionsStorage.getUnsavedChangedOptions());
+        if (!cyanLibOptionsStorage.getUnsavedChangedOptions().isEmpty())
+        {
+            for (Map.Entry<String, Object> entry : cyanLibOptionsStorage.getUnsavedChangedOptions().entrySet())
+            {
+                if (entry.getValue() instanceof Boolean)
+                {
+                    cyanLibOptionsStorage.setBooleanOption(entry.getKey(), (Boolean) entry.getValue(), false);
+                }
+                else if (entry.getValue() instanceof Integer)
+                {
+                    cyanLibOptionsStorage.setIntegerOption(entry.getKey(), (Integer) entry.getValue(), false);
+                }
+            }
+        }
+        close();
+    }
+
+    @Override
+    public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
+    {
+        this.renderBackgroundTexture(DrawContext);
+        optionList.render(DrawContext, mouseX, mouseY, delta);
+        DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+        super.render(DrawContext, mouseX, mouseY, delta);
+    }
+
+    @Override
+    protected void init()
+    {
+        optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);
+        optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
+        addSelectableChild(optionList);
+
+        addDrawableChild(
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button -> {
+                            cyanLibOptionsStorage.resetOptions();
+                            close();
+                        })
+                        .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.reset.tooltip")))
+                        .dimensions(10, 6, 100, 20)
+                        .build()
+        );
+
+        addDrawableChild(
+                ButtonWidget.builder(ScreenTexts.CANCEL, button -> closeWithoutSaving())
+                        .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.cancel.tooltip")))
+                        .dimensions(width / 2 - 154, height - 28, 150, 20)
+                        .build()
+        );
+        addDrawableChild(
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button -> close())
+                        .dimensions(width / 2 + 4, height - 28, 150, 20)
+                        .build()
+        );
+    }
+}

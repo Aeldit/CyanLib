@@ -25,9 +25,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
@@ -36,7 +34,8 @@ public class CyanLib
     private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
-    public static final Map<String, Class<?>> CONFIG_CLASS_INSTANCES = new HashMap<>();
+    // This Map stores the Config class and OptionsStorage instance of each mod, the key in the map being the modid of the mod
+    public static final Map<String, List<Object>> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
      * Main class of this library
@@ -62,9 +61,9 @@ public class CyanLib
         this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>());
     }
 
-    public void init(String modid, Class<?> CyanLibConfigInstanceClass)
+    public void init(String modid, Class<?> configInstanceClass, @NotNull CyanLibOptionsStorage optionsStorage)
     {
-        CONFIG_CLASS_INSTANCES.put(modid, CyanLibConfigInstanceClass);
+        CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(configInstanceClass, optionsStorage));
         optionsStorage.init();
         ArrayList<String> option = optionsStorage.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
 
@@ -99,9 +98,9 @@ public class CyanLib
     {
         if (source.getPlayer() == null)
         {
-            if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
+            if (optionsStorage.getBooleanOption("useCustomTranslations"))
             {
-                source.getServer().sendMessage(Text.of(this.languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
+                source.getServer().sendMessage(Text.of(languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
             }
             else
             {
@@ -136,9 +135,9 @@ public class CyanLib
     {
         if (!player.hasPermissionLevel(permission))
         {
-            this.languageUtils.sendPlayerMessage(player,
-                    this.languageUtils.getTranslation(ERROR + "notOp"),
-                    "%s.msg.notOp".formatted(this.modid)
+            languageUtils.sendPlayerMessage(player,
+                    languageUtils.getTranslation(ERROR + "notOp"),
+                    "%s.msg.notOp".formatted(modid)
             );
             return false;
         }
@@ -157,9 +156,9 @@ public class CyanLib
     {
         if (!option)
         {
-            this.languageUtils.sendPlayerMessage(player,
-                    this.languageUtils.getTranslation(ERROR + msgPath),
-                    "%s.msg.%s".formatted(this.modid, msgPath)
+            languageUtils.sendPlayerMessage(player,
+                    languageUtils.getTranslation(ERROR + msgPath),
+                    "%s.msg.%s".formatted(modid, msgPath)
             );
             return false;
         }

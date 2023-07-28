@@ -32,6 +32,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import static fr.aeldit.cyanlib.core.config.CoreConfig.MSG_TO_ACTION_BAR;
+
 public class CyanLibLanguageUtils
 {
     private final String MODID;
@@ -106,7 +108,6 @@ public class CyanLibLanguageUtils
      *
      * <ul><h2>Required config options :</h2>
      *      <li>{@code useCustomTranslations}</li>
-     *      <li>{@code msgToActionBar}</li>
      * </ul>
      *
      * @param player   the player to whom the message will be sent
@@ -118,11 +119,11 @@ public class CyanLibLanguageUtils
     {
         if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
         {
-            player.sendMessage(Text.translatable(msg, args), this.optionsStorage.getBooleanOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
         else
         {
-            player.sendMessage(Text.translatable(tradPath, args), this.optionsStorage.getBooleanOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(tradPath, args), MSG_TO_ACTION_BAR.getValue());
         }
     }
 

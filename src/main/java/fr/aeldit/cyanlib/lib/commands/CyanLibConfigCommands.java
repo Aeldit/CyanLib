@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import static fr.aeldit.cyanlib.core.config.CoreConfig.MIN_OP_LVL_EDIT_CONFIG;
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.*;
 
 public class CyanLibConfigCommands
@@ -91,16 +92,12 @@ public class CyanLibConfigCommands
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.translationsReloaded"}</li>
      * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
-     * </ul>
      */
     public int reloadTranslations(@NotNull CommandContext<ServerCommandSource> context)
     {
         if (this.libUtils.isPlayer(context.getSource()))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 this.libUtils.getLanguageUtils().loadLanguage();
 
@@ -121,19 +118,11 @@ public class CyanLibConfigCommands
      * This allows to see the changed option in the chat
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.wrongType"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the parameter of the function)</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
      * </ul>
      */
     public int setBoolOption(@NotNull CommandContext<ServerCommandSource> context)
@@ -142,14 +131,14 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(source))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
                 if (this.libUtils.getOptionsStorage().booleanOptionExists(option))
                 {
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    this.libUtils.getOptionsStorage().setAndSaveBooleanOption(option, value);
+                    this.libUtils.getOptionsStorage().setBooleanOption(option, value, true);
 
                     if (this.libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
                     {
@@ -190,19 +179,13 @@ public class CyanLibConfigCommands
      * Sets the value of the given {@code boolean option} to the given {@code boolean value}
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.wrongType"}</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the parameter of the function)</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
      * </ul>
      */
     public int setBoolOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
@@ -211,14 +194,14 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(source))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
                 if (this.libUtils.getOptionsStorage().booleanOptionExists(option))
                 {
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    this.libUtils.getOptionsStorage().setAndSaveBooleanOption(option, value);
+                    this.libUtils.getOptionsStorage().setBooleanOption(option, value, true);
 
                     if (this.libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
                     {
@@ -258,19 +241,15 @@ public class CyanLibConfigCommands
      * This allows to see the changed option in the chat
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.wrongType"}</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.incorrectInteger"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the parameter of the function)</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
      * </ul>
      */
     public int setIntOption(@NotNull CommandContext<ServerCommandSource> context)
@@ -279,7 +258,7 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(source))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -287,7 +266,7 @@ public class CyanLibConfigCommands
                 {
                     int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                    if (this.libUtils.getOptionsStorage().setAndSaveIntegerOption(option, value))
+                    if (this.libUtils.getOptionsStorage().setIntegerOption(option, value, true))
                     {
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
@@ -324,19 +303,15 @@ public class CyanLibConfigCommands
      * Sets the value of the given {@code int option} to the given {@code int value}
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the parameter of the function)</li>
-     *      <li>{@code "modid.msg.wrongType"}</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.incorrectInteger"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the parameter of the function)</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "wrongType"}</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
      * </ul>
      */
     public int setIntOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
@@ -345,7 +320,7 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(source))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -353,7 +328,7 @@ public class CyanLibConfigCommands
                 {
                     int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                    if (this.libUtils.getOptionsStorage().setAndSaveIntegerOption(option, value))
+                    if (this.libUtils.getOptionsStorage().setIntegerOption(option, value, true))
                     {
                         this.libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
                                 this.libUtils.getLanguageUtils().getTranslation(SET + option),
@@ -389,7 +364,7 @@ public class CyanLibConfigCommands
      *
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.dashSeparation"}</li>
-     *      <li>{@code "modid.msg.getDesc.option"} (option is the parameter of the function)</li>
+     *      <li>{@code "modid.msg.getDesc.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@code "modid.msg.currentValue"}</li>
      *      <li>{@code "modid.msg.setValue"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
@@ -397,19 +372,10 @@ public class CyanLibConfigCommands
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@code "dashSeparation"}</li>
-     *      <li>{@link TranslationsPrefixes#DESC} + {@code option} (option is the parameter of the function)</li>
+     *      <li>{@link TranslationsPrefixes#DESC} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@code "currentValue"}</li>
      *      <li>{@code "setValue"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config commands :</h2>
-     *      <li>{@code /modid config <optionName> set [(boolean) value] [(boolean) mode]}</li>
-     *      <li>{@code /modid config <optionName> set [(int) value] [(boolean) mode]}</li>
      * </ul>
      */
     public int getOptionChatConfig(@NotNull CommandContext<ServerCommandSource> context)
@@ -418,7 +384,7 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(context.getSource()))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(player), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(player), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -556,14 +522,6 @@ public class CyanLibConfigCommands
      *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "header"}</li>
      *      <li>{@link TranslationsPrefixes#GETCFG} + {@code option} (option is the parameter of the function)</li>
      * </ul>
-     *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code minOpLevelExeEditConfig}</li>
-     * </ul>
-     *
-     * <ul><h2>Required config commands :</h2>
-     *      <li>{@code /modid config <optionName> set [(boolean) value] [(boolean) mode]}</li>
-     * </ul>
      */
     public int getConfigOptions(@NotNull CommandContext<ServerCommandSource> context)
     {
@@ -571,7 +529,7 @@ public class CyanLibConfigCommands
 
         if (this.libUtils.isPlayer(context.getSource()))
         {
-            if (this.libUtils.hasPermission(Objects.requireNonNull(player), libUtils.getOptionsStorage().getIntegerOption("minOpLvlEditConfig")))
+            if (this.libUtils.hasPermission(Objects.requireNonNull(player), MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 this.libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                         this.libUtils.getLanguageUtils().getTranslation("dashSeparation"),

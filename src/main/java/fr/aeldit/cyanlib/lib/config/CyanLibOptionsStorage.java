@@ -21,16 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import fr.aeldit.cyanlib.lib.utils.RULES;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,18 +33,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
-import static fr.aeldit.cyanlib.lib.CyanLib.CONFIG_CLASS_INSTANCES;
 
 public class CyanLibOptionsStorage
 {
-    protected String modid;
+    private final String modid;
     private final Class<?> configClass;
     private final ArrayList<String> optionsNames = new ArrayList<>();
-    private final Map<String, Object> changedUnsavedOptions = new HashMap<>();
+    private final Map<String, Object> unsavedChangedOptions = new HashMap<>();
     private boolean isEditingFile = false;
 
     public CyanLibOptionsStorage(String modid, Class<?> configClass)
@@ -66,6 +59,21 @@ public class CyanLibOptionsStorage
         readConfig();
     }
 
+    public String getModid()
+    {
+        return modid;
+    }
+
+    public Map<String, Object> getUnsavedChangedOptions()
+    {
+        return unsavedChangedOptions;
+    }
+
+    public void clearUnsavedChangedOptions()
+    {
+        unsavedChangedOptions.clear();
+    }
+
     public class BooleanOption implements SimpleOptionConverter
     {
         private final String optionName;
@@ -74,18 +82,18 @@ public class CyanLibOptionsStorage
 
         public BooleanOption(String optionName, boolean value)
         {
-            setBooleanOption(optionName, value);
             this.optionName = optionName;
             this.rule = RULES.NONE;
             this.defaultValue = value;
+            setBooleanOption(optionName, value, false);
         }
 
         public BooleanOption(String optionName, boolean value, RULES rule)
         {
-            setBooleanOption(optionName, value);
             this.optionName = optionName;
             this.rule = rule;
             this.defaultValue = value;
+            setBooleanOption(optionName, value, false);
         }
 
         public String getOptionName()
@@ -100,11 +108,11 @@ public class CyanLibOptionsStorage
 
         public void setValue(boolean value)
         {
-            if (!changedUnsavedOptions.containsKey(optionName))
+            if (!unsavedChangedOptions.containsKey(optionName) && booleanOptionExists(optionName))
             {
-                changedUnsavedOptions.put(optionName, booleanOptions.get(optionName));
+                unsavedChangedOptions.put(optionName, getBooleanOption(optionName));
             }
-            booleanOptions.put(optionName, value);
+            setBooleanOption(optionName, value, false);
         }
 
         @Override
@@ -149,7 +157,18 @@ public class CyanLibOptionsStorage
         public IntegerOption(String optionName, int value, @NotNull RULES rule)
         {
             this.optionName = optionName;
-            if (rule.equals(RULES.OP_LEVELS))
+
+            if (rule.equals(RULES.POSITIVE_VALUE))
+            {
+                this.min = 0;
+                this.max = 512;
+            }
+            else if (rule.equals(RULES.NEGATIVE_VALUE))
+            {
+                this.min = -512;
+                this.max = 0;
+            }
+            else if (rule.equals(RULES.OP_LEVELS))
             {
                 this.min = 0;
                 this.max = 4;
@@ -157,7 +176,7 @@ public class CyanLibOptionsStorage
             else
             {
                 this.min = 0;
-                this.max = 0;
+                this.max = 4;
             }
             this.rule = rule;
             this.defaultValue = value;
@@ -178,11 +197,11 @@ public class CyanLibOptionsStorage
             if (rule.equals(RULES.MIN_VALUE))
             {
                 this.min = minOrMax;
-                this.max = 0;
+                this.max = -512;
             }
             else if (rule.equals(RULES.MAX_VALUE))
             {
-                this.min = 0;
+                this.min = 512;
                 this.max = minOrMax;
             }
             else
@@ -227,9 +246,9 @@ public class CyanLibOptionsStorage
                     || (rule.equals(RULES.RANGE) && value >= min && value <= max)
             )
             {
-                if (!changedUnsavedOptions.containsKey(optionName))
+                if (!unsavedChangedOptions.containsKey(optionName) && integerOptionExists(optionName))
                 {
-                    changedUnsavedOptions.put(optionName, integerOptions.get(optionName));
+                    unsavedChangedOptions.put(optionName, getIntegerOption(optionName));
                 }
                 integerOptions.put(optionName, value);
                 return true;
@@ -246,158 +265,6 @@ public class CyanLibOptionsStorage
                     new SimpleOption.ValidatingIntSliderCallbacks(min, max),
                     getValue(),
                     this::setValue
-            );
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    public class CyanLibModsScreen extends Screen
-    {
-        private final Screen parent;
-        private final CyanLibOptionsStorage optionsStorage;
-
-        public CyanLibModsScreen(Screen parent, CyanLibOptionsStorage optionsStorage)
-        {
-            super(Text.translatable("%s.screen.mods.title".formatted(modid)));
-            this.parent = parent;
-            this.optionsStorage = optionsStorage;
-        }
-
-        @Override
-        public void close()
-        {
-            Objects.requireNonNull(client).setScreen(parent);
-        }
-
-        @Override
-        public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
-        {
-            this.renderBackgroundTexture(DrawContext);
-            DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-            super.render(DrawContext, mouseX, mouseY, delta);
-        }
-
-        @Override
-        protected void init()
-        {
-            int i = 0;
-            List<String> sortedNames = new ArrayList<>(CONFIG_CLASS_INSTANCES.keySet());
-            Collections.sort(sortedNames);
-
-            for (String modId : sortedNames)
-            {
-                // Temporary, will add a page system at some point
-                if (i < 6)
-                {
-                    addDrawableChild(
-                            ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
-                                            button -> Objects.requireNonNull(client).setScreen(optionsStorage.new CyanLibConfigScreen(null, CONFIG_CLASS_INSTANCES.get(modId)))
-                                    )
-                                    .dimensions(30, 30 + 20 * i + 10 * i, 150, 20)
-                                    .build()
-                    );
-                }
-                else
-                {
-                    addDrawableChild(
-                            ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
-                                            button -> Objects.requireNonNull(client).setScreen(optionsStorage.new CyanLibConfigScreen(null, CONFIG_CLASS_INSTANCES.get(modId)))
-                                    )
-                                    .dimensions(width - 180, 30 + 30 * (i - 6), 150, 20)
-                                    .build()
-                    );
-                }
-                i++;
-            }
-
-            addDrawableChild(
-                    ButtonWidget.builder(ScreenTexts.DONE, button -> close())
-                            .dimensions(width / 2 - 100, height - 28, 200, 20)
-                            .build()
-            );
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    public class CyanLibConfigScreen extends Screen
-    {
-        private final Screen parent;
-        private final Class<?> configOptionsClass;
-        private OptionListWidget optionList;
-
-        public CyanLibConfigScreen(Screen parent, Class<?> configOptionsClass)
-        {
-            super(Text.translatable("%s.screen.options.title".formatted(modid)));
-            this.parent = parent;
-            this.configOptionsClass = configOptionsClass;
-        }
-
-        @Override
-        public void close()
-        {
-            Objects.requireNonNull(client).setScreen(parent);
-        }
-
-        public void closeWithoutSaving()
-        {
-            if (!changedUnsavedOptions.isEmpty())
-            {
-                for (Map.Entry<String, Object> entry : changedUnsavedOptions.entrySet())
-                {
-                    if (entry.getValue() instanceof Boolean)
-                    {
-                        booleanOptions.put(entry.getKey(), (Boolean) entry.getValue());
-                    }
-                    else if (entry.getValue() instanceof Integer)
-                    {
-                        integerOptions.put(entry.getKey(), (Integer) entry.getValue());
-                    }
-                }
-                changedUnsavedOptions.clear();
-                writeConfig();
-            }
-            close();
-        }
-
-        @Override
-        public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
-        {
-            this.renderBackgroundTexture(DrawContext);
-            optionList.render(DrawContext, mouseX, mouseY, delta);
-            DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-            super.render(DrawContext, mouseX, mouseY, delta);
-        }
-
-        @Override
-        protected void init()
-        {
-            optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);
-            optionList.addAll(asConfigOptions(configOptionsClass));
-            addSelectableChild(optionList);
-
-            addDrawableChild(
-                    ButtonWidget.builder(Text.translatable("%s.screen.config.reset".formatted(modid)), button -> {
-                                resetOptions();
-                                writeConfig();
-                                close();
-                            })
-                            .tooltip(Tooltip.of(Text.translatable("%s.screen.config.reset.tooltip".formatted(modid))))
-                            .dimensions(10, 6, 100, 20)
-                            .build()
-            );
-
-            addDrawableChild(
-                    ButtonWidget.builder(ScreenTexts.CANCEL, button -> closeWithoutSaving())
-                            .dimensions(width / 2 - 154, height - 28, 150, 20)
-                            .build()
-            );
-            addDrawableChild(
-                    ButtonWidget.builder(Text.translatable("%s.screen.config.save&quit".formatted(modid)), button -> {
-                                writeConfig();
-                                close();
-                            })
-                            .dimensions(width / 2 + 4, height - 28, 150, 20)
-                            .build()
             );
         }
     }
@@ -433,13 +300,20 @@ public class CyanLibOptionsStorage
         return integerOptions.get(optionName);
     }
 
-    public void setBooleanOption(String optionName, boolean value)
+    public void setBooleanOption(String optionName, boolean value, boolean save)
     {
         booleanOptions.put(optionName, value);
+
+        if (save)
+        {
+            writeConfig();
+        }
     }
 
-    public boolean setIntegerOption(String optionName, int value)
+    public boolean setIntegerOption(String optionName, int value, boolean save)
     {
+        boolean res = false;
+
         for (Field field : configClass.getDeclaredFields())
         {
             if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
@@ -452,7 +326,13 @@ public class CyanLibOptionsStorage
 
                         if (integerOption.optionName.equals(optionName))
                         {
-                            return integerOption.setValue(value);
+                            res = integerOption.setValue(value);
+
+                            if (save)
+                            {
+                                writeConfig();
+                            }
+                            break;
                         }
                     }
                     catch (IllegalAccessException e)
@@ -462,26 +342,10 @@ public class CyanLibOptionsStorage
                 }
             }
         }
-        return false;
+        return res;
     }
 
-    public void setAndSaveBooleanOption(String optionName, boolean value)
-    {
-        setBooleanOption(optionName, value);
-        writeConfig();
-    }
-
-    public boolean setAndSaveIntegerOption(String optionName, int value)
-    {
-        if (setIntegerOption(optionName, value))
-        {
-            writeConfig();
-            return true;
-        }
-        return false;
-    }
-
-    public void resetOptions()
+    protected void resetOptions()
     {
         for (Field field : configClass.getDeclaredFields())
         {
@@ -602,7 +466,23 @@ public class CyanLibOptionsStorage
         {
             if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
             {
-                if (IntegerOption.class.isAssignableFrom(field.getType()))
+                if (BooleanOption.class.isAssignableFrom(field.getType()))
+                {
+                    try
+                    {
+                        BooleanOption booleanOption = (BooleanOption) field.get(null);
+
+                        if (booleanOption.rule.equals(rule))
+                        {
+                            validOptions.add(booleanOption.getOptionName());
+                        }
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else if (IntegerOption.class.isAssignableFrom(field.getType()))
                 {
                     try
                     {
@@ -618,28 +498,12 @@ public class CyanLibOptionsStorage
                         throw new RuntimeException(e);
                     }
                 }
-                else if (BooleanOption.class.isAssignableFrom(field.getType()))
-                {
-                    try
-                    {
-                        BooleanOption booleanOption = (BooleanOption) field.get(null);
-
-                        if (booleanOption.rule.equals(rule))
-                        {
-                            validOptions.add(booleanOption.optionName);
-                        }
-                    }
-                    catch (IllegalAccessException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         }
         return validOptions;
     }
 
-    public void readConfig()
+    private void readConfig()
     {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
 
@@ -758,11 +622,11 @@ public class CyanLibOptionsStorage
         }
     }
 
-    public void writeConfig()
+    protected void writeConfig()
     {
+        clearUnsavedChangedOptions();
         Map<String, Object> config = new HashMap<>(booleanOptions);
         config.putAll(integerOptions);
-
         Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
 
         if (!Files.exists(path))
