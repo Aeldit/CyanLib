@@ -38,6 +38,8 @@ public class CyanLibConfigScreen extends Screen
     private final Screen parent;
     private final Class<?> configOptionsClass;
     private OptionListWidget optionList;
+    // Used for when the player uses the escape key to exit the screen, which like the cancel button, reverts the modified but no saved options to their previous value
+    private boolean save = false;
 
     public CyanLibConfigScreen(@NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, Class<?> configOptionsClass)
     {
@@ -50,28 +52,26 @@ public class CyanLibConfigScreen extends Screen
     @Override
     public void close()
     {
-        cyanLibOptionsStorage.writeConfig();
-        Objects.requireNonNull(client).setScreen(parent);
-    }
-
-    public void closeWithoutSaving()
-    {
-        System.out.println("CloseWithoutSaving : " + cyanLibOptionsStorage.getUnsavedChangedOptions());
-        if (!cyanLibOptionsStorage.getUnsavedChangedOptions().isEmpty())
+        if (!save)
         {
-            for (Map.Entry<String, Object> entry : cyanLibOptionsStorage.getUnsavedChangedOptions().entrySet())
+            if (!cyanLibOptionsStorage.getUnsavedChangedOptions().isEmpty())
             {
-                if (entry.getValue() instanceof Boolean)
+                for (Map.Entry<String, Object> entry : cyanLibOptionsStorage.getUnsavedChangedOptions().entrySet())
                 {
-                    cyanLibOptionsStorage.setBooleanOption(entry.getKey(), (Boolean) entry.getValue(), false);
-                }
-                else if (entry.getValue() instanceof Integer)
-                {
-                    cyanLibOptionsStorage.setIntegerOption(entry.getKey(), (Integer) entry.getValue(), false);
+                    if (entry.getValue() instanceof Boolean)
+                    {
+                        cyanLibOptionsStorage.setBooleanOption(entry.getKey(), (Boolean) entry.getValue(), false);
+                    }
+                    else if (entry.getValue() instanceof Integer)
+                    {
+                        cyanLibOptionsStorage.setIntegerOption(entry.getKey(), (Integer) entry.getValue(), false);
+                    }
                 }
             }
         }
-        close();
+        save = false;
+        cyanLibOptionsStorage.writeConfig();
+        Objects.requireNonNull(client).setScreen(parent);
     }
 
     @Override
@@ -93,6 +93,7 @@ public class CyanLibConfigScreen extends Screen
         addDrawableChild(
                 ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button -> {
                             cyanLibOptionsStorage.resetOptions();
+                            save = true;
                             close();
                         })
                         .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.reset.tooltip")))
@@ -101,13 +102,19 @@ public class CyanLibConfigScreen extends Screen
         );
 
         addDrawableChild(
-                ButtonWidget.builder(ScreenTexts.CANCEL, button -> closeWithoutSaving())
+                ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
+                            save = false;
+                            close();
+                        })
                         .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.cancel.tooltip")))
                         .dimensions(width / 2 - 154, height - 28, 150, 20)
                         .build()
         );
         addDrawableChild(
-                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button -> close())
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button -> {
+                            save = true;
+                            close();
+                        })
                         .dimensions(width / 2 + 4, height - 28, 150, 20)
                         .build()
         );
