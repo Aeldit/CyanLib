@@ -17,70 +17,72 @@
 
 package fr.aeldit.cyanlib.lib;
 
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
+import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
+
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
 public class CyanLib
 {
-    private final String MODID;
-    private final CyanLibConfig configUtils;
+    private final String modid;
+    private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
+    // This Map stores the Config class and OptionsStorage instance of each mod, the key in the map being the modid of the mod
+    public static final Map<String, List<Object>> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
      * Main class of this library
      *
-     * @param modid         The modid of your mod
-     * @param configUtils   The instance of {@link CyanLibConfig}
-     * @param languageUtils The instance of {@link CyanLibLanguageUtils}
+     * @param modid          The modid of your mod
+     * @param optionsStorage The instance of {@link CyanLibOptionsStorage}
+     * @param languageUtils  The instance of {@link CyanLibLanguageUtils}
      */
-    public CyanLib(String modid, CyanLibConfig configUtils, CyanLibLanguageUtils languageUtils)
+    public CyanLib(String modid, @NotNull CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
     {
-        this.MODID = modid;
-        this.configUtils = configUtils;
-
-        if (this.configUtils.optionExists("useCustomTranslations"))
-        {
-            this.languageUtils = languageUtils;
-
-            if (!this.configUtils.getBoolOption("useCustomTranslations"))
-            {
-                this.languageUtils.unload();
-            }
-        }
-        else
-        {
-            this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
-        }
+        this.modid = modid;
+        this.optionsStorage = optionsStorage;
+        this.languageUtils = languageUtils;
     }
 
     /**
      * Main class of this library but without the language utils
      */
-    public CyanLib(String modid, CyanLibConfig configUtils)
+    public CyanLib(String modid, CyanLibOptionsStorage optionsStorage)
     {
-        this.MODID = modid;
-        this.configUtils = configUtils;
-        this.languageUtils = new CyanLibLanguageUtils(modid, configUtils);
+        this.modid = modid;
+        this.optionsStorage = optionsStorage;
+        this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>());
     }
 
-    public String getMODID()
+    public void init(String modid, Class<?> configInstanceClass, @NotNull CyanLibOptionsStorage optionsStorage)
     {
-        return this.MODID;
+        CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(configInstanceClass, optionsStorage));
+        optionsStorage.init();
+        ArrayList<String> option = optionsStorage.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
+
+        if (!option.isEmpty())
+        {
+            if (optionsStorage.getBooleanOption(option.get(0)))
+            {
+                languageUtils.loadLanguage();
+            }
+            else
+            {
+                languageUtils.unload();
+            }
+        }
     }
 
-    public CyanLibConfig getConfigUtils()
+    public CyanLibOptionsStorage getOptionsStorage()
     {
-        return this.configUtils;
-    }
-
-    public CyanLibLanguageUtils getLanguageUtils()
-    {
-        return this.languageUtils;
+        return optionsStorage;
     }
 
     /**
@@ -96,9 +98,9 @@ public class CyanLib
     {
         if (source.getPlayer() == null)
         {
-            if (this.configUtils.getBoolOption("useCustomTranslations"))
+            if (optionsStorage.getBooleanOption("useCustomTranslations"))
             {
-                source.getServer().sendMessage(Text.of(this.languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
+                source.getServer().sendMessage(Text.of(languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
             }
             else
             {
@@ -107,6 +109,11 @@ public class CyanLib
             return false;
         }
         return true;
+    }
+
+    public CyanLibLanguageUtils getLanguageUtils()
+    {
+        return languageUtils;
     }
 
     /**
@@ -128,9 +135,9 @@ public class CyanLib
     {
         if (!player.hasPermissionLevel(permission))
         {
-            this.languageUtils.sendPlayerMessage(player,
-                    this.languageUtils.getTranslation(ERROR + "notOp"),
-                    "%s.msg.notOp".formatted(this.MODID)
+            languageUtils.sendPlayerMessage(player,
+                    languageUtils.getTranslation(ERROR + "notOp"),
+                    "%s.msg.notOp".formatted(modid)
             );
             return false;
         }
@@ -149,9 +156,9 @@ public class CyanLib
     {
         if (!option)
         {
-            this.languageUtils.sendPlayerMessage(player,
-                    this.languageUtils.getTranslation(ERROR + msgPath),
-                    "%s.msg.%s".formatted(this.MODID, msgPath)
+            languageUtils.sendPlayerMessage(player,
+                    languageUtils.getTranslation(ERROR + msgPath),
+                    "%s.msg.%s".formatted(modid, msgPath)
             );
             return false;
         }

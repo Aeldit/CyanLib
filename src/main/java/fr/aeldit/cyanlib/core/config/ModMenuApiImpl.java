@@ -15,20 +15,17 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core;
+package fr.aeldit.cyanlib.core.config;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import fr.aeldit.cyanlib.lib.config.CyanLibModsScreen;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.CONFIG_COMMANDS;
-import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
-
-public class CyanLibServerCore implements DedicatedServerModInitializer
+public class ModMenuApiImpl implements ModMenuApi
 {
     @Override
-    public void onInitializeServer()
+    public ConfigScreenFactory<?> getModConfigScreenFactory()
     {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
-        LOGGER.info("[CyanLib] Successfully initialized");
+        return CyanLibModsScreen::new;
     }
 }

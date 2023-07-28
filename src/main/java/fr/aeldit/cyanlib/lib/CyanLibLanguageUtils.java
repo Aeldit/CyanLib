@@ -19,6 +19,7 @@ package fr.aeldit.cyanlib.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -31,18 +32,20 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.LibConfig;
+import static fr.aeldit.cyanlib.core.config.CoreConfig.MSG_TO_ACTION_BAR;
 
 public class CyanLibLanguageUtils
 {
     private final String MODID;
-    private final CyanLibConfig libConfig;
+    private final CyanLibOptionsStorage optionsStorage;
     private Map<String, String> translations;
+    private final Map<String, String> defaultTranslations;
 
-    public CyanLibLanguageUtils(String modid, CyanLibConfig libConfig)
+    public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage, Map<String, String> defaultTranslations)
     {
         this.MODID = modid;
-        this.libConfig = libConfig;
+        this.optionsStorage = optionsStorage;
+        this.defaultTranslations = defaultTranslations;
     }
 
     /**
@@ -50,18 +53,18 @@ public class CyanLibLanguageUtils
      *
      * @param defaultTranslations The default translations if the file does not exist
      */
-    public void loadLanguage(Map<String, String> defaultTranslations)
+    public void loadLanguage()
     {
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(this.MODID + "/translations.json");
+        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(MODID + "/translations.json");
 
-        if (this.translations == null)
+        if (translations == null)
         {
-            this.translations = new HashMap<>();
+            translations = new HashMap<>();
         }
 
         if (!Files.exists(languagePath))
         {
-            this.translations = defaultTranslations;
+            translations = defaultTranslations;
         }
         else
         {
@@ -70,7 +73,7 @@ public class CyanLibLanguageUtils
                 Gson gsonReader = new Gson();
                 Reader reader = Files.newBufferedReader(languagePath);
                 TypeToken<Map<String, String>> mapType = new TypeToken<>() {};
-                this.translations = gsonReader.fromJson(reader, mapType);
+                translations = gsonReader.fromJson(reader, mapType);
                 reader.close();
             }
             catch (IOException e)
@@ -105,7 +108,6 @@ public class CyanLibLanguageUtils
      *
      * <ul><h2>Required config options :</h2>
      *      <li>{@code useCustomTranslations}</li>
-     *      <li>{@code msgToActionBar}</li>
      * </ul>
      *
      * @param player   the player to whom the message will be sent
@@ -115,13 +117,13 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (this.libConfig.getBoolOption("useCustomTranslations"))
+        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
         {
-            player.sendMessage(Text.translatable(msg, args), LibConfig.getBoolOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
         else
         {
-            player.sendMessage(Text.translatable(tradPath, args), LibConfig.getBoolOption("msgToActionBar"));
+            player.sendMessage(Text.translatable(tradPath, args), MSG_TO_ACTION_BAR.getValue());
         }
     }
 
@@ -144,7 +146,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (this.libConfig.getBoolOption("useCustomTranslations"))
+        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }

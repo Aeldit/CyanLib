@@ -1,0 +1,14 @@
+0.4.0 :
+    ✏️ Added :
+    - A screen for the configuration (only works for the client options, but a screen will come to edit the server's options)
+    - The screen can be opened via ModMenu or in-game (not in a menu) using the default key `c`
+
+    🚧 Fixed :
+    - If an option file was present (for a mod using this library) and contained options that were not in the default options,
+      they were kept in the options
+    - If an option was in the default options but not in the options file, it was not added to the options
+    - When an option with the rule LOAD_CUSTOM_TRANSLATIONS was not exactly named "useCustomTranslations",
+      the instances were not created correctly and the custom translations were not loaded correctly
+
+    🫧 Changed :
+    - Entirely remade the config system to use a `class` instead of a `Map` (which make it usable with screens)

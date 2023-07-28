@@ -15,20 +15,11 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core;
+package fr.aeldit.cyanlib.lib.config;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.option.SimpleOption;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.CONFIG_COMMANDS;
-import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
-
-public class CyanLibServerCore implements DedicatedServerModInitializer
+public interface SimpleOptionConverter
 {
-    @Override
-    public void onInitializeServer()
-    {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
-        LOGGER.info("[CyanLib] Successfully initialized");
-    }
+    SimpleOption<?> asConfigOption();
 }

@@ -22,10 +22,12 @@ package fr.aeldit.cyanlib.lib.utils;
  */
 public enum RULES
 {
+    NONE,
     MAX_VALUE,
     MIN_VALUE,
     OP_LEVELS,
     POSITIVE_VALUE,
     NEGATIVE_VALUE,
+    RANGE,
     LOAD_CUSTOM_TRANSLATIONS
 }

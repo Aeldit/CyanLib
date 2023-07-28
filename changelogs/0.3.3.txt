@@ -1,6 +1,0 @@
-✏️ Added :
-- Rules for options, like a minimum and / or maximum value for the integer options
-
-🚧 Fixed :
-- Translation errors + some typos in javadocs
-- Translation path to get the options descriptions was missing 'getDesc' in CyanLibCommands#getOptionChatConfig()
