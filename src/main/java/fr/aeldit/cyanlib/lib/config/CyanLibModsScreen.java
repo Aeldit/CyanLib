@@ -52,8 +52,8 @@ public class CyanLibModsScreen extends Screen
     @Override
     public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
     {
-        this.renderBackgroundTexture(DrawContext);
-        DrawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+        renderBackgroundTexture(DrawContext);
+        DrawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
         super.render(DrawContext, mouseX, mouseY, delta);
     }
 
@@ -72,9 +72,9 @@ public class CyanLibModsScreen extends Screen
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
                                         button -> Objects.requireNonNull(client).setScreen(new CyanLibConfigScreen(
-                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(1),
+                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
                                                 parent,
-                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(0)
+                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
                                         ))
                                 )
                                 .dimensions(30, 30 + 20 * i + 10 * i, 150, 20)
@@ -86,9 +86,9 @@ public class CyanLibModsScreen extends Screen
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
                                         button -> Objects.requireNonNull(client).setScreen(new CyanLibConfigScreen(
-                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(1),
+                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
                                                 parent,
-                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(0)
+                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
                                         ))
                                 )
                                 .dimensions(width - 180, 30 + 30 * (i - 6), 150, 20)

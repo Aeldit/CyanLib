@@ -17,17 +17,19 @@
 
 package fr.aeldit.cyanlib.core;
 
+import fr.aeldit.cyanlib.core.config.CoreConfig;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.CONFIG_COMMANDS;
-import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
+import static fr.aeldit.cyanlib.core.utils.Utils.*;
 
 public class CyanLibServerCore implements DedicatedServerModInitializer
 {
     @Override
     public void onInitializeServer()
     {
+        LIB_UTILS.init(MODID, OPTIONS_STORAGE, CoreConfig.class);
+
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
         LOGGER.info("[CyanLib] Successfully initialized");
     }

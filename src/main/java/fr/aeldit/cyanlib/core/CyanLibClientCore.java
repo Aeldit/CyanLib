@@ -34,7 +34,7 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LIB_UTILS.init(CYANLIB_MODID, CoreConfig.class, OPTIONS_STORAGE);
+        LIB_UTILS.init(MODID, OPTIONS_STORAGE, CoreConfig.class);
 
         KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "cyanlib.keybindings.openScreen.config",

@@ -36,35 +36,28 @@ import static fr.aeldit.cyanlib.core.config.CoreConfig.MSG_TO_ACTION_BAR;
 
 public class CyanLibLanguageUtils
 {
-    private final String MODID;
+    private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
-    private Map<String, String> translations;
+    private final Map<String, String> translations = new HashMap<>();
     private final Map<String, String> defaultTranslations;
 
     public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage, Map<String, String> defaultTranslations)
     {
-        this.MODID = modid;
+        this.modid = modid;
         this.optionsStorage = optionsStorage;
         this.defaultTranslations = defaultTranslations;
     }
 
     /**
      * Loads the custom translations into this class translations
-     *
-     * @param defaultTranslations The default translations if the file does not exist
      */
     public void loadLanguage()
     {
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(MODID + "/translations.json");
-
-        if (translations == null)
-        {
-            translations = new HashMap<>();
-        }
+        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(modid + "/translations.json");
 
         if (!Files.exists(languagePath))
         {
-            translations = defaultTranslations;
+            translations.putAll(defaultTranslations);
         }
         else
         {
@@ -73,7 +66,7 @@ public class CyanLibLanguageUtils
                 Gson gsonReader = new Gson();
                 Reader reader = Files.newBufferedReader(languagePath);
                 TypeToken<Map<String, String>> mapType = new TypeToken<>() {};
-                translations = gsonReader.fromJson(reader, mapType);
+                translations.putAll(gsonReader.fromJson(reader, mapType));
                 reader.close();
             }
             catch (IOException e)
@@ -84,11 +77,11 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * Sets the translations at null, so it doesn't use memory
+     * Clears the translations map, so it doesn't use too much memory
      */
     public void unload()
     {
-        this.translations = null;
+        translations.clear();
     }
 
     /**
@@ -98,7 +91,7 @@ public class CyanLibLanguageUtils
      */
     public String getTranslation(String key)
     {
-        return translations == null ? "null" : (translations.get(key) == null ? "null" : translations.get(key));
+        return translations.isEmpty() ? "null" : (translations.get(key) == null ? "null" : translations.get(key));
     }
 
     /**
@@ -117,7 +110,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
+        if (optionsStorage.getBooleanOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
@@ -146,7 +139,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (this.optionsStorage.getBooleanOption("useCustomTranslations"))
+        if (optionsStorage.getBooleanOption("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }

@@ -21,6 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import fr.aeldit.cyanlib.lib.utils.RULES;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
@@ -115,6 +117,7 @@ public class CyanLibOptionsStorage
             setBooleanOption(optionName, value, false);
         }
 
+        @Environment(EnvType.CLIENT)
         @Override
         public SimpleOption<Boolean> asConfigOption()
         {
@@ -256,6 +259,7 @@ public class CyanLibOptionsStorage
             return false;
         }
 
+        @Environment(EnvType.CLIENT)
         @Override
         public SimpleOption<Integer> asConfigOption()
         {
@@ -269,6 +273,7 @@ public class CyanLibOptionsStorage
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull Class<?> configClass)
     {
         ArrayList<SimpleOption<?>> options = new ArrayList<>();
@@ -437,7 +442,23 @@ public class CyanLibOptionsStorage
         {
             if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
             {
-                if (IntegerOption.class.isAssignableFrom(field.getType()))
+                if (BooleanOption.class.isAssignableFrom(field.getType()))
+                {
+                    try
+                    {
+                        BooleanOption booleanOption = (BooleanOption) field.get(null);
+
+                        if (optionName.equals(booleanOption.optionName))
+                        {
+                            return rule.equals(booleanOption.rule);
+                        }
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else if (IntegerOption.class.isAssignableFrom(field.getType()))
                 {
                     try
                     {
