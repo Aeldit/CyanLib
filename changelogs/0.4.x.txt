@@ -12,3 +12,11 @@
 
     🫧 Changed :
     - Entirely remade the config system to use a `class` instead of a `Map` (which make it usable with screens)
+
+0.4.1 :
+    🚧 Fixed :
+    - Crash on server launch (due to missing annotation `@Environment(EnvType.CLIENT)`)
+    - Function `hasRule(String optionName, RULES rule)` was only checking for rules in `Integer` options, not `Boolean` ones
+
+    🫧 Changed :
+    - `MsgToActionBar` and `MinOpLvlEditConfig` options are now centralized in this library, not each mod using this library

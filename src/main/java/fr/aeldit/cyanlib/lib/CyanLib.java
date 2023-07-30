@@ -61,15 +61,15 @@ public class CyanLib
         this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>());
     }
 
-    public void init(String modid, Class<?> configInstanceClass, @NotNull CyanLibOptionsStorage optionsStorage)
+    public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance, Class<?> configClass)
     {
-        CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(configInstanceClass, optionsStorage));
-        optionsStorage.init();
-        ArrayList<String> option = optionsStorage.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
+        CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(optionsStorageInstance, configClass));
+        optionsStorageInstance.init();
+        ArrayList<String> option = optionsStorageInstance.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
 
         if (!option.isEmpty())
         {
-            if (optionsStorage.getBooleanOption(option.get(0)))
+            if (optionsStorageInstance.getBooleanOption(option.get(0)))
             {
                 languageUtils.loadLanguage();
             }
