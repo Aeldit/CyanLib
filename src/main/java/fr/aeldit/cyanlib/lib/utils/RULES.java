@@ -18,7 +18,21 @@
 package fr.aeldit.cyanlib.lib.utils;
 
 /**
- * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option
+ * {@code NONE} is used to indicate that the option has no rule (you should not use it. If you want an option to have no rule, simply don't specify one)
+ * <p>
+ * {@code MAX_VALUE} indicates a maximum value
+ * <p>
+ * {@code MIN_VALUE} indicates a minimum value
+ * <p>
+ * {@code OP_LEVELS} is a particular type of range, which can take integer values between 0 and 4, both included
+ * <p>
+ * {@code POSITIVE_VALUE} indicates that the option must be positive and != 0
+ * <p>
+ * {@code NEGATIVE_VALUE} indicates that the option must be negative and != 0
+ * <p>
+ * {@code RANGE} indicates that the option can be between 2 values, which must both be specified in the option definition
+ * <p>
+ * {@code LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option and indicates the code that when true, the custom translations will be loaded and used
  */
 public enum RULES
 {
