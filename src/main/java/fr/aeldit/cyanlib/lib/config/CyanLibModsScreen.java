@@ -72,10 +72,11 @@ public class CyanLibModsScreen extends Screen
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
                                         button -> Objects.requireNonNull(client).setScreen(new CyanLibConfigScreen(
-                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
-                                                parent,
-                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
-                                        ))
+                                                        (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
+                                                        parent,
+                                                        (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
+                                                )
+                                        )
                                 )
                                 .dimensions(30, 30 + 20 * i + 10 * i, 150, 20)
                                 .build()

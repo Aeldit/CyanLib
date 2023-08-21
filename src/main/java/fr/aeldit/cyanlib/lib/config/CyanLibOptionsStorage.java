@@ -87,7 +87,7 @@ public class CyanLibOptionsStorage
             this.optionName = optionName;
             this.rule = RULES.NONE;
             this.defaultValue = value;
-            setBooleanOption(optionName, value, false);
+            booleanOptions.put(optionName, value);
         }
 
         public BooleanOption(String optionName, boolean value, RULES rule)
@@ -95,26 +95,21 @@ public class CyanLibOptionsStorage
             this.optionName = optionName;
             this.rule = rule;
             this.defaultValue = value;
-            setBooleanOption(optionName, value, false);
-        }
-
-        public String getOptionName()
-        {
-            return optionName;
+            booleanOptions.put(optionName, value);
         }
 
         public boolean getValue()
         {
-            return getBooleanOption(optionName);
+            return booleanOptions.get(optionName);
         }
 
         public void setValue(boolean value)
         {
             if (!unsavedChangedOptions.containsKey(optionName) && booleanOptionExists(optionName))
             {
-                unsavedChangedOptions.put(optionName, getBooleanOption(optionName));
+                unsavedChangedOptions.put(optionName, booleanOptions.get(optionName));
             }
-            setBooleanOption(optionName, value, false);
+            booleanOptions.put(optionName, value);
         }
 
         @Environment(EnvType.CLIENT)
@@ -235,7 +230,7 @@ public class CyanLibOptionsStorage
 
         public int getValue()
         {
-            return getIntegerOption(optionName);
+            return integerOptions.get(optionName);
         }
 
         public boolean setValue(int value)
@@ -251,7 +246,7 @@ public class CyanLibOptionsStorage
             {
                 if (!unsavedChangedOptions.containsKey(optionName) && integerOptionExists(optionName))
                 {
-                    unsavedChangedOptions.put(optionName, getIntegerOption(optionName));
+                    unsavedChangedOptions.put(optionName, integerOptions.get(optionName));
                 }
                 integerOptions.put(optionName, value);
                 return true;
@@ -350,7 +345,7 @@ public class CyanLibOptionsStorage
         return res;
     }
 
-    protected void resetOptions()
+    public void resetOptions()
     {
         for (Field field : configClass.getDeclaredFields())
         {
@@ -495,7 +490,7 @@ public class CyanLibOptionsStorage
 
                         if (booleanOption.rule.equals(rule))
                         {
-                            validOptions.add(booleanOption.getOptionName());
+                            validOptions.add(booleanOption.optionName);
                         }
                     }
                     catch (IllegalAccessException e)
@@ -643,7 +638,7 @@ public class CyanLibOptionsStorage
         }
     }
 
-    protected void writeConfig()
+    public void writeConfig()
     {
         clearUnsavedChangedOptions();
         Map<String, Object> config = new HashMap<>(booleanOptions);
