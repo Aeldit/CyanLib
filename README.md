@@ -19,6 +19,8 @@ or
 |   `1.19.4`    |     ✅      |
 |   `1.20.x`    |     ✅      |
 
+***
+
 📖 This mod is a library, so it is meant to be used alongside other mods
 
 #### ✅ List of features (see the wiki for more information) :
