@@ -2,8 +2,11 @@
 
 ![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![LICENSE_PLATE](https://img.shields.io/github/license/Aeldit/CyanLib?style=for-the-badge)
-![loader](https://img.shields.io/badge/modloader-Fabric-1976d2?style=for-the-badge)
 ![modrinth downloads](https://img.shields.io/modrinth/dt/CyanLib?color=008383&labelColor=008383&label=downloads&logo=modrinth&logoColor=00ff35&style=for-the-badge)
+
+[![fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_vector.svg)](https://modrinth.com/mod/fabric-api)
+or
+[![quilted-fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/quilted-fabric-api_vector.svg)](https://modrinth.com/mod/qsl)
 
 > ❌ I do NOT allow this mod to be ported on the Forge loader, nor to be uploaded on Curseforge
 
