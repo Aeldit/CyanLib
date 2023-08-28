@@ -24,9 +24,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import fr.aeldit.cyanlib.lib.CyanLib;
-import fr.aeldit.cyanlib.lib.commands.arguments.ArgumentSuggestion;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,9 +36,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import static fr.aeldit.cyanlib.core.config.CoreConfig.MIN_OP_LVL_EDIT_CONFIG;
+import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptions;
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.*;
 
 public class CyanLibConfigCommands
@@ -57,7 +59,7 @@ public class CyanLibConfigCommands
         dispatcher.register(CommandManager.literal(modid)
                 .then(CommandManager.literal("config")
                         .then(CommandManager.argument("optionName", StringArgumentType.string())
-                                .suggests((context, builder) -> ArgumentSuggestion.getOptions(builder, libUtils.getOptionsStorage()))
+                                .suggests((context, builder) -> getOptions(builder, libUtils.getOptionsStorage()))
                                 .then(CommandManager.literal("set")
                                         .then(CommandManager.argument("booleanValue", BoolArgumentType.bool())
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
@@ -66,7 +68,7 @@ public class CyanLibConfigCommands
                                                 .executes(this::setBoolOptionFromCommand)
                                         )
                                         .then(CommandManager.argument("integerValue", IntegerArgumentType.integer())
-                                                .suggests((context, builder) -> ArgumentSuggestion.getOPLevels(builder))
+                                                .suggests((context, builder) -> CommandSource.suggestMatching(Arrays.asList("0", "1", "2", "3", "4"), builder))
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
                                                         .executes(this::setIntOption)
                                                 )
