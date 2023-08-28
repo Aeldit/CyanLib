@@ -1,6 +1,5 @@
 ![banner](images/banner.png?raw=true)
 
-![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![LICENSE_PLATE](https://img.shields.io/github/license/Aeldit/CyanLib?style=for-the-badge&color=008383&labelColor=008383)
 ![modrinth downloads](https://img.shields.io/modrinth/dt/CyanLib?color=008383&labelColor=008383&label=downloads&logo=modrinth&logoColor=00ff35&style=for-the-badge)
 
