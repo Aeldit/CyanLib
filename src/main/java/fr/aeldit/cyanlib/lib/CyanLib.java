@@ -52,13 +52,11 @@ public class CyanLib
     }
 
     /**
-     * Main class of this library but without the language utils
+     * Main class of this library but without the language utils (creates the class but with an empty Map, to prevent crashes)
      */
     public CyanLib(String modid, CyanLibOptionsStorage optionsStorage)
     {
-        this.modid = modid;
-        this.optionsStorage = optionsStorage;
-        this.languageUtils = new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>());
+        this(modid, optionsStorage, new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>()));
     }
 
     public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance, Class<?> configClass)

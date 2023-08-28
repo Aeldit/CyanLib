@@ -20,3 +20,12 @@
 
     🫧 Changed :
     - `MsgToActionBar` and `MinOpLvlEditConfig` options are now centralized in this library, not each mod using this library
+
+0.4.2 :
+    🚧 Fixed :
+    - ModMenu Discord link was an old link, no longer functionnal
+
+    🧪 Dev :
+    - Simplified the code
+
+    ❌ Remove support for 1.19-1.19.2

@@ -20,11 +20,14 @@ package fr.aeldit.cyanlib.lib.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.SimpleOption;
+import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +41,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
@@ -76,18 +80,21 @@ public class CyanLibOptionsStorage
         unsavedChangedOptions.clear();
     }
 
+    public interface SimpleOptionConverter
+    {
+        SimpleOption<?> asConfigOption();
+    }
+
     public class BooleanOption implements SimpleOptionConverter
     {
         private final String optionName;
-        private final RULES rule;
         private final boolean defaultValue;
+        private final RULES rule;
 
         public BooleanOption(String optionName, boolean value)
         {
-            this.optionName = optionName;
-            this.rule = RULES.NONE;
-            this.defaultValue = value;
-            setBooleanOption(optionName, value, false);
+            this(optionName, value, RULES.NONE);
+            booleanOptions.put(optionName, value);
         }
 
         public BooleanOption(String optionName, boolean value, RULES rule)
@@ -95,26 +102,21 @@ public class CyanLibOptionsStorage
             this.optionName = optionName;
             this.rule = rule;
             this.defaultValue = value;
-            setBooleanOption(optionName, value, false);
-        }
-
-        public String getOptionName()
-        {
-            return optionName;
+            booleanOptions.put(optionName, value);
         }
 
         public boolean getValue()
         {
-            return getBooleanOption(optionName);
+            return booleanOptions.get(optionName);
         }
 
         public void setValue(boolean value)
         {
             if (!unsavedChangedOptions.containsKey(optionName) && booleanOptionExists(optionName))
             {
-                unsavedChangedOptions.put(optionName, getBooleanOption(optionName));
+                unsavedChangedOptions.put(optionName, booleanOptions.get(optionName));
             }
-            setBooleanOption(optionName, value, false);
+            booleanOptions.put(optionName, value);
         }
 
         @Environment(EnvType.CLIENT)
@@ -131,22 +133,17 @@ public class CyanLibOptionsStorage
     public class IntegerOption implements SimpleOptionConverter
     {
         private final String optionName;
+        private final int defaultValue;
+        private final RULES rule;
         private final int min;
         private final int max;
-        private final RULES rule;
-        private final int defaultValue;
 
         /**
          * Use when no rules are given (makes this integer option store just the value)
          */
         public IntegerOption(String optionName, int value)
         {
-            this.optionName = optionName;
-            this.min = 0;
-            this.max = 4;
-            this.rule = RULES.NONE;
-            this.defaultValue = value;
-            setValue(value);
+            this(optionName, value, RULES.NONE, 0, 4);
         }
 
         /**
@@ -195,26 +192,7 @@ public class CyanLibOptionsStorage
          */
         public IntegerOption(String optionName, int value, @NotNull RULES rule, int minOrMax)
         {
-            this.optionName = optionName;
-
-            if (rule.equals(RULES.MIN_VALUE))
-            {
-                this.min = minOrMax;
-                this.max = -512;
-            }
-            else if (rule.equals(RULES.MAX_VALUE))
-            {
-                this.min = 512;
-                this.max = minOrMax;
-            }
-            else
-            {
-                this.min = 0;
-                this.max = 0;
-            }
-            this.rule = rule;
-            this.defaultValue = value;
-            setValue(value);
+            this(optionName, value, rule, rule.equals(RULES.MIN_VALUE) ? minOrMax : -512, rule.equals(RULES.MIN_VALUE) ? 512 : minOrMax);
         }
 
         /**
@@ -222,6 +200,8 @@ public class CyanLibOptionsStorage
          * <ul>
          *     <li>{@link RULES#RANGE}</li>
          * </ul>
+         * <p>
+         * and called by other constructors of this class
          */
         public IntegerOption(String optionName, int value, RULES rule, int min, int max)
         {
@@ -235,7 +215,7 @@ public class CyanLibOptionsStorage
 
         public int getValue()
         {
-            return getIntegerOption(optionName);
+            return integerOptions.get(optionName);
         }
 
         public boolean setValue(int value)
@@ -251,7 +231,7 @@ public class CyanLibOptionsStorage
             {
                 if (!unsavedChangedOptions.containsKey(optionName) && integerOptionExists(optionName))
                 {
-                    unsavedChangedOptions.put(optionName, getIntegerOption(optionName));
+                    unsavedChangedOptions.put(optionName, integerOptions.get(optionName));
                 }
                 integerOptions.put(optionName, value);
                 return true;
@@ -350,7 +330,7 @@ public class CyanLibOptionsStorage
         return res;
     }
 
-    protected void resetOptions()
+    public void resetOptions()
     {
         for (Field field : configClass.getDeclaredFields())
         {
@@ -386,26 +366,12 @@ public class CyanLibOptionsStorage
 
     public boolean booleanOptionExists(String optionName)
     {
-        for (String option : booleanOptions.keySet())
-        {
-            if (option.equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
+        return booleanOptions.keySet().stream().anyMatch(option -> option.equals(optionName));
     }
 
     public boolean integerOptionExists(String optionName)
     {
-        for (String option : integerOptions.keySet())
-        {
-            if (option.equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
+        return integerOptions.keySet().stream().anyMatch(option -> option.equals(optionName));
     }
 
     public boolean optionExists(String optionName)
@@ -434,6 +400,16 @@ public class CyanLibOptionsStorage
             optionsNames.addAll(integerOptions.keySet());
         }
         return optionsNames;
+    }
+
+    /**
+     * Called for the command {@code /modid config <optionName>}
+     *
+     * @return a suggestion with the available options
+     */
+    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder, @NotNull CyanLibOptionsStorage optionsStorage)
+    {
+        return CommandSource.suggestMatching(optionsStorage.getOptionsNames(), builder);
     }
 
     public boolean hasRule(String optionName, RULES rule)
@@ -495,7 +471,7 @@ public class CyanLibOptionsStorage
 
                         if (booleanOption.rule.equals(rule))
                         {
-                            validOptions.add(booleanOption.getOptionName());
+                            validOptions.add(booleanOption.optionName);
                         }
                     }
                     catch (IllegalAccessException e)
@@ -643,7 +619,7 @@ public class CyanLibOptionsStorage
         }
     }
 
-    protected void writeConfig()
+    public void writeConfig()
     {
         clearUnsavedChangedOptions();
         Map<String, Object> config = new HashMap<>(booleanOptions);
