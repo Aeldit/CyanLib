@@ -27,3 +27,5 @@
 
     🧪 Dev :
     - Simplified the code
+
+    ❌ Remove support for 1.19-1.19.2
