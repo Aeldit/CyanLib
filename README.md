@@ -1,6 +1,5 @@
 ![banner](images/banner.png?raw=true)
 
-![java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![LICENSE_PLATE](https://img.shields.io/github/license/Aeldit/CyanLib?style=for-the-badge&color=008383&labelColor=008383)
 ![modrinth downloads](https://img.shields.io/modrinth/dt/CyanLib?color=008383&labelColor=008383&label=downloads&logo=modrinth&logoColor=00ff35&style=for-the-badge)
 
@@ -10,14 +9,13 @@ or
 
 > ❌ I do NOT allow this mod to be ported on the Forge loader, nor to be uploaded on Curseforge
 
-|  MC Version   | Up to date |
-|:-------------:|:----------:|
-|   `1.17.x`    | ❌ (0.1.8)  |
-|   `1.18.x`    | ❌ (0.1.8)  |
-| `1.19-1.19.2` |     ✅      |
-|   `1.19.3`    | ❌ (0.1.9)  |
-|   `1.19.4`    |     ✅      |
-|   `1.20.x`    |     ✅      |
+|   MC Version    | Up to date | Latest Version |
+|:---------------:|:----------:|:--------------:|
+| 1.17.x - 1.18.x |     ❌      |    (0.1.8)     |
+|   1.19-1.19.2   |     ❌      |    (0.4.1)     |
+|     1.19.3      |     ❌      |    (0.1.9)     |
+|     1.19.4      |     ✅      |     latest     |
+|     1.20.x      |     ✅      |     latest     |
 
 ***
 
