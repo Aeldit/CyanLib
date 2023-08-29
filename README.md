@@ -6,6 +6,8 @@
 or
 [![quilted-fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/quilted-fabric-api_vector.svg)](https://modrinth.com/mod/qsl)
 
+[![gitbook](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/gitbook_vector.svg)](https://github.com/Aeldit/CyanLib/wiki)
+
 |   MC Version    | Up to date | Latest Version |
 |:---------------:|:----------:|:--------------:|
 | 1.17.x - 1.18.x |     ❌      |    (0.1.8)     |
