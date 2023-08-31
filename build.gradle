@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.3-SNAPSHOT'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -24,7 +25,7 @@ dependencies {
     //modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Fabric API
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+    //modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-key-binding-api-v1", project.fabric_version))
@@ -34,6 +35,27 @@ dependencies {
 
     //Gson
     implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
+    projectId = "cyanlib" // This can be the project ID or the slug. Either will work!
+    versionName = "[$project.minecraft_version] CyanLib $version"
+    versionNumber = "$version"
+    // You don't need to set this manually. Will fail if Modrinth has this version already
+    versionType = "release" // This is the default -- can also be `beta` or `alpha`
+    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    gameVersions = ["1.20", "1.20.1"] // Must be an array, even with only one version
+    loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "fabric-api" // Creates a new required dependency on Fabric API
+        optional.version "modmenu", "7.2.1"
+    }
+    debugMode = true // Stops version from being published
 }
 
 processResources {
@@ -46,7 +68,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
+    it.options.release.set(17)
 }
 
 java {
