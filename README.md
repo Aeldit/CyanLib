@@ -1,12 +1,15 @@
-![banner](images/banner.png?raw=true)
-
+![banner](https://github.com/Aeldit/CyanLib/blob/1.20.x/images/banner_small.png?raw=true)
+<!-- modrinth_exclude.start -->
 > ❌ I do NOT allow this mod to be ported on the Forge loader, nor to be uploaded on Curseforge
-
+<!-- modrinth_exclude.end -->
 [![fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_vector.svg)](https://modrinth.com/mod/fabric-api)
 or
 [![quilted-fabric-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/quilted-fabric-api_vector.svg)](https://modrinth.com/mod/qsl)
 
 [![gitbook](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/gitbook_vector.svg)](https://github.com/Aeldit/CyanLib/wiki)
+
+<details>
+<summary>🎴 Show available versions</summary>
 
 |   MC Version    | Up to date | Latest Version |
 |:---------------:|:----------:|:--------------:|
@@ -15,6 +18,8 @@ or
 |     1.19.3      |     ❌      |    (0.1.9)     |
 |     1.19.4      |     ✅      |     latest     |
 |     1.20.x      |     ✅      |     latest     |
+
+</details>
 
 ***
 
@@ -36,8 +41,6 @@ or
 > If you have a suggestion, you can go on my discord server and create a post in 🗽-suggestions-forum
 >
 > [![discord_badge](https://img.shields.io/discord/750243612473819188?color=7289da&label=DISCORD&logo=discord&logoColor=7289da&style=for-the-badge)](https://discord.gg/PcYPpqzhKS)
-
-***
 
 ### Check out the rest of my projects !
 
