@@ -84,7 +84,7 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
     projectId = "cyanlib" // This can be the project ID or the slug. Either will work!
-    versionName = "[$project.minecraft_version] CyanLib $version"
+    versionName = "[$project.minecraft_version] $archivesBaseName $version"
     versionNumber = "$version"
     // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = "release" // This is the default -- can also be `beta` or `alpha`
