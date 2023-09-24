@@ -75,12 +75,11 @@ public class CyanLibConfigScreen extends Screen
     }
 
     @Override
-    public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
-        renderBackgroundTexture(DrawContext);
-        optionList.render(DrawContext, mouseX, mouseY, delta);
-        DrawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
-        super.render(DrawContext, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
+        optionList.render(context, mouseX, mouseY, delta);
+        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
 
     @Override

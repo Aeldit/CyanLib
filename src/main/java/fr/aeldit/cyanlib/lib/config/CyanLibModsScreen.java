@@ -50,11 +50,10 @@ public class CyanLibModsScreen extends Screen
     }
 
     @Override
-    public void render(DrawContext DrawContext, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
-        renderBackgroundTexture(DrawContext);
-        DrawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
-        super.render(DrawContext, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
+        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
 
     @Override
