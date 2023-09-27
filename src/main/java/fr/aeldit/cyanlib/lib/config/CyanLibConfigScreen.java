@@ -83,6 +83,12 @@ public class CyanLibConfigScreen extends Screen
     }
 
     @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
+    {
+        super.renderBackgroundTexture(context);
+    }
+
+    @Override
     protected void init()
     {
         optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);

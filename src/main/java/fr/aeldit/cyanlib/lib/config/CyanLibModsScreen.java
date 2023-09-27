@@ -57,6 +57,12 @@ public class CyanLibModsScreen extends Screen
     }
 
     @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
+    {
+        super.renderBackgroundTexture(context);
+    }
+
+    @Override
     protected void init()
     {
         int i = 0;
