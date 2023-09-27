@@ -27,7 +27,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.*;
+import static fr.aeldit.cyanlib.core.CyanLib.*;
 
 public class CyanLibClientCore implements ClientModInitializer
 {

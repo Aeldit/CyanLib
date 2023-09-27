@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.LOGGER;
+import static fr.aeldit.cyanlib.core.CyanLib.LOGGER;
 
 public class CyanLibOptionsStorage
 {

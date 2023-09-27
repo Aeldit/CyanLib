@@ -20,7 +20,7 @@ package fr.aeldit.cyanlib.core.config;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.OPTIONS_STORAGE;
+import static fr.aeldit.cyanlib.core.CyanLib.OPTIONS_STORAGE;
 
 public class CoreConfig
 {

@@ -21,7 +21,7 @@ import fr.aeldit.cyanlib.core.config.CoreConfig;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.*;
+import static fr.aeldit.cyanlib.core.CyanLib.*;
 
 public class CyanLibServerCore implements DedicatedServerModInitializer
 {

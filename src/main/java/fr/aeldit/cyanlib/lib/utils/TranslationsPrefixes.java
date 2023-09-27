@@ -17,12 +17,12 @@
 
 package fr.aeldit.cyanlib.lib.utils;
 
-import fr.aeldit.cyanlib.core.utils.Utils;
+import fr.aeldit.cyanlib.core.CyanLib;
 
 /**
  * Contains some prefixes for the translations
  * <p>
- * For examples, see {@link Utils#getDefaultTranslations()}
+ * For examples, see {@link CyanLib#getDefaultTranslations()}
  */
 public class TranslationsPrefixes
 {
