@@ -18,6 +18,7 @@ or
 |     1.19.3      |     ❌      |    (0.1.9)     |
 |     1.19.4      |     ✅      |     latest     |
 |     1.20.x      |     ✅      |     latest     |
+|     1.20.2      |     ✅      |     latest     |
 
 </details>
 
@@ -27,7 +28,7 @@ or
 
 #### ✅ List of features (see the wiki for more information) :
 
-- Config system
+- Config system (with screen on client)
 - Custom translations
 - Some other smaller functionalities
 
