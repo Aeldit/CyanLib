@@ -15,8 +15,9 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib.config;
+package fr.aeldit.cyanlib.lib.gui;
 
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;

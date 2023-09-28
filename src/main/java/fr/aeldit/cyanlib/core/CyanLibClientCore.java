@@ -18,7 +18,7 @@
 package fr.aeldit.cyanlib.core;
 
 import fr.aeldit.cyanlib.core.config.CoreConfig;
-import fr.aeldit.cyanlib.lib.config.CyanLibModsScreen;
+import fr.aeldit.cyanlib.lib.gui.CyanLibModsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
