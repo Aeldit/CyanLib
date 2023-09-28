@@ -393,7 +393,6 @@ public class CyanLibConfigCommands
                 if (libUtils.getOptionsStorage().optionExists(option))
                 {
                     Object value = libUtils.getOptionsStorage().getOption(option);
-                    System.out.println(value);
 
                     libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                             libUtils.getLanguageUtils().getTranslation("dashSeparation"),

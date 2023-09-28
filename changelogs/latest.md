@@ -1,1 +1,3 @@
-🎴 Update to 1.20.2
+🚧 Fixed :
+
+- A message was sent in the console when using the `/modid config <optionName>` command
