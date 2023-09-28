@@ -110,7 +110,7 @@ public class CyanLibOptionsStorage
             return booleanOptions.get(optionName);
         }
 
-        public void setValue(boolean value)
+        private void setValue(boolean value)
         {
             if (!unsavedChangedOptions.containsKey(optionName) && booleanOptionExists(optionName))
             {
@@ -218,7 +218,7 @@ public class CyanLibOptionsStorage
             return integerOptions.get(optionName);
         }
 
-        public boolean setValue(int value)
+        private boolean setValue(int value)
         {
             if (rule.equals(RULES.NONE)
                     || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
