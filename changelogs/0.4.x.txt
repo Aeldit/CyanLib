@@ -29,3 +29,8 @@
     - Simplified the code
 
     ❌ Remove support for 1.19-1.19.2
+
+0.4.3 :
+    🚧 Fixed :
+
+    - A message was sent in the console when using the `/modid config <optionName>` command

@@ -90,7 +90,7 @@ modrinth {
     versionType = "release" // This is the default -- can also be `beta` or `alpha`
     uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
     additionalFiles = [remapSourcesJar]
-    gameVersions = ["1.20.2"] // Must be an array, even with only one version
+    gameVersions = ["1.20.3"] // Must be an array, even with only one version
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
     dependencies { // A special DSL for creating dependencies
         // scope.type
@@ -101,6 +101,6 @@ modrinth {
     }
     changelog = file("changelogs/latest.md").exists() ? file("changelogs/latest.md").getText() : "No changelog provided"
     syncBodyFrom = rootProject.file("README.md").text
-    debugMode = true // Stops version from being published
+    debugMode = false // Stops version from being published
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
