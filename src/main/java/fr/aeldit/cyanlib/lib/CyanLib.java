@@ -67,7 +67,7 @@ public class CyanLib
 
         if (!option.isEmpty())
         {
-            if (optionsStorageInstance.getBooleanOption(option.get(0)))
+            if (optionsStorageInstance.getBooleanOptionValue(option.get(0)))
             {
                 languageUtils.loadLanguage();
             }
@@ -96,7 +96,7 @@ public class CyanLib
     {
         if (source.getPlayer() == null)
         {
-            if (optionsStorage.getBooleanOption("useCustomTranslations"))
+            if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
             {
                 source.getServer().sendMessage(Text.of(languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
             }

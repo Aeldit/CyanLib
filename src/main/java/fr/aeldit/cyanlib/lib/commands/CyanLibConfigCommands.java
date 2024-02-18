@@ -390,10 +390,9 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (libUtils.getOptionsStorage().optionExists(option))
+                Object value = libUtils.getOptionsStorage().getOption(option);
+                if (value != null)
                 {
-                    Object value = libUtils.getOptionsStorage().getOption(option);
-
                     libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
                             libUtils.getLanguageUtils().getTranslation("dashSeparation"),
                             "%s.msg.dashSeparation".formatted(modid),
@@ -551,7 +550,7 @@ public class CyanLibConfigCommands
                                 libUtils.getLanguageUtils().getTranslation(GETCFG + option),
                                 "%s.msg.getCfg.%s".formatted(modid, option),
                                 false,
-                                libUtils.getOptionsStorage().getBooleanOption(option) ? Text.literal(Formatting.GREEN + "ON").
+                                libUtils.getOptionsStorage().getBooleanOptionValue(option) ? Text.literal(Formatting.GREEN + "ON").
                                         setStyle(Style.EMPTY.withClickEvent(
                                                 new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set false true".formatted(modid, option)))
                                         ) : Text.literal(Formatting.RED + "OFF").
@@ -566,7 +565,7 @@ public class CyanLibConfigCommands
                                 libUtils.getLanguageUtils().getTranslation(GETCFG + option),
                                 "%s.msg.getCfg.%s".formatted(modid, option),
                                 false,
-                                Formatting.GOLD + Integer.toString(libUtils.getOptionsStorage().getIntegerOption(option))
+                                Formatting.GOLD + Integer.toString(libUtils.getOptionsStorage().getIntegerOptionValue(option))
                         );
                     }
                 }

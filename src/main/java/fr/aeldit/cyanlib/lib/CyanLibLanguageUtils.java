@@ -110,7 +110,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (optionsStorage.getBooleanOption("useCustomTranslations"))
+        if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
@@ -139,7 +139,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (optionsStorage.getBooleanOption("useCustomTranslations"))
+        if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }

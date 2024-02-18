@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023  -  Made by Aeldit
+ * Copyright (c) 2024  -  Made by Aeldit
  *
  *              GNU LESSER GENERAL PUBLIC LICENSE
  *                  Version 3, 29 June 2007
@@ -15,20 +15,11 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.lib.utils;
+package fr.aeldit.cyanlib.lib.config;
 
-import fr.aeldit.cyanlib.core.CyanLibCore;
+import net.minecraft.client.option.SimpleOption;
 
-/**
- * Contains some prefixes for the translations
- * <p>
- * For examples, see {@link CyanLibCore#getDefaultTranslations()}
- */
-public class TranslationsPrefixes
+public interface OptionConverter
 {
-    public static final String ERROR = "error.";
-    public static final String SET = "set.";
-    public static final String DESC = "desc.";
-    public static final String GETCFG = "getCfg.";
-    public static final String RULE = "rule.";
+    SimpleOption<?> asConfigOption();
 }

@@ -17,14 +17,13 @@
 
 package fr.aeldit.cyanlib.core.config;
 
-import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
+import fr.aeldit.cyanlib.lib.config.BooleanOption;
+import fr.aeldit.cyanlib.lib.config.IntegerOption;
 import fr.aeldit.cyanlib.lib.utils.RULES;
-
-import static fr.aeldit.cyanlib.core.CyanLib.OPTIONS_STORAGE;
 
 public class CoreConfig
 {
-    public static final CyanLibOptionsStorage.BooleanOption USE_CUSTOM_TRANSLATIONS = OPTIONS_STORAGE.new BooleanOption("useCustomTranslations", false, RULES.LOAD_CUSTOM_TRANSLATIONS);
-    public static final CyanLibOptionsStorage.BooleanOption MSG_TO_ACTION_BAR = OPTIONS_STORAGE.new BooleanOption("msgToActionBar", true);
-    public static final CyanLibOptionsStorage.IntegerOption MIN_OP_LVL_EDIT_CONFIG = OPTIONS_STORAGE.new IntegerOption("minOpLvlEditConfig", 4, RULES.OP_LEVELS);
+    public static final BooleanOption USE_CUSTOM_TRANSLATIONS = new BooleanOption("useCustomTranslations", false, RULES.LOAD_CUSTOM_TRANSLATIONS);
+    public static final BooleanOption MSG_TO_ACTION_BAR = new BooleanOption("msgToActionBar", true);
+    public static final IntegerOption MIN_OP_LVL_EDIT_CONFIG = new IntegerOption("minOpLvlEditConfig", 4, RULES.OP_LEVELS);
 }
