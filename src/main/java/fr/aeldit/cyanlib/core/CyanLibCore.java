@@ -15,7 +15,7 @@
  * in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
-package fr.aeldit.cyanlib.core.utils;
+package fr.aeldit.cyanlib.core;
 
 import fr.aeldit.cyanlib.core.config.CoreConfig;
 import fr.aeldit.cyanlib.lib.CyanLib;
@@ -29,15 +29,15 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Utils
+public class CyanLibCore
 {
     public static final String MODID = "cyanlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     private static final Map<String, String> DEFAULT_TRANSLATIONS = new HashMap<>();
 
-    public static CyanLibOptionsStorage OPTIONS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
-    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, OPTIONS_STORAGE, getDefaultTranslations());
-    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTIONS_STORAGE, LANGUAGE_UTILS);
+    public static CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
+    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, OPTS_STORAGE, getDefaultTranslations());
+    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE, LANGUAGE_UTILS);
     public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS);
 
     public static @NotNull Map<String, String> getDefaultTranslations()

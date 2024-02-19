@@ -14,10 +14,10 @@ or
 |   MC Version    | Up to date | Latest Version |
 |:---------------:|:----------:|:--------------:|
 | 1.17.x - 1.18.x |     ❌      |    (0.1.8)     |
-|   1.19-1.19.2   |     ❌      |    (0.4.1)     |
+|  1.19 - 1.19.2  |     ❌      |    (0.4.1)     |
 |     1.19.3      |     ❌      |    (0.1.9)     |
 |     1.19.4      |     ✅      |     latest     |
-|     1.20.x      |     ✅      |     latest     |
+|  1.20 - 1.20.4  |     ✅      |     latest     |
 
 </details>
 
@@ -27,7 +27,7 @@ or
 
 #### ✅ List of features (see the wiki for more information) :
 
-- Config system
+- Config system (with screen on client)
 - Custom translations
 - Some other smaller functionalities
 

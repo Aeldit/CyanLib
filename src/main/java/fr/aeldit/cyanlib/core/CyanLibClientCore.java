@@ -18,7 +18,7 @@
 package fr.aeldit.cyanlib.core;
 
 import fr.aeldit.cyanlib.core.config.CoreConfig;
-import fr.aeldit.cyanlib.lib.config.CyanLibModsScreen;
+import fr.aeldit.cyanlib.lib.gui.CyanLibModsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -27,18 +27,18 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
-import static fr.aeldit.cyanlib.core.utils.Utils.*;
+import static fr.aeldit.cyanlib.core.CyanLibCore.*;
 
 public class CyanLibClientCore implements ClientModInitializer
 {
     @Override
     public void onInitializeClient()
     {
-        LIB_UTILS.init(MODID, OPTIONS_STORAGE, CoreConfig.class);
+        LIB_UTILS.init(MODID, OPTS_STORAGE, CoreConfig.class);
 
         KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "cyanlib.keybindings.openScreen.config",
-                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C,
+                InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I,
                 "cyanlib.keybindings.category"
         ));
 

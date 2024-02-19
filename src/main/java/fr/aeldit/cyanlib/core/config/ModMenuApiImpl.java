@@ -19,7 +19,7 @@ package fr.aeldit.cyanlib.core.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import fr.aeldit.cyanlib.lib.config.CyanLibModsScreen;
+import fr.aeldit.cyanlib.lib.gui.CyanLibModsScreen;
 
 public class ModMenuApiImpl implements ModMenuApi
 {

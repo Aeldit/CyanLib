@@ -1,1 +1,1 @@
-🎴 Test changelog
+Use classes instead of a HashMap to store the options
