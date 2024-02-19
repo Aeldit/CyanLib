@@ -1,1 +1,1 @@
-🎴 Update to 1.20.4
+Use classes instead of a HashMap to store the options
