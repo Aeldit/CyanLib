@@ -5,7 +5,6 @@ plugins {
 }
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + project.minecraft_version
 
 repositories {
     maven { url = "https://api.modrinth.com/maven" }
@@ -13,11 +12,11 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    //modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Fabric API
     modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
@@ -29,7 +28,7 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation('com.google.code.gson:gson:2.10.1')
 }
 
 processResources {
@@ -59,7 +58,7 @@ modrinth {
     // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
     projectId = "cyanlib" // This can be the project ID or the slug. Either will work!
     versionName = "[$project.minecraft_version] $project.archives_base_name $project.mod_version"
-    versionNumber = "$version"
+    versionNumber = "$project.mod_version + $project.minecraft_version"
     // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = "release" // This is the default -- can also be `beta` or `alpha`
     uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
@@ -70,10 +69,10 @@ modrinth {
         // The scope can be `required`, `optional`, `incompatible`, or `embedded`
         // The type can either be `project` or `version`
         required.project "fabric-api" // Creates a new required dependency on Fabric API
-        optional.version "modmenu", "$project.modmenu_version"
+        required.version "modmenu", "$project.modmenu_version"
     }
     changelog = file("changelogs/latest.md").exists() ? file("changelogs/latest.md").getText() : "No changelog provided"
     syncBodyFrom = rootProject.file("README.md").text
-    debugMode = true // Stops version from being published
+    debugMode = false // Stops version from being published
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
