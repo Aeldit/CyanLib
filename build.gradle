@@ -5,6 +5,7 @@ plugins {
 }
 
 archivesBaseName = project.archives_base_name
+version = project.mod_version + "+" + project.minecraft_version
 
 repositories {
     maven { url = "https://api.modrinth.com/maven" }
@@ -58,10 +59,11 @@ modrinth {
     // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
     projectId = "cyanlib" // This can be the project ID or the slug. Either will work!
     versionName = "[$project.minecraft_version] CyanLib $project.mod_version"
-    versionNumber = "$project.mod_version + $project.minecraft_version"
+    versionNumber = "$version"
     // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = "release" // This is the default -- can also be `beta` or `alpha`
     uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    additionalFiles = [remapSourcesJar]
     gameVersions = ["1.20.4"] // Must be an array, even with only one version
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
     dependencies { // A special DSL for creating dependencies
