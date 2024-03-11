@@ -74,16 +74,6 @@ public class CyanLibOptionsStorage
         return modid;
     }
 
-    public ArrayList<String> getOptionsNamesOld()
-    {
-        if (optionsNames.isEmpty())
-        {
-            booleanOptionList.forEach(option -> optionsNames.add(option.getOptionName()));
-            integerOptionList.forEach(option -> optionsNames.add(option.getOptionName()));
-        }
-        return optionsNames;
-    }
-
     public ArrayList<String> getOptionsNames()
     {
         if (optionsNames.isEmpty())
@@ -123,30 +113,6 @@ public class CyanLibOptionsStorage
         return options.toArray(SimpleOption[]::new);
     }
 
-    public boolean getBooleanOptionValue(String optionName)
-    {
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getValue();
-            }
-        }
-        return false;
-    }
-
-    public int getIntegerOptionValue(String optionName)
-    {
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getValue();
-            }
-        }
-        return 0;
-    }
-
     @Nullable
     public Object getOptionValue(String optionName, Class<?> expectedType)
     {
@@ -178,64 +144,6 @@ public class CyanLibOptionsStorage
         return null;
     }
 
-    public boolean isBoolean(String optionName)
-    {
-        for (Option<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option instanceof BooleanOption;
-            }
-        }
-        return false;
-    }
-
-    public boolean isInteger(String optionName)
-    {
-        for (Option<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option instanceof IntegerOption;
-            }
-        }
-        return false;
-    }
-
-    public void setBooleanOption(String optionName, boolean value, boolean save)
-    {
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                option.setValue(value);
-                break;
-            }
-        }
-
-        if (save)
-        {
-            writeConfig();
-        }
-    }
-
-    public boolean setIntegerOption(String optionName, int value, boolean save)
-    {
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.setValue(value);
-            }
-        }
-
-        if (save)
-        {
-            writeConfig();
-        }
-        return false;
-    }
-
     public boolean setOption(String optionName, Object value, boolean save)
     {
         for (Option<?> option : optionsList)
@@ -257,30 +165,6 @@ public class CyanLibOptionsStorage
     {
         booleanOptionList.forEach(BooleanOption::reset);
         integerOptionList.forEach(IntegerOption::reset);
-    }
-
-    public boolean booleanOptionExists(String optionName)
-    {
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean integerOptionExists(String optionName)
-    {
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean optionExists(String optionName)
@@ -325,28 +209,6 @@ public class CyanLibOptionsStorage
         return false;
     }
 
-    public ArrayList<String> getOptionsWithRuleOld(RULES rule)
-    {
-        ArrayList<String> validOptions = new ArrayList<>();
-
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getRule() == rule)
-            {
-                validOptions.add(option.getOptionName());
-            }
-        }
-
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getRule() == rule)
-            {
-                validOptions.add(option.getOptionName());
-            }
-        }
-        return validOptions;
-    }
-
     public ArrayList<String> getOptionsWithRule(RULES rule)
     {
         ArrayList<String> validOptions = new ArrayList<>();
@@ -359,123 +221,6 @@ public class CyanLibOptionsStorage
             }
         }
         return validOptions;
-    }
-
-    private void readConfigOld()
-    {
-        Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
-
-        if (!Files.exists(path))
-        {
-            for (Field field : configClass.getDeclaredFields())
-            {
-                if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
-                {
-                    if (BooleanOption.class.isAssignableFrom(field.getType()))
-                    {
-                        try
-                        {
-                            BooleanOption booleanOption = (BooleanOption) field.get(null);
-                            booleanOptionList.add(booleanOption);
-                        }
-                        catch (IllegalAccessException e)
-                        {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    else if (IntegerOption.class.isAssignableFrom(field.getType()))
-                    {
-                        try
-                        {
-                            IntegerOption integerOption = (IntegerOption) field.get(null);
-                            integerOptionList.add(integerOption);
-                        }
-                        catch (IllegalAccessException e)
-                        {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            try
-            {
-                Gson gson = new Gson();
-                Reader reader = Files.newBufferedReader(path);
-                TypeToken<Map<String, Object>> mapType = new TypeToken<>()
-                {
-                };
-                Map<String, Object> config = new HashMap<>(gson.fromJson(reader, mapType));
-                reader.close();
-
-                for (Map.Entry<String, Object> entry : config.entrySet())
-                {
-                    if (entry.getValue() instanceof Double)
-                    {
-                        // Integer values are stored as double in the gson file, so by doing this we can put it back to an int
-                        if (((Double) entry.getValue()).intValue() == (Double) entry.getValue())
-                        {
-                            config.put(entry.getKey(), ((Double) entry.getValue()).intValue());
-                        }
-                    }
-                }
-
-                for (Field field : configClass.getDeclaredFields())
-                {
-                    if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
-                    {
-                        if (BooleanOption.class.isAssignableFrom(field.getType()))
-                        {
-                            try
-                            {
-                                BooleanOption booleanOption = (BooleanOption) field.get(null);
-
-                                if (config.containsKey(booleanOption.getOptionName()))
-                                {
-                                    boolean configFilevalue = (Boolean) config.get(booleanOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
-                                    if (configFilevalue != booleanOption.getValue())
-                                    {
-                                        setOption(booleanOption.getOptionName(), configFilevalue, false);
-                                    }
-                                }
-                            }
-                            catch (IllegalAccessException e)
-                            {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        else if (IntegerOption.class.isAssignableFrom(field.getType()))
-                        {
-                            try
-                            {
-                                IntegerOption integerOption = (IntegerOption) field.get(null);
-
-                                if (config.containsKey(integerOption.getOptionName()))
-                                {
-                                    int configFileValue = (Integer) config.get(integerOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
-                                    if (configFileValue != integerOption.getValue())
-                                    {
-                                        setOption(integerOption.getOptionName(), configFileValue, false);
-                                    }
-                                }
-                            }
-                            catch (IllegalAccessException e)
-                            {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     private void readConfig()
@@ -595,89 +340,6 @@ public class CyanLibOptionsStorage
             catch (IOException e)
             {
                 throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public void writeConfigOld()
-    {
-        clearUnsavedChangedOptions();
-        Map<String, Object> config = new HashMap<>();
-
-        for (BooleanOption option : booleanOptionList)
-        {
-            config.put(option.getOptionName(), option.getValue());
-        }
-
-        for (IntegerOption option : integerOptionList)
-        {
-            config.put(option.getOptionName(), option.getValue());
-        }
-
-        Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
-
-        if (!Files.exists(path))
-        {
-            try
-            {
-                Files.createFile(path);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        if (!this.isEditingFile)
-        {
-            this.isEditingFile = true;
-
-            try
-            {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                Writer writer = Files.newBufferedWriter(path);
-                gson.toJson(config, writer);
-                writer.close();
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-
-            this.isEditingFile = false;
-        }
-        else
-        {
-            long end = System.currentTimeMillis() + 1000; // 1 s
-            boolean couldWrite = false;
-
-            while (System.currentTimeMillis() < end)
-            {
-                if (!this.isEditingFile)
-                {
-                    this.isEditingFile = true;
-
-                    try
-                    {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        Writer writer = Files.newBufferedWriter(path);
-                        gson.toJson(config, writer);
-                        writer.close();
-                    }
-                    catch (IOException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-
-                    couldWrite = true;
-                    this.isEditingFile = false;
-                    break;
-                }
-            }
-
-            if (!couldWrite)
-            {
-                LOGGER.info("[CyanLibCore] Could not write the file %s because it is already being written (for more than 1 sec)".formatted(path.getFileName().toString()));
             }
         }
     }
