@@ -59,13 +59,10 @@ public class CyanLibConfigScreen extends Screen
             {
                 for (Map.Entry<String, Object> entry : cyanLibOptionsStorage.getUnsavedChangedOptions().entrySet())
                 {
-                    if (entry.getValue() instanceof Boolean)
+                    Object value = entry.getValue();
+                    if (value instanceof Boolean || value instanceof Integer)
                     {
-                        cyanLibOptionsStorage.setBooleanOption(entry.getKey(), (Boolean) entry.getValue(), false);
-                    }
-                    else if (entry.getValue() instanceof Integer)
-                    {
-                        cyanLibOptionsStorage.setIntegerOption(entry.getKey(), (Integer) entry.getValue(), false);
+                        cyanLibOptionsStorage.setOption(entry.getKey(), value, false);
                     }
                 }
             }
@@ -97,7 +94,8 @@ public class CyanLibConfigScreen extends Screen
         addSelectableChild(optionList);
 
         addDrawableChild(
-                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button -> {
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button ->
+                        {
                             cyanLibOptionsStorage.resetOptions();
                             save = true;
                             close();
@@ -108,7 +106,8 @@ public class CyanLibConfigScreen extends Screen
         );
 
         addDrawableChild(
-                ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
+                ButtonWidget.builder(ScreenTexts.CANCEL, button ->
+                        {
                             save = false;
                             close();
                         })
@@ -117,7 +116,8 @@ public class CyanLibConfigScreen extends Screen
                         .build()
         );
         addDrawableChild(
-                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button -> {
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button ->
+                        {
                             save = true;
                             close();
                         })

@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static fr.aeldit.cyanlib.core.config.CoreConfig.MIN_OP_LVL_EDIT_CONFIG;
-import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptions;
+import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.*;
 
 public class CyanLibConfigCommands
@@ -59,7 +59,7 @@ public class CyanLibConfigCommands
         dispatcher.register(CommandManager.literal(modid)
                 .then(CommandManager.literal("config")
                         .then(CommandManager.argument("optionName", StringArgumentType.string())
-                                .suggests((context, builder) -> getOptions(builder, libUtils.getOptionsStorage()))
+                                .suggests((context, builder) -> getOptionsSuggestions(builder, libUtils.getOptionsStorage()))
                                 .then(CommandManager.literal("set")
                                         .then(CommandManager.argument("booleanValue", BoolArgumentType.bool())
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
@@ -137,10 +137,10 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (libUtils.getOptionsStorage().booleanOptionExists(option))
+                if (libUtils.getOptionsStorage().optionExists(option))
                 {
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    libUtils.getOptionsStorage().setBooleanOption(option, value, true);
+                    libUtils.getOptionsStorage().setOption(option, value, true);
 
                     if (libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
                     {
@@ -200,10 +200,10 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (libUtils.getOptionsStorage().booleanOptionExists(option))
+                if (libUtils.getOptionsStorage().optionExists(option))
                 {
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    libUtils.getOptionsStorage().setBooleanOption(option, value, true);
+                    libUtils.getOptionsStorage().setOption(option, value, true);
 
                     if (libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
                     {
@@ -264,11 +264,11 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (libUtils.getOptionsStorage().integerOptionExists(option))
+                if (libUtils.getOptionsStorage().optionExists(option))
                 {
                     int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                    if (libUtils.getOptionsStorage().setIntegerOption(option, value, true))
+                    if (libUtils.getOptionsStorage().setOption(option, value, true))
                     {
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
@@ -326,11 +326,11 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                if (libUtils.getOptionsStorage().integerOptionExists(option))
+                if (libUtils.getOptionsStorage().optionExists(option))
                 {
                     int value = IntegerArgumentType.getInteger(context, "integerValue");
 
-                    if (libUtils.getOptionsStorage().setIntegerOption(option, value, true))
+                    if (libUtils.getOptionsStorage().setOption(option, value, true))
                     {
                         libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
                                 libUtils.getLanguageUtils().getTranslation(SET + option),
@@ -390,7 +390,7 @@ public class CyanLibConfigCommands
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
-                Object value = libUtils.getOptionsStorage().getOption(option);
+                Object value = libUtils.getOptionsStorage().getOptionValue(option);
                 if (value != null)
                 {
                     libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
@@ -544,29 +544,34 @@ public class CyanLibConfigCommands
 
                 for (String option : libUtils.getOptionsStorage().getOptionsNames())
                 {
-                    if (libUtils.getOptionsStorage().booleanOptionExists(option))
+                    if (libUtils.getOptionsStorage().optionExists(option))
                     {
-                        libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                libUtils.getLanguageUtils().getTranslation(GETCFG + option),
-                                "%s.msg.getCfg.%s".formatted(modid, option),
-                                false,
-                                libUtils.getOptionsStorage().getBooleanOptionValue(option) ? Text.literal(Formatting.GREEN + "ON").
-                                        setStyle(Style.EMPTY.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set false true".formatted(modid, option)))
-                                        ) : Text.literal(Formatting.RED + "OFF").
-                                        setStyle(Style.EMPTY.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set true true".formatted(modid, option)))
-                                        )
-                        );
-                    }
-                    else if (libUtils.getOptionsStorage().integerOptionExists(option))
-                    {
-                        libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                libUtils.getLanguageUtils().getTranslation(GETCFG + option),
-                                "%s.msg.getCfg.%s".formatted(modid, option),
-                                false,
-                                Formatting.GOLD + Integer.toString(libUtils.getOptionsStorage().getIntegerOptionValue(option))
-                        );
+                        Object value = libUtils.getOptionsStorage().getOptionValue(option);
+
+                        if (value instanceof Boolean booleanValue)
+                        {
+                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                                    libUtils.getLanguageUtils().getTranslation(GETCFG + option),
+                                    "%s.msg.getCfg.%s".formatted(modid, option),
+                                    false,
+                                    booleanValue ? Text.literal(Formatting.GREEN + "ON").
+                                            setStyle(Style.EMPTY.withClickEvent(
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set false true".formatted(modid, option)))
+                                            ) : Text.literal(Formatting.RED + "OFF").
+                                            setStyle(Style.EMPTY.withClickEvent(
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set true true".formatted(modid, option)))
+                                            )
+                            );
+                        }
+                        else if (value instanceof Integer integerValue)
+                        {
+                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                                    libUtils.getLanguageUtils().getTranslation(GETCFG + option),
+                                    "%s.msg.getCfg.%s".formatted(modid, option),
+                                    false,
+                                    Formatting.GOLD + integerValue.toString()
+                            );
+                        }
                     }
                 }
 

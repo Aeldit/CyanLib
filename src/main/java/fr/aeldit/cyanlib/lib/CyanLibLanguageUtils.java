@@ -65,7 +65,9 @@ public class CyanLibLanguageUtils
             {
                 Gson gsonReader = new Gson();
                 Reader reader = Files.newBufferedReader(languagePath);
-                TypeToken<Map<String, String>> mapType = new TypeToken<>() {};
+                TypeToken<Map<String, String>> mapType = new TypeToken<>()
+                {
+                };
                 translations.putAll(gsonReader.fromJson(reader, mapType));
                 reader.close();
             }
@@ -87,7 +89,7 @@ public class CyanLibLanguageUtils
     /**
      * @param key the key of the translation
      * @return The {@code String "null"} if the translations are {@code null} or if the translations don't contain the {@code key},
-     *         and the value associated with the {@code key} otherwise
+     * and the value associated with the {@code key} otherwise
      */
     public String getTranslation(String key)
     {
@@ -110,7 +112,8 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
+        Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
+        if (option != null && (Boolean) option)
         {
             player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
@@ -139,7 +142,8 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
     {
-        if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
+        Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
+        if (option != null && (Boolean) option)
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }

@@ -22,7 +22,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 
-public class BooleanOption implements OptionConverter
+public class BooleanOption implements Option<Boolean>
 {
     private final String optionName;
     private final boolean defaultValue;
@@ -42,31 +42,42 @@ public class BooleanOption implements OptionConverter
         this.value = value;
     }
 
+    @Override
     public String getOptionName()
     {
         return optionName;
     }
 
-    public boolean getDefaultValue()
+    @Override
+    public Boolean getDefaultValue()
     {
         return defaultValue;
     }
 
+    @Override
     public RULES getRule()
     {
         return rule;
     }
 
-    public boolean getValue()
+    @Override
+    public Boolean getValue()
     {
         return value;
     }
 
-    public void setValue(boolean value)
+    @Override
+    public boolean setValue(Object value)
     {
-        this.value = value;
+        if (value instanceof Boolean)
+        {
+            this.value = (Boolean) value;
+            return true;
+        }
+        return false;
     }
 
+    @Override
     public void reset()
     {
         this.value = defaultValue;

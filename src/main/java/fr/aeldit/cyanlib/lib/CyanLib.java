@@ -63,11 +63,12 @@ public class CyanLib
     {
         CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(optionsStorageInstance, configClass));
         optionsStorageInstance.init();
-        ArrayList<String> option = optionsStorageInstance.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
+        ArrayList<String> options = optionsStorageInstance.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
 
-        if (!option.isEmpty())
+        if (!options.isEmpty())
         {
-            if (optionsStorageInstance.getBooleanOptionValue(option.get(0)))
+            Object option = optionsStorage.getOptionValue(options.get(0), Boolean.class);
+            if (option != null && (Boolean) option)
             {
                 languageUtils.loadLanguage();
             }
@@ -96,7 +97,8 @@ public class CyanLib
     {
         if (source.getPlayer() == null)
         {
-            if (optionsStorage.getBooleanOptionValue("useCustomTranslations"))
+            Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
+            if (option != null && (Boolean) option)
             {
                 source.getServer().sendMessage(Text.of(languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
             }

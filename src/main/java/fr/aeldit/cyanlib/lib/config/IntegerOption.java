@@ -24,7 +24,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-public class IntegerOption implements OptionConverter
+public class IntegerOption implements Option<Integer>
 {
     private final String optionName;
     private final int defaultValue;
@@ -109,44 +109,53 @@ public class IntegerOption implements OptionConverter
         setValue(value);
     }
 
+    @Override
     public String getOptionName()
     {
         return optionName;
     }
 
-    public int getDefaultValue()
+    @Override
+    public Integer getDefaultValue()
     {
         return defaultValue;
     }
 
+    @Override
     public RULES getRule()
     {
         return rule;
     }
 
-    public int getValue()
+    @Override
+    public Integer getValue()
     {
         return value;
     }
 
-    public boolean setValue(int value)
+    @Override
+    public boolean setValue(Object valueArg)
     {
-        if (rule.equals(RULES.NONE)
-                || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
-                || (rule.equals(RULES.NEGATIVE_VALUE) && value < 0)
-                || (rule.equals(RULES.OP_LEVELS) && value >= 0 && value <= 4)
-                || (rule.equals(RULES.MAX_VALUE) && value <= max)
-                || (rule.equals(RULES.MIN_VALUE) && value >= min)
-                || (rule.equals(RULES.RANGE) && value >= min && value <= max)
-        )
+        if (valueArg instanceof Integer)
         {
-            this.value = value;
-
-            return true;
+            int value = (Integer) valueArg;
+            if (rule.equals(RULES.NONE)
+                    || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
+                    || (rule.equals(RULES.NEGATIVE_VALUE) && value < 0)
+                    || (rule.equals(RULES.OP_LEVELS) && value >= 0 && value <= 4)
+                    || (rule.equals(RULES.MAX_VALUE) && value <= max)
+                    || (rule.equals(RULES.MIN_VALUE) && value >= min)
+                    || (rule.equals(RULES.RANGE) && value >= min && value <= max)
+            )
+            {
+                this.value = value;
+                return true;
+            }
         }
         return false;
     }
 
+    @Override
     public void reset()
     {
         this.value = defaultValue;
