@@ -34,7 +34,8 @@ public class CyanLib
     private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
-    // This Map stores the Config class and OptionsStorage instance of each mod, the key in the map being the modid of the mod
+    // This Map stores the Config class and OptionsStorage instance of each mod, the key in the map being the modid
+    // of the mod
     public static final Map<String, List<Object>> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
@@ -52,11 +53,12 @@ public class CyanLib
     }
 
     /**
-     * Main class of this library but without the language utils (creates the class but with an empty Map, to prevent crashes)
+     * Main class of this library but without the language utils (creates the class but with an empty Map, to prevent
+     * crashes)
      */
     public CyanLib(String modid, CyanLibOptionsStorage optionsStorage)
     {
-        this(modid, optionsStorage, new CyanLibLanguageUtils(modid, optionsStorage, new HashMap<>()));
+        this(modid, optionsStorage, new CyanLibLanguageUtils(modid, new HashMap<>()));
     }
 
     public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance, Class<?> configClass)
@@ -149,7 +151,8 @@ public class CyanLib
      *
      * @param player  the player
      * @param option  the option you want to test
-     * @param msgPath the path to the translation (in the method, the translations path is {@code "MODID.message.OPTION"},
+     * @param msgPath the path to the translation (in the method, the translations path is {@code "MODID.message
+     *                .OPTION"},
      *                where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code msgPath})
      */
     public boolean isOptionAllowed(@NotNull ServerPlayerEntity player, boolean option, String msgPath)

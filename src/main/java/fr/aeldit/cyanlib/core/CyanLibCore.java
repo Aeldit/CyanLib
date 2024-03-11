@@ -36,7 +36,7 @@ public class CyanLibCore
     private static final Map<String, String> DEFAULT_TRANSLATIONS = new HashMap<>();
 
     public static CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
-    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, OPTS_STORAGE, getDefaultTranslations());
+    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, getDefaultTranslations());
     public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE, LANGUAGE_UTILS);
     public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS);
 
@@ -44,7 +44,8 @@ public class CyanLibCore
     {
         if (DEFAULT_TRANSLATIONS.isEmpty())
         {
-            DEFAULT_TRANSLATIONS.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type");
+            DEFAULT_TRANSLATIONS.put("error.optionNotFound", "§cThis option does not exist or you tried to set it to " +
+                    "the wrong type");
             DEFAULT_TRANSLATIONS.put("error.incorrectInteger", "§cThe number you entered is invalid for this option");
 
             DEFAULT_TRANSLATIONS.put("currentValue", "§7Current value : %s");
@@ -59,14 +60,18 @@ public class CyanLibCore
             DEFAULT_TRANSLATIONS.put("headerDescCmd", "§6CyanLib - DESCRIPTION (commands)\n");
             DEFAULT_TRANSLATIONS.put("headerDescOptions", "§6CyanLib - DESCRIPTION (options) :\n");
 
-            DEFAULT_TRANSLATIONS.put("desc.useCustomTranslations", "§3The §duseCustomTranslations §3option defines whether the custom translation will be used or not");
-            DEFAULT_TRANSLATIONS.put("desc.msgToActionBar", "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar or not");
-            DEFAULT_TRANSLATIONS.put("desc.minOpLvlEditConfig", "§3The §dminOpLevelExeEditConfig §3option defines the OP level required to edit the config");
+            DEFAULT_TRANSLATIONS.put("desc.useCustomTranslations", "§3The §duseCustomTranslations §3option defines " +
+                    "whether the custom translation will be used or not");
+            DEFAULT_TRANSLATIONS.put("desc.msgToActionBar", "§3The §dmsgToActionBar §3option defines whether the " +
+                    "messages will be sent to the action bar or not");
+            DEFAULT_TRANSLATIONS.put("desc.minOpLvlEditConfig", "§3The §dminOpLevelExeEditConfig §3option defines the" +
+                    " OP level required to edit the config");
 
             DEFAULT_TRANSLATIONS.put("getCfg.header", "§6CyanLib - OPTIONS\n");
             DEFAULT_TRANSLATIONS.put("getCfg.useCustomTranslations", "§6- §3Use custom translations : %s");
             DEFAULT_TRANSLATIONS.put("getCfg.msgToActionBar", "§6- §3Messages to action bar : %s");
-            DEFAULT_TRANSLATIONS.put("getCfg.minOpLvlEditConfig", "§6- §3Minimum OP level required to edit the config : %s");
+            DEFAULT_TRANSLATIONS.put("getCfg.minOpLvlEditConfig", "§6- §3Minimum OP level required to edit the config" +
+                    " : %s");
         }
         return DEFAULT_TRANSLATIONS;
     }

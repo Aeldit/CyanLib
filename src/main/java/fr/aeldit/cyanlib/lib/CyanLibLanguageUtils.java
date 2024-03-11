@@ -19,7 +19,6 @@ package fr.aeldit.cyanlib.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -33,18 +32,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static fr.aeldit.cyanlib.core.config.CoreConfig.MSG_TO_ACTION_BAR;
+import static fr.aeldit.cyanlib.core.config.CoreConfig.USE_CUSTOM_TRANSLATIONS;
 
 public class CyanLibLanguageUtils
 {
     private final String modid;
-    private final CyanLibOptionsStorage optionsStorage;
     private final Map<String, String> translations = new HashMap<>();
     private final Map<String, String> defaultTranslations;
 
-    public CyanLibLanguageUtils(String modid, CyanLibOptionsStorage optionsStorage, Map<String, String> defaultTranslations)
+    public CyanLibLanguageUtils(String modid, Map<String, String> defaultTranslations)
     {
         this.modid = modid;
-        this.optionsStorage = optionsStorage;
         this.defaultTranslations = defaultTranslations;
     }
 
@@ -88,12 +86,17 @@ public class CyanLibLanguageUtils
 
     /**
      * @param key the key of the translation
-     * @return The {@code String "null"} if the translations are {@code null} or if the translations don't contain the {@code key},
+     * @return The {@code String "null"} if the translations are {@code null} or if the translations don't contain
+     * the {@code key},
      * and the value associated with the {@code key} otherwise
      */
     public String getTranslation(String key)
     {
-        return translations.isEmpty() ? "null" : (translations.get(key) == null ? "null" : translations.get(key));
+        if (translations.isEmpty() || translations.get(key) == null)
+        {
+            return "null";
+        }
+        return translations.get(key);
     }
 
     /**
@@ -112,8 +115,7 @@ public class CyanLibLanguageUtils
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
     {
-        Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
-        if (option != null && (Boolean) option)
+        if (USE_CUSTOM_TRANSLATIONS.getValue())
         {
             player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
         }
@@ -128,7 +130,8 @@ public class CyanLibLanguageUtils
      * the player to have the mod or the resource pack with translations installed), or use the default without needing
      * the player to have them installed.
      * <p>
-     * This method allows to force the message to be or not in the action bar, independently of this class attributes
+     * This function forces the message to be or not in the action bar, independently of the {@code MSG_TO_ACTION_BAR}
+     * option
      *
      * <ul><h2>Required config options :</h2>
      *      <li>{@code useCustomTranslations}</li>
@@ -140,10 +143,10 @@ public class CyanLibLanguageUtils
      * @param toActionBar whether the message will be sent in the action bar or not
      * @param args        the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath, boolean toActionBar, Object... args)
+    public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath,
+                                           boolean toActionBar, Object... args)
     {
-        Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
-        if (option != null && (Boolean) option)
+        if (USE_CUSTOM_TRANSLATIONS.getValue())
         {
             player.sendMessage(Text.translatable(msg, args), toActionBar);
         }
