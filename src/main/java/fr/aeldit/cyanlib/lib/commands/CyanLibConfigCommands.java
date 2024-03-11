@@ -59,7 +59,8 @@ public class CyanLibConfigCommands
         dispatcher.register(CommandManager.literal(modid)
                 .then(CommandManager.literal("config")
                         .then(CommandManager.argument("optionName", StringArgumentType.string())
-                                .suggests((context, builder) -> getOptionsSuggestions(builder, libUtils.getOptionsStorage()))
+                                .suggests((context, builder) -> getOptionsSuggestions(builder,
+                                        libUtils.getOptionsStorage()))
                                 .then(CommandManager.literal("set")
                                         .then(CommandManager.argument("booleanValue", BoolArgumentType.bool())
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
@@ -99,7 +100,8 @@ public class CyanLibConfigCommands
     {
         if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            if (libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()),
+                    MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 libUtils.getLanguageUtils().loadLanguage();
 
@@ -116,7 +118,8 @@ public class CyanLibConfigCommands
      * Called by the command {@code /modid <optionName> set [booleanValue] [mode]}
      * <p>
      * Sets the value of the given {@code boolean option} to the given {@code boolean value} and executes the
-     * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config <optionName>} otherwise.
+     * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config
+     * <optionName>} otherwise.
      * This allows to see the changed option in the chat
      *
      * <ul><h2>Translations paths :</h2>
@@ -156,11 +159,13 @@ public class CyanLibConfigCommands
 
                     if (BoolArgumentType.getBool(context, "mode"))
                     {
-                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(modid));
+                        source.getServer().getCommandManager().executeWithPrefix(source,
+                                "/%s get-config".formatted(modid));
                     }
                     else
                     {
-                        source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(modid, option));
+                        source.getServer().getCommandManager().executeWithPrefix(source,
+                                "/%s config %s".formatted(modid, option));
                     }
                 }
                 else
@@ -181,12 +186,14 @@ public class CyanLibConfigCommands
      * Sets the value of the given {@code boolean option} to the given {@code boolean value}
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
+     *      (context, "optionName")})</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
+     *      StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      */
@@ -239,17 +246,20 @@ public class CyanLibConfigCommands
      * Called by the command {@code /modid <optionName> set [intValue] [mode]}
      * <p>
      * Sets the value of the given {@code int option} to the given {@code int value} and executes the
-     * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config <optionName>} otherwise.
+     * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config
+     * <optionName>} otherwise.
      * This allows to see the changed option in the chat
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
+     *      (context, "optionName")})</li>
      *      <li>{@code "modid.msg.incorrectInteger"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
+     *      StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
@@ -272,11 +282,13 @@ public class CyanLibConfigCommands
                     {
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
-                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s get-config".formatted(modid));
+                            source.getServer().getCommandManager().executeWithPrefix(source,
+                                    "/%s get-config".formatted(modid));
                         }
                         else
                         {
-                            source.getServer().getCommandManager().executeWithPrefix(source, "/%s config %s".formatted(modid, option));
+                            source.getServer().getCommandManager().executeWithPrefix(source,
+                                    "/%s config %s".formatted(modid, option));
                         }
                     }
                     else
@@ -305,13 +317,15 @@ public class CyanLibConfigCommands
      * Sets the value of the given {@code int option} to the given {@code int value}
      *
      * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
+     *      (context, "optionName")})</li>
      *      <li>{@code "modid.msg.incorrectInteger"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
+     *      StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
@@ -366,7 +380,8 @@ public class CyanLibConfigCommands
      *
      * <ul><h2>Translations paths :</h2>
      *      <li>{@code "modid.msg.dashSeparation"}</li>
-     *      <li>{@code "modid.msg.getDesc.option"} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@code "modid.msg.getDesc.option"} (option is the command argument {@code StringArgumentType
+     *      .getString(context, "optionName")})</li>
      *      <li>{@code "modid.msg.currentValue"}</li>
      *      <li>{@code "modid.msg.setValue"}</li>
      *      <li>{@code "modid.msg.optionNotFound"}</li>
@@ -374,7 +389,8 @@ public class CyanLibConfigCommands
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@code "dashSeparation"}</li>
-     *      <li>{@link TranslationsPrefixes#DESC} + {@code option} (option is the command argument {@code StringArgumentType.getString(context, "optionName")})</li>
+     *      <li>{@link TranslationsPrefixes#DESC} + {@code option} (option is the command argument {@code
+     *      StringArgumentType.getString(context, "optionName")})</li>
      *      <li>{@code "currentValue"}</li>
      *      <li>{@code "setValue"}</li>
      *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
@@ -412,10 +428,13 @@ public class CyanLibConfigCommands
                                 false,
                                 (Boolean) value ? Text.literal(Formatting.GREEN + "ON (click to change)").
                                         setStyle(Style.EMPTY.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set false false".formatted(modid, option)))
+                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set " +
+                                                        "false false").formatted(modid, option)))
                                         ) : Text.literal(Formatting.RED + "OFF (click to change)").
                                         setStyle(Style.EMPTY.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set true false".formatted(modid, option)))
+                                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set " +
+                                                        "true" +
+                                                        " false").formatted(modid, option)))
                                         )
                         );
                     }
@@ -436,23 +455,33 @@ public class CyanLibConfigCommands
                                     false,
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 0 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "0 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "1")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 1 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "1 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "2")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 2 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "2 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "3")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 3 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "3 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "4")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 4 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "4 false").formatted(modid, option)))
                                             )
                             );
                         }
@@ -467,23 +496,33 @@ public class CyanLibConfigCommands
                                     false,
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 8 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "8 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "16")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 16 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "16 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "32")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 32 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "32 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "64")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 64 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "64 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "128")).
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set 128 false".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "128 false").formatted(modid, option)))
                                             )
                             );
                         }
@@ -556,10 +595,14 @@ public class CyanLibConfigCommands
                                     false,
                                     booleanValue ? Text.literal(Formatting.GREEN + "ON").
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set false true".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "false true").formatted(modid, option)))
                                             ) : Text.literal(Formatting.RED + "OFF").
                                             setStyle(Style.EMPTY.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/%s config %s set true true".formatted(modid, option)))
+                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
+                                                            " " +
+                                                            "true true").formatted(modid, option)))
                                             )
                             );
                         }

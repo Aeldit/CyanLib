@@ -52,10 +52,7 @@ public class CyanLibOptionsStorage
     private final Map<String, Object> unsavedChangedOptions = new HashMap<>();
     private boolean isEditingFile = false;
 
-    // We use synchronized lists because 2 players can edit the config at the same time
-    private final List<BooleanOption> booleanOptionList = Collections.synchronizedList(new ArrayList<>());
-    private final List<IntegerOption> integerOptionList = Collections.synchronizedList(new ArrayList<>());
-
+    // We use a synchronized list because 2 players can edit the config at the same time
     private final List<Option<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
     public CyanLibOptionsStorage(String modid, Class<?> configClass)
@@ -163,8 +160,7 @@ public class CyanLibOptionsStorage
 
     public void resetOptions()
     {
-        booleanOptionList.forEach(BooleanOption::reset);
-        integerOptionList.forEach(IntegerOption::reset);
+        optionsList.forEach(Option::reset);
     }
 
     public boolean optionExists(String optionName)
@@ -184,22 +180,15 @@ public class CyanLibOptionsStorage
      *
      * @return a suggestion with the available options
      */
-    public static CompletableFuture<Suggestions> getOptionsSuggestions(@NotNull SuggestionsBuilder builder, @NotNull CyanLibOptionsStorage optionsStorage)
+    public static CompletableFuture<Suggestions> getOptionsSuggestions(@NotNull SuggestionsBuilder builder,
+                                                                       @NotNull CyanLibOptionsStorage optionsStorage)
     {
         return CommandSource.suggestMatching(optionsStorage.getOptionsNames(), builder);
     }
 
     public boolean hasRule(String optionName, RULES rule)
     {
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getRule() == rule;
-            }
-        }
-
-        for (IntegerOption option : integerOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -301,7 +290,8 @@ public class CyanLibOptionsStorage
                                 if (config.containsKey(booleanOption.getOptionName()))
                                 {
                                     boolean configFileValue = (Boolean) config.get(booleanOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
+                                    // If the value in the config file is different from the default one, we change
+                                    // its value in the class
                                     if (configFileValue != booleanOption.getValue())
                                     {
                                         setOption(booleanOption.getOptionName(), configFileValue, false);
@@ -322,7 +312,8 @@ public class CyanLibOptionsStorage
                                 if (config.containsKey(integerOption.getOptionName()))
                                 {
                                     int configFileValue = (Integer) config.get(integerOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
+                                    // If the value in the config file is different from the default one, we change
+                                    // its value in the class
                                     if (configFileValue != integerOption.getValue())
                                     {
                                         setOption(integerOption.getOptionName(), configFileValue, false);
@@ -417,7 +408,9 @@ public class CyanLibOptionsStorage
 
             if (!couldWrite)
             {
-                LOGGER.info("[CyanLibCore] Could not write the file %s because it is already being written (for more than 1 sec)".formatted(path.getFileName().toString()));
+                LOGGER.info(("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
+                        " " +
+                        "than 1 sec)").formatted(path.getFileName().toString()));
             }
         }
     }
