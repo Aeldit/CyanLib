@@ -37,7 +37,7 @@ public class CyanLibCore
 
     public static CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
     public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, getDefaultTranslations());
-    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE, LANGUAGE_UTILS);
+    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE);
     public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS);
 
     public static @NotNull Map<String, String> getDefaultTranslations()

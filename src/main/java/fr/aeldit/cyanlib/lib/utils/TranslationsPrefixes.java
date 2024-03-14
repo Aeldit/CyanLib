@@ -29,6 +29,5 @@ public class TranslationsPrefixes
     public static final String ERROR = "error.";
     public static final String SET = "set.";
     public static final String DESC = "desc.";
-    public static final String GETCFG = "getCfg.";
-    public static final String RULE = "rule.";
+    public static final String GET_CFG = "getCfg.";
 }

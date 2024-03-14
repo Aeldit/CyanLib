@@ -25,7 +25,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.ERROR;
 
@@ -34,9 +36,9 @@ public class CyanLib
     private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
-    // This Map stores the Config class and OptionsStorage instance of each mod, the key in the map being the modid
+    // This Map stores the CyanLib instance of each mod using this library, the key in the map being the modid
     // of the mod
-    public static final Map<String, List<Object>> CONFIG_CLASS_INSTANCES = new HashMap<>();
+    public static final Map<String, CyanLib> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
      * Main class of this library
@@ -45,7 +47,7 @@ public class CyanLib
      * @param optionsStorage The instance of {@link CyanLibOptionsStorage}
      * @param languageUtils  The instance of {@link CyanLibLanguageUtils}
      */
-    public CyanLib(String modid, @NotNull CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
+    public CyanLib(String modid, CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
     {
         this.modid = modid;
         this.optionsStorage = optionsStorage;
@@ -61,15 +63,16 @@ public class CyanLib
         this(modid, optionsStorage, new CyanLibLanguageUtils(modid, new HashMap<>()));
     }
 
-    public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance, Class<?> configClass)
+    public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance)
     {
-        CONFIG_CLASS_INSTANCES.put(modid, Arrays.asList(optionsStorageInstance, configClass));
+        CONFIG_CLASS_INSTANCES.put(modid, this);
         optionsStorageInstance.init();
         ArrayList<String> options = optionsStorageInstance.getOptionsWithRule(RULES.LOAD_CUSTOM_TRANSLATIONS);
 
         if (!options.isEmpty())
         {
             Object option = optionsStorage.getOptionValue(options.get(0), Boolean.class);
+
             if (option != null && (Boolean) option)
             {
                 languageUtils.loadLanguage();
@@ -86,6 +89,11 @@ public class CyanLib
         return optionsStorage;
     }
 
+    public CyanLibLanguageUtils getLanguageUtils()
+    {
+        return languageUtils;
+    }
+
     /**
      * Returns whether the source is a player or not, and sends a message if this condition is {@code false}
      *
@@ -100,6 +108,7 @@ public class CyanLib
         if (source.getPlayer() == null)
         {
             Object option = optionsStorage.getOptionValue("useCustomTranslations", Boolean.class);
+
             if (option != null && (Boolean) option)
             {
                 source.getServer().sendMessage(Text.of(languageUtils.getTranslation(ERROR + "playerOnlyCmd")));
@@ -113,11 +122,6 @@ public class CyanLib
         return true;
     }
 
-    public CyanLibLanguageUtils getLanguageUtils()
-    {
-        return languageUtils;
-    }
-
     /**
      * Returns whether the player has the required OP level or not, and sends a message if this condition is
      * {@code false}
@@ -127,7 +131,7 @@ public class CyanLib
      * </ul>
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "notOp"}</li>
+     *      <li>{@link TranslationsPrefixes#GET_CFG} + {@code "notOp"}</li>
      * </ul>
      *
      * @param player     the player
@@ -155,16 +159,15 @@ public class CyanLib
      *                .OPTION"},
      *                where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code msgPath})
      */
-    public boolean isOptionAllowed(@NotNull ServerPlayerEntity player, boolean option, String msgPath)
+    public boolean isOptionAllowed(ServerPlayerEntity player, boolean option, String msgPath)
     {
         if (!option)
         {
             languageUtils.sendPlayerMessage(player,
                     languageUtils.getTranslation(ERROR + msgPath),
-                    "%s.msg.%s".formatted(modid, msgPath)
+                    "%s.error.%s".formatted(modid, msgPath)
             );
-            return false;
         }
-        return true;
+        return option;
     }
 }

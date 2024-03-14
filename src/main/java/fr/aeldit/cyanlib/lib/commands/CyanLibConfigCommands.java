@@ -60,7 +60,8 @@ public class CyanLibConfigCommands
                 .then(CommandManager.literal("config")
                         .then(CommandManager.argument("optionName", StringArgumentType.string())
                                 .suggests((context, builder) -> getOptionsSuggestions(builder,
-                                        libUtils.getOptionsStorage()))
+                                        libUtils.getOptionsStorage()
+                                ))
                                 .then(CommandManager.literal("set")
                                         .then(CommandManager.argument("booleanValue", BoolArgumentType.bool())
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
@@ -69,7 +70,9 @@ public class CyanLibConfigCommands
                                                 .executes(this::setBoolOptionFromCommand)
                                         )
                                         .then(CommandManager.argument("integerValue", IntegerArgumentType.integer())
-                                                .suggests((context, builder) -> CommandSource.suggestMatching(Arrays.asList("0", "1", "2", "3", "4"), builder))
+                                                .suggests((context, builder) -> CommandSource.suggestMatching(
+                                                        Arrays.asList("0", "1", "2", "3", "4"), builder)
+                                                )
                                                 .then(CommandManager.argument("mode", BoolArgumentType.bool())
                                                         .executes(this::setIntOption)
                                                 )
@@ -100,12 +103,14 @@ public class CyanLibConfigCommands
     {
         if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(context.getSource().getPlayer()),
-                    MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 libUtils.getLanguageUtils().loadLanguage();
 
-                libUtils.getLanguageUtils().sendPlayerMessage(context.getSource().getPlayer(),
+                libUtils.getLanguageUtils().sendPlayerMessage(
+                        player,
                         libUtils.getLanguageUtils().getTranslation("translationsReloaded"),
                         "%s.msg.translationsReloaded".formatted(modid)
                 );
@@ -160,12 +165,14 @@ public class CyanLibConfigCommands
                     if (BoolArgumentType.getBool(context, "mode"))
                     {
                         source.getServer().getCommandManager().executeWithPrefix(source,
-                                "/%s get-config".formatted(modid));
+                                "/%s get-config".formatted(modid)
+                        );
                     }
                     else
                     {
                         source.getServer().getCommandManager().executeWithPrefix(source,
-                                "/%s config %s".formatted(modid, option));
+                                "/%s config %s".formatted(modid, option)
+                        );
                     }
                 }
                 else
@@ -283,12 +290,14 @@ public class CyanLibConfigCommands
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
                             source.getServer().getCommandManager().executeWithPrefix(source,
-                                    "/%s get-config".formatted(modid));
+                                    "/%s get-config".formatted(modid)
+                            );
                         }
                         else
                         {
                             source.getServer().getCommandManager().executeWithPrefix(source,
-                                    "/%s config %s".formatted(modid, option));
+                                    "/%s config %s".formatted(modid, option)
+                            );
                         }
                     }
                     else
@@ -558,8 +567,8 @@ public class CyanLibConfigCommands
      *
      * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
      *      <li>{@code "dashSeparation"}</li>
-     *      <li>{@link TranslationsPrefixes#GETCFG} + {@code "header"}</li>
-     *      <li>{@link TranslationsPrefixes#GETCFG} + {@code option} (option is the parameter of the function)</li>
+     *      <li>{@link TranslationsPrefixes#GET_CFG} + {@code "header"}</li>
+     *      <li>{@link TranslationsPrefixes#GET_CFG} + {@code option} (option is the parameter of the function)</li>
      * </ul>
      */
     public int getConfigOptions(@NotNull CommandContext<ServerCommandSource> context)
@@ -576,7 +585,7 @@ public class CyanLibConfigCommands
                         false
                 );
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                        libUtils.getLanguageUtils().getTranslation(GETCFG + "header"),
+                        libUtils.getLanguageUtils().getTranslation(GET_CFG + "header"),
                         "%s.msg.getCfg.header".formatted(modid),
                         false
                 );
@@ -590,7 +599,7 @@ public class CyanLibConfigCommands
                         if (value instanceof Boolean booleanValue)
                         {
                             libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation(GETCFG + option),
+                                    libUtils.getLanguageUtils().getTranslation(GET_CFG + option),
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     booleanValue ? Text.literal(Formatting.GREEN + "ON").
@@ -609,7 +618,7 @@ public class CyanLibConfigCommands
                         else if (value instanceof Integer integerValue)
                         {
                             libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation(GETCFG + option),
+                                    libUtils.getLanguageUtils().getTranslation(GET_CFG + option),
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     Formatting.GOLD + integerValue.toString()

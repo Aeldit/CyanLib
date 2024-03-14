@@ -71,6 +71,11 @@ public class CyanLibOptionsStorage
         return modid;
     }
 
+    public Class<?> getConfigClass()
+    {
+        return configClass;
+    }
+
     public ArrayList<String> getOptionsNames()
     {
         if (optionsNames.isEmpty())
@@ -110,6 +115,13 @@ public class CyanLibOptionsStorage
         return options.toArray(SimpleOption[]::new);
     }
 
+    /**
+     * Returns the value of the given option if it exists and is of the wanted type | {@code null} otherwise
+     *
+     * @param optionName   The name of the option
+     * @param expectedType The expected output type
+     * @return The value or {@code null}
+     */
     @Nullable
     public Object getOptionValue(String optionName, Class<?> expectedType)
     {
@@ -180,8 +192,10 @@ public class CyanLibOptionsStorage
      *
      * @return a suggestion with the available options
      */
-    public static CompletableFuture<Suggestions> getOptionsSuggestions(@NotNull SuggestionsBuilder builder,
-                                                                       @NotNull CyanLibOptionsStorage optionsStorage)
+    public static CompletableFuture<Suggestions> getOptionsSuggestions(
+            @NotNull SuggestionsBuilder builder,
+            @NotNull CyanLibOptionsStorage optionsStorage
+    )
     {
         return CommandSource.suggestMatching(optionsStorage.getOptionsNames(), builder);
     }

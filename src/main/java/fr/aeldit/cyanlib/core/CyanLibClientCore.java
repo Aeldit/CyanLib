@@ -17,7 +17,6 @@
 
 package fr.aeldit.cyanlib.core;
 
-import fr.aeldit.cyanlib.core.config.CoreConfig;
 import fr.aeldit.cyanlib.lib.gui.CyanLibModsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -34,7 +33,7 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LIB_UTILS.init(MODID, OPTS_STORAGE, CoreConfig.class);
+        LIB_UTILS.init(MODID, OPTS_STORAGE);
 
         KeyBinding mainScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "cyanlib.keybindings.openScreen.config",
