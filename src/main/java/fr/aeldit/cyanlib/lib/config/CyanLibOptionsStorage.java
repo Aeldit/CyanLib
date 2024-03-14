@@ -52,8 +52,8 @@ public class CyanLibOptionsStorage
     private final Map<String, Object> unsavedChangedOptions = new HashMap<>();
     private boolean isEditingFile = false;
 
-    private final List<BooleanOption> booleanOptionList = Collections.synchronizedList(new ArrayList<>());
-    private final List<IntegerOption> integerOptionList = Collections.synchronizedList(new ArrayList<>());
+    // We use a synchronized list because 2 players can edit the config at the same time
+    private final List<Option<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
     public CyanLibOptionsStorage(String modid, Class<?> configClass)
     {
@@ -69,6 +69,20 @@ public class CyanLibOptionsStorage
     public String getModid()
     {
         return modid;
+    }
+
+    public Class<?> getConfigClass()
+    {
+        return configClass;
+    }
+
+    public ArrayList<String> getOptionsNames()
+    {
+        if (optionsNames.isEmpty())
+        {
+            optionsList.forEach(option -> optionsNames.add(option.getOptionName()));
+        }
+        return optionsNames;
     }
 
     public Map<String, Object> getUnsavedChangedOptions()
@@ -90,7 +104,8 @@ public class CyanLibOptionsStorage
         {
             try
             {
-                options.add(((OptionConverter) field.get(null)).asConfigOption());
+                //options.add(((OptionConverter) field.get(null)).asConfigOption());
+                options.add(((Option<?>) field.get(null)).asConfigOption());
             }
             catch (IllegalAccessException e)
             {
@@ -100,63 +115,47 @@ public class CyanLibOptionsStorage
         return options.toArray(SimpleOption[]::new);
     }
 
-    public boolean getBooleanOptionValue(String optionName)
+    /**
+     * Returns the value of the given option if it exists and is of the wanted type | {@code null} otherwise
+     *
+     * @param optionName   The name of the option
+     * @param expectedType The expected output type
+     * @return The value or {@code null}
+     */
+    @Nullable
+    public Object getOptionValue(String optionName, Class<?> expectedType)
     {
-        for (BooleanOption option : booleanOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
-                return option.getValue();
+                // If the given option is of the expected type
+                if (option.getValue().getClass().equals(expectedType))
+                {
+                    return option.getValue();
+                }
+                break;
             }
-        }
-        return false;
-    }
-
-    public int getIntegerOptionValue(String optionName)
-    {
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getValue();
-            }
-        }
-        return 0;
-    }
-
-    public @Nullable Object getOption(String optionName)
-    {
-        if (booleanOptionExists(optionName))
-        {
-            return getBooleanOptionValue(optionName);
-        }
-        else if (integerOptionExists(optionName))
-        {
-            return getIntegerOptionValue(optionName);
         }
         return null;
     }
 
-    public void setBooleanOption(String optionName, boolean value, boolean save)
+    @Nullable
+    public Object getOptionValue(String optionName)
     {
-        for (BooleanOption option : booleanOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
-                option.setValue(value);
-                break;
+                return option.getValue();
             }
         }
-
-        if (save)
-        {
-            writeConfig();
-        }
+        return null;
     }
 
-    public boolean setIntegerOption(String optionName, int value, boolean save)
+    public boolean setOption(String optionName, Object value, boolean save)
     {
-        for (IntegerOption option : integerOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -173,13 +172,12 @@ public class CyanLibOptionsStorage
 
     public void resetOptions()
     {
-        booleanOptionList.forEach(BooleanOption::reset);
-        integerOptionList.forEach(IntegerOption::reset);
+        optionsList.forEach(Option::reset);
     }
 
-    public boolean booleanOptionExists(String optionName)
+    public boolean optionExists(String optionName)
     {
-        for (BooleanOption option : booleanOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -187,28 +185,6 @@ public class CyanLibOptionsStorage
             }
         }
         return false;
-    }
-
-    public boolean integerOptionExists(String optionName)
-    {
-        for (IntegerOption option : integerOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public ArrayList<String> getOptionsNames()
-    {
-        if (optionsNames.isEmpty())
-        {
-            booleanOptionList.forEach(option -> optionsNames.add(option.getOptionName()));
-            integerOptionList.forEach(option -> optionsNames.add(option.getOptionName()));
-        }
-        return optionsNames;
     }
 
     /**
@@ -216,22 +192,17 @@ public class CyanLibOptionsStorage
      *
      * @return a suggestion with the available options
      */
-    public static CompletableFuture<Suggestions> getOptions(@NotNull SuggestionsBuilder builder, @NotNull CyanLibOptionsStorage optionsStorage)
+    public static CompletableFuture<Suggestions> getOptionsSuggestions(
+            @NotNull SuggestionsBuilder builder,
+            @NotNull CyanLibOptionsStorage optionsStorage
+    )
     {
         return CommandSource.suggestMatching(optionsStorage.getOptionsNames(), builder);
     }
 
     public boolean hasRule(String optionName, RULES rule)
     {
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getRule() == rule;
-            }
-        }
-
-        for (IntegerOption option : integerOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -245,15 +216,7 @@ public class CyanLibOptionsStorage
     {
         ArrayList<String> validOptions = new ArrayList<>();
 
-        for (BooleanOption option : booleanOptionList)
-        {
-            if (option.getRule() == rule)
-            {
-                validOptions.add(option.getOptionName());
-            }
-        }
-
-        for (IntegerOption option : integerOptionList)
+        for (Option<?> option : optionsList)
         {
             if (option.getRule() == rule)
             {
@@ -267,6 +230,7 @@ public class CyanLibOptionsStorage
     {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
 
+        // If the file does not exist, we simply load the class in memory
         if (!Files.exists(path))
         {
             for (Field field : configClass.getDeclaredFields())
@@ -278,7 +242,7 @@ public class CyanLibOptionsStorage
                         try
                         {
                             BooleanOption booleanOption = (BooleanOption) field.get(null);
-                            booleanOptionList.add(booleanOption);
+                            optionsList.add(booleanOption);
                         }
                         catch (IllegalAccessException e)
                         {
@@ -290,7 +254,7 @@ public class CyanLibOptionsStorage
                         try
                         {
                             IntegerOption integerOption = (IntegerOption) field.get(null);
-                            integerOptionList.add(integerOption);
+                            optionsList.add(integerOption);
                         }
                         catch (IllegalAccessException e)
                         {
@@ -300,13 +264,16 @@ public class CyanLibOptionsStorage
                 }
             }
         }
+        // Otherwise, we load the config from the file
         else
         {
             try
             {
                 Gson gson = new Gson();
                 Reader reader = Files.newBufferedReader(path);
-                TypeToken<Map<String, Object>> mapType = new TypeToken<>() {};
+                TypeToken<Map<String, Object>> mapType = new TypeToken<>()
+                {
+                };
                 Map<String, Object> config = new HashMap<>(gson.fromJson(reader, mapType));
                 reader.close();
 
@@ -314,7 +281,8 @@ public class CyanLibOptionsStorage
                 {
                     if (entry.getValue() instanceof Double)
                     {
-                        // Integer values are stored as double in the gson file, so by doing this we can put it back to an int
+                        // Integer values are stored as double in the gson file, so by doing this we can put them back
+                        // to an int
                         if (((Double) entry.getValue()).intValue() == (Double) entry.getValue())
                         {
                             config.put(entry.getKey(), ((Double) entry.getValue()).intValue());
@@ -322,6 +290,7 @@ public class CyanLibOptionsStorage
                     }
                 }
 
+                //
                 for (Field field : configClass.getDeclaredFields())
                 {
                     if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
@@ -334,11 +303,12 @@ public class CyanLibOptionsStorage
 
                                 if (config.containsKey(booleanOption.getOptionName()))
                                 {
-                                    boolean configFilevalue = (Boolean) config.get(booleanOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
-                                    if (configFilevalue != booleanOption.getValue())
+                                    boolean configFileValue = (Boolean) config.get(booleanOption.getOptionName());
+                                    // If the value in the config file is different from the default one, we change
+                                    // its value in the class
+                                    if (configFileValue != booleanOption.getValue())
                                     {
-                                        setBooleanOption(booleanOption.getOptionName(), configFilevalue, false);
+                                        setOption(booleanOption.getOptionName(), configFileValue, false);
                                     }
                                 }
                             }
@@ -356,10 +326,11 @@ public class CyanLibOptionsStorage
                                 if (config.containsKey(integerOption.getOptionName()))
                                 {
                                     int configFileValue = (Integer) config.get(integerOption.getOptionName());
-                                    // If the value in the config file is different from the default one, we change its value in the class
+                                    // If the value in the config file is different from the default one, we change
+                                    // its value in the class
                                     if (configFileValue != integerOption.getValue())
                                     {
-                                        setIntegerOption(integerOption.getOptionName(), configFileValue, false);
+                                        setOption(integerOption.getOptionName(), configFileValue, false);
                                     }
                                 }
                             }
@@ -383,12 +354,7 @@ public class CyanLibOptionsStorage
         clearUnsavedChangedOptions();
         Map<String, Object> config = new HashMap<>();
 
-        for (BooleanOption option : booleanOptionList)
-        {
-            config.put(option.getOptionName(), option.getValue());
-        }
-
-        for (IntegerOption option : integerOptionList)
+        for (Option<?> option : optionsList)
         {
             config.put(option.getOptionName(), option.getValue());
         }
@@ -456,7 +422,9 @@ public class CyanLibOptionsStorage
 
             if (!couldWrite)
             {
-                LOGGER.info("[CyanLibCore] Could not write the file %s because it is already being written (for more than 1 sec)".formatted(path.getFileName().toString()));
+                LOGGER.info(("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
+                        " " +
+                        "than 1 sec)").formatted(path.getFileName().toString()));
             }
         }
     }

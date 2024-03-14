@@ -17,7 +17,6 @@
 
 package fr.aeldit.cyanlib.lib.gui;
 
-import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
@@ -72,10 +71,11 @@ public class CyanLibModsScreen extends Screen
             {
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
-                                        button -> Objects.requireNonNull(client).setScreen(new CyanLibConfigScreen(
-                                                        (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
+                                        button -> Objects.requireNonNull(client).setScreen(
+                                                new CyanLibConfigScreen(
+                                                        CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage(),
                                                         parent,
-                                                        (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
+                                                        CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage().getConfigClass()
                                                 )
                                         )
                                 )
@@ -87,11 +87,13 @@ public class CyanLibModsScreen extends Screen
             {
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
-                                        button -> Objects.requireNonNull(client).setScreen(new CyanLibConfigScreen(
-                                                (CyanLibOptionsStorage) CONFIG_CLASS_INSTANCES.get(modId).get(0),
-                                                parent,
-                                                (Class<?>) CONFIG_CLASS_INSTANCES.get(modId).get(1)
-                                        ))
+                                        button -> Objects.requireNonNull(client).setScreen(
+                                                new CyanLibConfigScreen(
+                                                        CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage(),
+                                                        parent,
+                                                        CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage().getConfigClass()
+                                                )
+                                        )
                                 )
                                 .dimensions(width - 180, 30 + 30 * (i - 6), 150, 20)
                                 .build()
