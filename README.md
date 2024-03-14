@@ -1,4 +1,4 @@
-![banner](https://github.com/Aeldit/CyanLib/blob/1.20.x/images/banner_small.png?raw=true)
+![banner](https://github.com/Aeldit/CyanLib/blob/1.20.4/images/banner_small.png?raw=true)
 <!-- modrinth_exclude.start -->
 > ❌ I do NOT allow this mod to be ported on the Forge loader, nor to be uploaded on Curseforge
 <!-- modrinth_exclude.end -->
@@ -11,13 +11,13 @@ or
 <details>
 <summary>🎴 Show available versions</summary>
 
-|   MC Version    | Up to date | Latest Version |
-|:---------------:|:----------:|:--------------:|
-| 1.17.x - 1.18.x |     ❌      |    (0.1.8)     |
-|  1.19 - 1.19.2  |     ❌      |    (0.4.1)     |
-|     1.19.3      |     ❌      |    (0.1.9)     |
-|     1.19.4      |     ✅      |     latest     |
-|  1.20 - 1.20.4  |     ✅      |     latest     |
+|       MC Version       | Up to date | Latest Version |
+|:----------------------:|:----------:|:--------------:|
+|    1.17.x - 1.18.x     |     ❌      |     0.1.8      |
+| 1.19 - 1.19.2 / 1.20.x |     ❌      |     0.4.1      |
+|         1.19.3         |     ❌      |     0.1.9      |
+|         1.19.4         |     ✅      |     latest     |
+|         1.20.4         |     ✅      |     latest     |
 
 </details>
 
