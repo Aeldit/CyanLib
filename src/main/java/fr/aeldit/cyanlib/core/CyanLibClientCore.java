@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.core;
 
+import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
 import fr.aeldit.cyanlib.lib.gui.CyanLibModsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -48,7 +49,9 @@ public class CyanLibClientCore implements ClientModInitializer
             }
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, dedicated, environment) -> new CyanLibConfigCommands(MODID, LIB_UTILS).register(dispatcher)
+        );
         LOGGER.info("[CyanLib] Successfully initialized");
     }
 }

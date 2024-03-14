@@ -19,8 +19,6 @@ package fr.aeldit.cyanlib.core;
 
 import fr.aeldit.cyanlib.core.config.CoreConfig;
 import fr.aeldit.cyanlib.lib.CyanLib;
-import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
-import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -36,10 +34,9 @@ public class CyanLibCore
     private static final Map<String, String> DEFAULT_TRANSLATIONS = new HashMap<>();
 
     public static CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, CoreConfig.class);
-    public static CyanLibLanguageUtils LANGUAGE_UTILS = new CyanLibLanguageUtils(MODID, getDefaultTranslations());
     public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE);
-    public static CyanLibConfigCommands CONFIG_COMMANDS = new CyanLibConfigCommands(MODID, LIB_UTILS);
 
+    // This function isn't actually used in this library, it is here only as an example
     public static @NotNull Map<String, String> getDefaultTranslations()
     {
         if (DEFAULT_TRANSLATIONS.isEmpty())

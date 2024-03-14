@@ -17,6 +17,7 @@
 
 package fr.aeldit.cyanlib.core;
 
+import fr.aeldit.cyanlib.lib.commands.CyanLibConfigCommands;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
@@ -29,7 +30,9 @@ public class CyanLibServerCore implements DedicatedServerModInitializer
     {
         LIB_UTILS.init(MODID, OPTS_STORAGE);
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> CONFIG_COMMANDS.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, dedicated, environment) -> new CyanLibConfigCommands(MODID, LIB_UTILS).register(dispatcher)
+        );
         LOGGER.info("[CyanLib] Successfully initialized");
     }
 }
