@@ -159,7 +159,7 @@ public class CyanLib
      *                .OPTION"},
      *                where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code msgPath})
      */
-    public boolean isOptionAllowed(ServerPlayerEntity player, boolean option, String msgPath)
+    public boolean isOptionEnabled(ServerPlayerEntity player, boolean option, String msgPath)
     {
         if (!option)
         {
