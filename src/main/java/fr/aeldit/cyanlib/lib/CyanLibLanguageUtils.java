@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2023  -  Made by Aeldit
+ * Copyright (c) 2023-2024  -  Made by Aeldit
  *
- *              GNU LESSER GENERAL PUBLIC LICENSE
- *                  Version 3, 29 June 2007
+ *               GNU LESSER GENERAL PUBLIC LICENSE
+ *                   Version 3, 29 June 2007
  *
- *  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
- *  Everyone is permitted to copy and distribute verbatim copies
- *  of this license document, but changing it is not allowed.
+ *   Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ *   Everyone is permitted to copy and distribute verbatim copies
+ *   of this license document, but changing it is not allowed.
  *
  *
- * This version of the GNU Lesser General Public License incorporates
- * the terms and conditions of version 3 of the GNU General Public
- * License, supplemented by the additional permissions listed in the LICENSE.txt file
- * in the repo of this mod (https://github.com/Aeldit/CyanLib)
+ *  This version of the GNU Lesser General Public License incorporates
+ *  the terms and conditions of version 3 of the GNU General Public
+ *  License, supplemented by the additional permissions listed in the LICENSE.txt file
+ *  in the repo of this mod (https://github.com/Aeldit/CyanLib)
  */
 
 package fr.aeldit.cyanlib.lib;
@@ -143,8 +143,10 @@ public class CyanLibLanguageUtils
      * @param toActionBar whether the message will be sent in the action bar or not
      * @param args        the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public void sendPlayerMessageActionBar(@NotNull ServerPlayerEntity player, String msg, String tradPath,
-                                           boolean toActionBar, Object... args)
+    public void sendPlayerMessageActionBar(
+            @NotNull ServerPlayerEntity player, String msg, String tradPath,
+            boolean toActionBar, Object... args
+    )
     {
         if (USE_CUSTOM_TRANSLATIONS.getValue())
         {
