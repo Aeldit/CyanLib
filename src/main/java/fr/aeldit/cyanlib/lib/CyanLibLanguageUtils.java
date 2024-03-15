@@ -14,98 +14,77 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.aeldit.cyanlib.core.config.CoreConfig.MSG_TO_ACTION_BAR;
-import static fr.aeldit.cyanlib.core.config.CoreConfig.USE_CUSTOM_TRANSLATIONS;
+import static fr.aeldit.cyanlib.core.config.CoreCyanLibConfig.MSG_TO_ACTION_BAR;
 
 public class CyanLibLanguageUtils
 {
     private final String modid;
-    private final Map<String, String> translations = new HashMap<>();
-    private final Map<String, String> defaultTranslations;
+    // Map<modid, Map<translationKey, translation>>
+    private static final Map<String, Map<String, String>> translations = new HashMap<>(0);
 
-    public CyanLibLanguageUtils(String modid, Map<String, String> defaultTranslations)
+    public CyanLibLanguageUtils(String modid)
     {
         this.modid = modid;
-        this.defaultTranslations = defaultTranslations;
     }
 
-    /**
-     * Loads the custom translations into this class translations
-     */
-    public void loadLanguage()
+    public void loadCustomLanguage(Map<String, String> defaultTranslations)
     {
-        Path languagePath = FabricLoader.getInstance().getConfigDir().resolve(modid + "/translations.json");
+        Path customLangPath = FabricLoader.getInstance().getConfigDir().resolve(modid + "/custom_lang.json");
 
-        if (!Files.exists(languagePath))
+        if (!Files.exists(customLangPath))
         {
-            translations.putAll(defaultTranslations);
+            translations.put(modid, defaultTranslations);
         }
         else
         {
             try
             {
                 Gson gsonReader = new Gson();
-                Reader reader = Files.newBufferedReader(languagePath);
+                Reader reader = Files.newBufferedReader(customLangPath);
                 TypeToken<Map<String, String>> mapType = new TypeToken<>()
                 {
                 };
-                translations.putAll(gsonReader.fromJson(reader, mapType));
+                translations.put(modid, gsonReader.fromJson(reader, mapType));
                 reader.close();
             }
             catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
+
+            // If there are missing translations in the provided one, we add them from the default translations
+            Map<String, String> currentModTranslations = translations.get(modid);
+
+            for (String key : defaultTranslations.keySet())
+            {
+                if (!currentModTranslations.containsKey(key))
+                {
+                    translations.get(modid).put(key, defaultTranslations.get(key));
+                }
+            }
         }
     }
 
-    /**
-     * Clears the translations map, so it doesn't use too much memory
-     */
-    public void unload()
+    private String getTranslation(String translationKey)
     {
-        translations.clear();
-    }
-
-    /**
-     * @param key the key of the translation
-     * @return The {@code String "null"} if the translations are {@code null} or if the translations don't contain
-     * the {@code key},
-     * and the value associated with the {@code key} otherwise
-     */
-    public String getTranslation(String key)
-    {
-        if (translations.isEmpty() || translations.get(key) == null)
+        if (translations.containsKey(modid) && translations.get(modid).containsKey(translationKey))
         {
-            return "null";
+            return translations.get(modid).get(translationKey);
         }
-        return translations.get(key);
+        return "null";
     }
 
     /**
-     * Sends a message to the player but with the possibility of using the translation (which will require
-     * the player to have the mod or the resource pack with translations installed), or use the default without needing
-     * the player to have them installed
+     * Sends a message to the player using the custom language if it is initialized, using the default translations
+     * otherwise
      *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code useCustomTranslations}</li>
-     * </ul>
-     *
-     * @param player   the player to whom the message will be sent
-     * @param msg      the default translation
-     * @param tradPath the translation path (requires the player to have the mod/resource pack)
-     * @param args     the arguments to pass to the message (can be null). (You can put more than 1 arg)
+     * @param player          The player to whom the message will be sent
+     * @param translationPath The translation key (ex: "cyanlib.error.notOp")
+     * @param args            The arguments to pass to the message (can be omitted). (You can put more than 1 arg)
      */
-    public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String msg, String tradPath, Object... args)
+    public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String translationPath, Object... args)
     {
-        if (USE_CUSTOM_TRANSLATIONS.getValue())
-        {
-            player.sendMessage(Text.translatable(msg, args), MSG_TO_ACTION_BAR.getValue());
-        }
-        else
-        {
-            player.sendMessage(Text.translatable(tradPath, args), MSG_TO_ACTION_BAR.getValue());
-        }
+        player.sendMessage(Text.translatable(getTranslation(translationPath), args), MSG_TO_ACTION_BAR.getValue());
     }
 
     /**
@@ -116,28 +95,15 @@ public class CyanLibLanguageUtils
      * This function forces the message to be or not in the action bar, independently of the {@code MSG_TO_ACTION_BAR}
      * option
      *
-     * <ul><h2>Required config options :</h2>
-     *      <li>{@code useCustomTranslations}</li>
-     * </ul>
-     *
-     * @param player      the player to whom the message will be sent
-     * @param msg         the default translation
-     * @param tradPath    the translation path (requires the player to have the mod/resource pack)
-     * @param toActionBar whether the message will be sent in the action bar or not
-     * @param args        the arguments to pass to the message (can be null). (You can put more than 1 arg)
+     * @param player          the player to whom the message will be sent
+     * @param translationPath the translation key
+     * @param toActionBar     whether the message will be sent in the action bar or not
+     * @param args            the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
     public void sendPlayerMessageActionBar(
-            @NotNull ServerPlayerEntity player, String msg, String tradPath,
-            boolean toActionBar, Object... args
+            @NotNull ServerPlayerEntity player, String translationPath, boolean toActionBar, Object... args
     )
     {
-        if (USE_CUSTOM_TRANSLATIONS.getValue())
-        {
-            player.sendMessage(Text.translatable(msg, args), toActionBar);
-        }
-        else
-        {
-            player.sendMessage(Text.translatable(tradPath, args), toActionBar);
-        }
+        player.sendMessage(Text.translatable(getTranslation(translationPath), args), toActionBar);
     }
 }

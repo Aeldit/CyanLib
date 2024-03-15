@@ -1,5 +1,6 @@
 package fr.aeldit.cyanlib.lib.gui;
 
+import fr.aeldit.cyanlib.lib.config.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,14 +21,14 @@ public class CyanLibConfigScreen extends Screen
 {
     private final CyanLibOptionsStorage cyanLibOptionsStorage;
     private final Screen parent;
-    private final Class<?> configOptionsClass;
+    private final CyanLibConfig configOptionsClass;
     private OptionListWidget optionList;
     // Used for when the player uses the escape key to exit the screen, which like the cancel button, reverts the
     // modified but no saved options to their previous value
     private boolean save = false;
 
     public CyanLibConfigScreen(
-            @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, Class<?> configOptionsClass
+            @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, CyanLibConfig configOptionsClass
     )
     {
         super(Text.translatable("%s.screen.options.title".formatted(cyanLibOptionsStorage.getModid())));

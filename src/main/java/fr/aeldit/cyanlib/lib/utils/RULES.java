@@ -16,9 +16,6 @@ package fr.aeldit.cyanlib.lib.utils;
  * <p>
  * {@link #RANGE} indicates that the option can be between 2 values, which must both be specified in the option
  * definition
- * <p>
- * {@link #LOAD_CUSTOM_TRANSLATIONS} can be held by only 1 option and indicates the code that when true, the custom
- * translations will be loaded and used
  */
 public enum RULES
 {
@@ -28,6 +25,5 @@ public enum RULES
     OP_LEVELS,
     POSITIVE_VALUE,
     NEGATIVE_VALUE,
-    RANGE,
-    LOAD_CUSTOM_TRANSLATIONS
+    RANGE
 }

@@ -29,7 +29,7 @@ import static fr.aeldit.cyanlib.core.CyanLibCore.LOGGER;
 public class CyanLibOptionsStorage
 {
     private final String modid;
-    private final Class<?> configClass;
+    private final CyanLibConfig cyanLibConfigClass;
     // Used for the auto-completion for commands
     private final ArrayList<String> optionsNames = new ArrayList<>();
     private final Map<String, Object> unsavedChangedOptions = new HashMap<>();
@@ -38,10 +38,10 @@ public class CyanLibOptionsStorage
     // We use a synchronized list because 2 players can edit the config at the same time
     private final List<Option<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
-    public CyanLibOptionsStorage(String modid, Class<?> configClass)
+    public CyanLibOptionsStorage(String modid, CyanLibConfig configClass)
     {
         this.modid = modid;
-        this.configClass = configClass;
+        this.cyanLibConfigClass = configClass;
     }
 
     public void init()
@@ -54,9 +54,9 @@ public class CyanLibOptionsStorage
         return modid;
     }
 
-    public Class<?> getConfigClass()
+    public CyanLibConfig getConfigClass()
     {
-        return configClass;
+        return cyanLibConfigClass;
     }
 
     public ArrayList<String> getOptionsNames()
@@ -79,11 +79,11 @@ public class CyanLibOptionsStorage
     }
 
     @Environment(EnvType.CLIENT)
-    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull Class<?> configClass)
+    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull CyanLibConfig configClass)
     {
         ArrayList<SimpleOption<?>> options = new ArrayList<>();
 
-        for (Field field : configClass.getDeclaredFields())
+        for (Field field : configClass.getClass().getDeclaredFields())
         {
             try
             {
@@ -216,7 +216,7 @@ public class CyanLibOptionsStorage
         // If the file does not exist, we simply load the class in memory
         if (!Files.exists(path))
         {
-            for (Field field : configClass.getDeclaredFields())
+            for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
             {
                 if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 {
@@ -273,8 +273,7 @@ public class CyanLibOptionsStorage
                     }
                 }
 
-                //
-                for (Field field : configClass.getDeclaredFields())
+                for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
                 {
                     if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                     {

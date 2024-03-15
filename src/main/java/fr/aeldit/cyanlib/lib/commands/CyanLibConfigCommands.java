@@ -7,8 +7,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import fr.aeldit.cyanlib.lib.CyanLib;
+import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.utils.RULES;
-import fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -20,11 +20,9 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Objects;
 
-import static fr.aeldit.cyanlib.core.config.CoreConfig.MIN_OP_LVL_EDIT_CONFIG;
+import static fr.aeldit.cyanlib.core.config.CoreCyanLibConfig.MIN_OP_LVL_EDIT_CONFIG;
 import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
-import static fr.aeldit.cyanlib.lib.utils.TranslationsPrefixes.*;
 
 public class CyanLibConfigCommands
 {
@@ -69,35 +67,23 @@ public class CyanLibConfigCommands
                         .executes(this::getConfigOptions)
                 )
 
-                .then(CommandManager.literal("reload-translations")
+                .then(CommandManager.literal("reloadTranslations")
                         .executes(this::reloadTranslations)
                 )
         );
     }
 
-    /**
-     * Reloads the custom translations for the given modid
-     *
-     * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.translationsReloaded"}</li>
-     * </ul>
-     */
     public int reloadTranslations(@NotNull CommandContext<ServerCommandSource> context)
     {
+        libUtils.getLanguageUtils().loadCustomLanguage(
+                libUtils.getOptionsStorage().getConfigClass().getDefaultTranslations()
+        );
+
         if (libUtils.isPlayer(context.getSource()))
         {
-            ServerPlayerEntity player = context.getSource().getPlayer();
-
-            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
-            {
-                libUtils.getLanguageUtils().loadLanguage();
-
-                libUtils.getLanguageUtils().sendPlayerMessage(
-                        player,
-                        libUtils.getLanguageUtils().getTranslation("translationsReloaded"),
-                        "%s.msg.translationsReloaded".formatted(modid)
-                );
-            }
+            libUtils.getLanguageUtils().sendPlayerMessage(context.getSource().getPlayer(),
+                    "cyanlib.msg.translationsReloaded"
+            );
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -109,14 +95,6 @@ public class CyanLibConfigCommands
      * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config
      * <optionName>} otherwise.
      * This allows to see the changed option in the chat
-     *
-     * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
      */
     public int setBoolOption(@NotNull CommandContext<ServerCommandSource> context)
     {
@@ -124,7 +102,9 @@ public class CyanLibConfigCommands
 
         if (libUtils.isPlayer(source))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = source.getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -133,37 +113,24 @@ public class CyanLibConfigCommands
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
                     libUtils.getOptionsStorage().setOption(option, value, true);
 
-                    if (libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
-                    {
-                        if (value)
-                        {
-                            libUtils.getLanguageUtils().loadLanguage();
-                        }
-                        else
-                        {
-                            libUtils.getLanguageUtils().unload();
-                        }
-                    }
-
                     if (BoolArgumentType.getBool(context, "mode"))
                     {
-                        source.getServer().getCommandManager().executeWithPrefix(source,
+                        source.getServer().getCommandManager().executeWithPrefix(
+                                source,
                                 "/%s get-config".formatted(modid)
                         );
                     }
                     else
                     {
-                        source.getServer().getCommandManager().executeWithPrefix(source,
+                        source.getServer().getCommandManager().executeWithPrefix(
+                                source,
                                 "/%s config %s".formatted(modid, option)
                         );
                     }
                 }
                 else
                 {
-                    libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                            libUtils.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.optionNotFound".formatted(modid)
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.optionNotFound");
                 }
             }
         }
@@ -175,25 +142,18 @@ public class CyanLibConfigCommands
      * <p>
      * Sets the value of the given {@code boolean option} to the given {@code boolean value}
      *
-     * <ul><h2>Translations paths :</h2>
+     * <ul><h2>Required translation path :</h2>
      *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
      *      (context, "optionName")})</li>
-     *      <li>{@code "modid.msg.optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
-     *      StringArgumentType.getString(context, "optionName")})</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      */
     public int setBoolOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
     {
-        ServerCommandSource source = context.getSource();
-
-        if (libUtils.isPlayer(source))
+        if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -202,30 +162,14 @@ public class CyanLibConfigCommands
                     boolean value = BoolArgumentType.getBool(context, "booleanValue");
                     libUtils.getOptionsStorage().setOption(option, value, true);
 
-                    if (libUtils.getOptionsStorage().hasRule(option, RULES.LOAD_CUSTOM_TRANSLATIONS))
-                    {
-                        if (value)
-                        {
-                            libUtils.getLanguageUtils().loadLanguage();
-                        }
-                        else
-                        {
-                            libUtils.getLanguageUtils().unload();
-                        }
-                    }
-
-                    libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                            libUtils.getLanguageUtils().getTranslation(SET + option),
+                    libUtils.getLanguageUtils().sendPlayerMessage(player,
                             "%s.msg.set.%s".formatted(modid, option),
                             value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
                     );
                 }
                 else
                 {
-                    libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                            libUtils.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.optionNotFound".formatted(modid)
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.optionNotFound");
                 }
             }
         }
@@ -239,20 +183,6 @@ public class CyanLibConfigCommands
      * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config
      * <optionName>} otherwise.
      * This allows to see the changed option in the chat
-     *
-     * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
-     *      (context, "optionName")})</li>
-     *      <li>{@code "modid.msg.incorrectInteger"}</li>
-     *      <li>{@code "modid.msg.optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
-     *      StringArgumentType.getString(context, "optionName")})</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
-     * </ul>
      */
     public int setIntOption(@NotNull CommandContext<ServerCommandSource> context)
     {
@@ -260,7 +190,9 @@ public class CyanLibConfigCommands
 
         if (libUtils.isPlayer(source))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -272,31 +204,27 @@ public class CyanLibConfigCommands
                     {
                         if (BoolArgumentType.getBool(context, "mode"))
                         {
-                            source.getServer().getCommandManager().executeWithPrefix(source,
+                            source.getServer().getCommandManager().executeWithPrefix(
+                                    source,
                                     "/%s get-config".formatted(modid)
                             );
                         }
                         else
                         {
-                            source.getServer().getCommandManager().executeWithPrefix(source,
+                            source.getServer().getCommandManager().executeWithPrefix(
+                                    source,
                                     "/%s config %s".formatted(modid, option)
                             );
                         }
                     }
                     else
                     {
-                        libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                                libUtils.getLanguageUtils().getTranslation(ERROR + "incorrectInteger"),
-                                "%s.msg.incorrectInteger".formatted(modid)
-                        );
+                        libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.incorrectInteger");
                     }
                 }
                 else
                 {
-                    libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                            libUtils.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.optionNotFound".formatted(modid)
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.optionNotFound");
                 }
             }
         }
@@ -308,27 +236,19 @@ public class CyanLibConfigCommands
      * <p>
      * Sets the value of the given {@code int option} to the given {@code int value}
      *
-     * <ul><h2>Translations paths :</h2>
+     * <ul><h2>Required translations paths :</h2>
      *      <li>{@code "modid.msg.set.option"} (option is the command argument {@code StringArgumentType.getString
      *      (context, "optionName")})</li>
      *      <li>{@code "modid.msg.incorrectInteger"}</li>
-     *      <li>{@code "modid.msg.optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@link TranslationsPrefixes#SET} + {@code option} (option is the command argument {@code
-     *      StringArgumentType.getString(context, "optionName")})</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "incorrectInteger"}</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      */
     public int setIntOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
     {
-        ServerCommandSource source = context.getSource();
-
-        if (libUtils.isPlayer(source))
+        if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(source.getPlayer()), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
 
@@ -338,26 +258,20 @@ public class CyanLibConfigCommands
 
                     if (libUtils.getOptionsStorage().setOption(option, value, true))
                     {
-                        libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                                libUtils.getLanguageUtils().getTranslation(SET + option),
+                        libUtils.getLanguageUtils().sendPlayerMessage(
+                                player,
                                 "%s.msg.set.%s".formatted(modid, option),
                                 Formatting.GOLD + String.valueOf(value)
                         );
                     }
                     else
                     {
-                        libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                                libUtils.getLanguageUtils().getTranslation(ERROR + "incorrectInteger"),
-                                "%s.msg.incorrectInteger".formatted(modid)
-                        );
+                        libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.incorrectInteger");
                     }
                 }
                 else
                 {
-                    libUtils.getLanguageUtils().sendPlayerMessage(source.getPlayer(),
-                            libUtils.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.optionNotFound".formatted(modid)
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.optionNotFound");
                 }
             }
         }
@@ -370,44 +284,29 @@ public class CyanLibConfigCommands
      * Sends a message in the player's chat with a description of the option and its current value + some
      * presets the player can click on to change the value of the option
      *
-     * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.dashSeparation"}</li>
+     * <ul><h2>Required translation path :</h2>
      *      <li>{@code "modid.msg.getDesc.option"} (option is the command argument {@code StringArgumentType
      *      .getString(context, "optionName")})</li>
-     *      <li>{@code "modid.msg.currentValue"}</li>
-     *      <li>{@code "modid.msg.setValue"}</li>
-     *      <li>{@code "modid.msg.optionNotFound"}</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@code "dashSeparation"}</li>
-     *      <li>{@link TranslationsPrefixes#DESC} + {@code option} (option is the command argument {@code
-     *      StringArgumentType.getString(context, "optionName")})</li>
-     *      <li>{@code "currentValue"}</li>
-     *      <li>{@code "setValue"}</li>
-     *      <li>{@link TranslationsPrefixes#ERROR} + {@code "optionNotFound"}</li>
      * </ul>
      */
     public int getOptionChatConfig(@NotNull CommandContext<ServerCommandSource> context)
     {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-
         if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(player), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
-
                 Object value = libUtils.getOptionsStorage().getOptionValue(option);
+
                 if (value != null)
                 {
                     libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                            libUtils.getLanguageUtils().getTranslation("dashSeparation"),
-                            "%s.msg.dashSeparation".formatted(modid),
+                            "cyanlib.msg.dashSeparation",
                             false
                     );
                     libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                            libUtils.getLanguageUtils().getTranslation(DESC + option),
                             "%s.msg.getDesc.%s".formatted(modid, option),
                             false
                     );
@@ -415,8 +314,7 @@ public class CyanLibConfigCommands
                     if (value instanceof Boolean)
                     {
                         libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                libUtils.getLanguageUtils().getTranslation("currentValue"),
-                                "%s.msg.currentValue".formatted(modid),
+                                "cyanlib.msg.currentValue",
                                 false,
                                 (Boolean) value ? Text.literal(Formatting.GREEN + "ON (click to change)").
                                         setStyle(Style.EMPTY.withClickEvent(
@@ -433,17 +331,17 @@ public class CyanLibConfigCommands
                     else if (value instanceof Integer)
                     {
                         libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                libUtils.getLanguageUtils().getTranslation("currentValue"),
-                                "%s.msg.currentValue".formatted(modid),
+                                "cyanlib.msg.currentValue",
                                 false,
                                 Formatting.GOLD + String.valueOf(value)
                         );
 
-                        if (libUtils.getOptionsStorage().hasRule(option, RULES.OP_LEVELS))
+                        CyanLibOptionsStorage optionsStorage = libUtils.getOptionsStorage();
+
+                        if (optionsStorage.hasRule(option, RULES.OP_LEVELS))
                         {
                             libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation("setValue"),
-                                    "%s.msg.setValue".formatted(modid),
+                                    "cyanlib.msg.setValue",
                                     false,
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                                             setStyle(Style.EMPTY.withClickEvent(
@@ -477,14 +375,14 @@ public class CyanLibConfigCommands
                                             )
                             );
                         }
-                        else if (!libUtils.getOptionsStorage().hasRule(option, RULES.MAX_VALUE)
-                                && !libUtils.getOptionsStorage().hasRule(option, RULES.MIN_VALUE)
-                                && !libUtils.getOptionsStorage().hasRule(option, RULES.NEGATIVE_VALUE)
+                        else if (!optionsStorage.hasRule(option, RULES.MAX_VALUE)
+                                && !optionsStorage.hasRule(option, RULES.MIN_VALUE)
+                                && !optionsStorage.hasRule(option, RULES.NEGATIVE_VALUE)
                         )
                         {
-                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation("setValue"),
-                                    "%s.msg.setValue".formatted(modid),
+                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                                    player,
+                                    "cyanlib.msg.setValue",
                                     false,
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                                             setStyle(Style.EMPTY.withClickEvent(
@@ -519,18 +417,11 @@ public class CyanLibConfigCommands
                             );
                         }
                     }
-                    libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                            libUtils.getLanguageUtils().getTranslation("dashSeparation"),
-                            "%s.msg.dashSeparation".formatted(modid),
-                            false
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessageActionBar(player, "cyanlib.msg.dashSeparation", false);
                 }
                 else
                 {
-                    libUtils.getLanguageUtils().sendPlayerMessage(Objects.requireNonNull(context.getSource().getPlayer()),
-                            libUtils.getLanguageUtils().getTranslation(ERROR + "optionNotFound"),
-                            "%s.msg.optionNotFound".formatted(modid)
-                    );
+                    libUtils.getLanguageUtils().sendPlayerMessage(player, "cyanlib.msg.optionNotFound");
                 }
             }
         }
@@ -541,34 +432,20 @@ public class CyanLibConfigCommands
      * Called by the command {@code /modid get-config}
      * <p>
      * Sends a message in the player's chat with the current value of every option of your mod
-     *
-     * <ul><h2>Translations paths :</h2>
-     *      <li>{@code "modid.msg.dashSeparation"}</li>
-     *      <li>{@code "modid.msg.getCfg.header"}</li>
-     *      <li>{@code "modid.msg.getCfg.option"} (option is the parameter of the function)</li>
-     * </ul>
-     *
-     * <ul><h2>Custom translations :</h2> Required only if the option useCustomTranslations is set to true
-     *      <li>{@code "dashSeparation"}</li>
-     *      <li>{@link TranslationsPrefixes#GET_CFG} + {@code "header"}</li>
-     *      <li>{@link TranslationsPrefixes#GET_CFG} + {@code option} (option is the parameter of the function)</li>
-     * </ul>
      */
     public int getConfigOptions(@NotNull CommandContext<ServerCommandSource> context)
     {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-
         if (libUtils.isPlayer(context.getSource()))
         {
-            if (libUtils.hasPermission(Objects.requireNonNull(player), MIN_OP_LVL_EDIT_CONFIG.getValue()))
+            ServerPlayerEntity player = context.getSource().getPlayer();
+
+            if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                        libUtils.getLanguageUtils().getTranslation("dashSeparation"),
-                        "%s.msg.dashSeparation".formatted(modid),
+                        "cyanlib.msg.dashSeparation",
                         false
                 );
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                        libUtils.getLanguageUtils().getTranslation(GET_CFG + "header"),
                         "%s.msg.getCfg.header".formatted(modid),
                         false
                 );
@@ -582,7 +459,6 @@ public class CyanLibConfigCommands
                         if (value instanceof Boolean booleanValue)
                         {
                             libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation(GET_CFG + option),
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     booleanValue ? Text.literal(Formatting.GREEN + "ON").
@@ -601,7 +477,6 @@ public class CyanLibConfigCommands
                         else if (value instanceof Integer integerValue)
                         {
                             libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                                    libUtils.getLanguageUtils().getTranslation(GET_CFG + option),
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     Formatting.GOLD + integerValue.toString()
@@ -611,8 +486,7 @@ public class CyanLibConfigCommands
                 }
 
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
-                        libUtils.getLanguageUtils().getTranslation("dashSeparation"),
-                        "%s.msg.dashSeparation".formatted(modid),
+                        "cyanlib.msg.dashSeparation",
                         false
                 );
             }
