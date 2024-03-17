@@ -295,7 +295,6 @@ public class CyanLibOptionsStorage
         {
             config.put(option.getOptionName(), option.getValue());
         }
-        System.out.println(config);
 
         Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
 
