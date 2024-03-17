@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2023  -  Made by Aeldit
- *
- *              GNU LESSER GENERAL PUBLIC LICENSE
- *                  Version 3, 29 June 2007
- *
- *  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
- *  Everyone is permitted to copy and distribute verbatim copies
- *  of this license document, but changing it is not allowed.
- *
- *
- * This version of the GNU Lesser General Public License incorporates
- * the terms and conditions of version 3 of the GNU General Public
- * License, supplemented by the additional permissions listed in the LICENSE.txt file
- * in the repo of this mod (https://github.com/Aeldit/CyanLib)
- */
-
 package fr.aeldit.cyanlib.lib.config;
 
 import com.google.gson.Gson;
@@ -46,24 +29,24 @@ import static fr.aeldit.cyanlib.core.CyanLibCore.LOGGER;
 public class CyanLibOptionsStorage
 {
     private final String modid;
-    private final Class<?> configClass;
+    private final CyanLibConfig cyanLibConfigClass;
     // Used for the auto-completion for commands
     private final ArrayList<String> optionsNames = new ArrayList<>();
-    private final Map<String, Object> unsavedChangedOptions = new HashMap<>();
     private boolean isEditingFile = false;
 
-    // We use a synchronized list because 2 players can edit the config at the same time
+    // We use a synchronized list because 2 players can edit the config at the same time when in multiplayer
     private final List<Option<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
-    public CyanLibOptionsStorage(String modid, Class<?> configClass)
+    public CyanLibOptionsStorage(String modid, CyanLibConfig configClass)
     {
         this.modid = modid;
-        this.configClass = configClass;
+        this.cyanLibConfigClass = configClass;
     }
 
     public void init()
     {
         readConfig();
+        optionsList.forEach(option -> optionsNames.add(option.getOptionName()));
     }
 
     public String getModid()
@@ -71,36 +54,22 @@ public class CyanLibOptionsStorage
         return modid;
     }
 
-    public Class<?> getConfigClass()
+    public CyanLibConfig getConfigClass()
     {
-        return configClass;
+        return cyanLibConfigClass;
     }
 
     public ArrayList<String> getOptionsNames()
     {
-        if (optionsNames.isEmpty())
-        {
-            optionsList.forEach(option -> optionsNames.add(option.getOptionName()));
-        }
         return optionsNames;
     }
 
-    public Map<String, Object> getUnsavedChangedOptions()
-    {
-        return unsavedChangedOptions;
-    }
-
-    public void clearUnsavedChangedOptions()
-    {
-        unsavedChangedOptions.clear();
-    }
-
     @Environment(EnvType.CLIENT)
-    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull Class<?> configClass)
+    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull CyanLibConfig configClass)
     {
         ArrayList<SimpleOption<?>> options = new ArrayList<>();
 
-        for (Field field : configClass.getDeclaredFields())
+        for (Field field : configClass.getClass().getDeclaredFields())
         {
             try
             {
@@ -113,31 +82,6 @@ public class CyanLibOptionsStorage
             }
         }
         return options.toArray(SimpleOption[]::new);
-    }
-
-    /**
-     * Returns the value of the given option if it exists and is of the wanted type | {@code null} otherwise
-     *
-     * @param optionName   The name of the option
-     * @param expectedType The expected output type
-     * @return The value or {@code null}
-     */
-    @Nullable
-    public Object getOptionValue(String optionName, Class<?> expectedType)
-    {
-        for (Option<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                // If the given option is of the expected type
-                if (option.getValue().getClass().equals(expectedType))
-                {
-                    return option.getValue();
-                }
-                break;
-            }
-        }
-        return null;
     }
 
     @Nullable
@@ -155,11 +99,13 @@ public class CyanLibOptionsStorage
 
     public boolean setOption(String optionName, Object value, boolean save)
     {
+        boolean success = true;
+
         for (Option<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
-                return option.setValue(value);
+                success = option.setValue(value);
             }
         }
 
@@ -167,7 +113,7 @@ public class CyanLibOptionsStorage
         {
             writeConfig();
         }
-        return false;
+        return success;
     }
 
     public void resetOptions()
@@ -212,20 +158,6 @@ public class CyanLibOptionsStorage
         return false;
     }
 
-    public ArrayList<String> getOptionsWithRule(RULES rule)
-    {
-        ArrayList<String> validOptions = new ArrayList<>();
-
-        for (Option<?> option : optionsList)
-        {
-            if (option.getRule() == rule)
-            {
-                validOptions.add(option.getOptionName());
-            }
-        }
-        return validOptions;
-    }
-
     private void readConfig()
     {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
@@ -233,7 +165,7 @@ public class CyanLibOptionsStorage
         // If the file does not exist, we simply load the class in memory
         if (!Files.exists(path))
         {
-            for (Field field : configClass.getDeclaredFields())
+            for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
             {
                 if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 {
@@ -267,6 +199,8 @@ public class CyanLibOptionsStorage
         // Otherwise, we load the config from the file
         else
         {
+            Map<String, Object> config = new HashMap<>();
+
             try
             {
                 Gson gson = new Gson();
@@ -274,9 +208,16 @@ public class CyanLibOptionsStorage
                 TypeToken<Map<String, Object>> mapType = new TypeToken<>()
                 {
                 };
-                Map<String, Object> config = new HashMap<>(gson.fromJson(reader, mapType));
+                config.putAll(gson.fromJson(reader, mapType));
                 reader.close();
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
 
+            if (!config.isEmpty())
+            {
                 for (Map.Entry<String, Object> entry : config.entrySet())
                 {
                     if (entry.getValue() instanceof Double)
@@ -290,8 +231,7 @@ public class CyanLibOptionsStorage
                     }
                 }
 
-                //
-                for (Field field : configClass.getDeclaredFields())
+                for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
                 {
                     if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                     {
@@ -308,8 +248,9 @@ public class CyanLibOptionsStorage
                                     // its value in the class
                                     if (configFileValue != booleanOption.getValue())
                                     {
-                                        setOption(booleanOption.getOptionName(), configFileValue, false);
+                                        booleanOption.setValue(configFileValue);
                                     }
+                                    optionsList.add(booleanOption);
                                 }
                             }
                             catch (IllegalAccessException e)
@@ -330,8 +271,9 @@ public class CyanLibOptionsStorage
                                     // its value in the class
                                     if (configFileValue != integerOption.getValue())
                                     {
-                                        setOption(integerOption.getOptionName(), configFileValue, false);
+                                        integerOption.setValue(configFileValue);
                                     }
+                                    optionsList.add(integerOption);
                                 }
                             }
                             catch (IllegalAccessException e)
@@ -342,16 +284,11 @@ public class CyanLibOptionsStorage
                     }
                 }
             }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
         }
     }
 
     public void writeConfig()
     {
-        clearUnsavedChangedOptions();
         Map<String, Object> config = new HashMap<>();
 
         for (Option<?> option : optionsList)
