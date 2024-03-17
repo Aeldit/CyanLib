@@ -19,8 +19,8 @@ import static fr.aeldit.cyanlib.core.config.CoreCyanLibConfig.MSG_TO_ACTION_BAR;
 public class CyanLibLanguageUtils
 {
     private final String modid;
-    // Map<modid, Map<translationKey, translation>>
-    private static final Map<String, Map<String, String>> translations = new HashMap<>(0);
+    // Map<translationKey, translation>
+    private static final Map<String, String> translations = new HashMap<>(0);
 
     public CyanLibLanguageUtils(String modid)
     {
@@ -33,7 +33,7 @@ public class CyanLibLanguageUtils
 
         if (!Files.exists(customLangPath))
         {
-            translations.put(modid, defaultTranslations);
+            translations.putAll(defaultTranslations);
         }
         else
         {
@@ -44,7 +44,7 @@ public class CyanLibLanguageUtils
                 TypeToken<Map<String, String>> mapType = new TypeToken<>()
                 {
                 };
-                translations.put(modid, gsonReader.fromJson(reader, mapType));
+                translations.putAll(gsonReader.fromJson(reader, mapType));
                 reader.close();
             }
             catch (IOException e)
@@ -53,13 +53,11 @@ public class CyanLibLanguageUtils
             }
 
             // If there are missing translations in the provided one, we add them from the default translations
-            Map<String, String> currentModTranslations = translations.get(modid);
-
             for (String key : defaultTranslations.keySet())
             {
-                if (!currentModTranslations.containsKey(key))
+                if (!translations.containsKey(key))
                 {
-                    translations.get(modid).put(key, defaultTranslations.get(key));
+                    translations.put(key, defaultTranslations.get(key));
                 }
             }
         }
@@ -67,9 +65,9 @@ public class CyanLibLanguageUtils
 
     private String getTranslation(String translationKey)
     {
-        if (translations.containsKey(modid) && translations.get(modid).containsKey(translationKey))
+        if (translations.containsKey(translationKey))
         {
-            return translations.get(modid).get(translationKey);
+            return translations.get(translationKey);
         }
         return "null";
     }

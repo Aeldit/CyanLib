@@ -33,7 +33,6 @@ public class CoreCyanLibConfig implements CyanLibConfig
         translations.put("cyanlib.msg.translationsReloaded", "§3Custom translations have been reloaded");
 
         // SETS
-        translations.put("cyanlib.msg.set.useCustomTranslations", "§3Toggled custom translation %s");
         translations.put("cyanlib.msg.set.msgToActionBar", "§3Toggled messages to action bar %s");
         translations.put("cyanlib.msg.set.minOpLvlEditConfig", "§3The minimum OP level required to edit the config is" +
                 " now %s");
@@ -42,8 +41,6 @@ public class CoreCyanLibConfig implements CyanLibConfig
         translations.put("cyanlib.msg.dashSeparation", "§6------------------------------------");
 
         // CONFIG
-        translations.put("cyanlib.msg.getDesc.useCustomTranslations", "§3The §duseCustomTranslations §3option defines" +
-                " whether the custom translation will be used or not");
         translations.put("cyanlib.msg.getDesc.msgToActionBar", "§3The §dmsgToActionBar §3option defines whether the " +
                 "messages will be sent to the action bar or not");
         translations.put("cyanlib.msg.getDesc.minOpLvlEditConfig", "§3The §dminOpLevelExeEditConfig §3option defines " +
@@ -51,7 +48,6 @@ public class CoreCyanLibConfig implements CyanLibConfig
 
         // GET_CFG
         translations.put("cyanlib.msg.getCfg.header", "§6CyanLib - OPTIONS\n");
-        translations.put("cyanlib.msg.getCfg.useCustomTranslations", "§6- §3Use custom translations : %s");
         translations.put("cyanlib.msg.getCfg.msgToActionBar", "§6- §3Messages to action bar : %s");
         translations.put("cyanlib.msg.getCfg.minOpLvlEditConfig", "§6- §3Minimum OP level required to edit the config" +
                 " : %s");
