@@ -57,7 +57,7 @@ public class CyanLibConfigScreen extends Screen
     @Override
     protected void init()
     {
-        optionList = new OptionListWidget(client, width, height - 66, 32, 32);
+        optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 
