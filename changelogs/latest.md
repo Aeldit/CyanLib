@@ -1,3 +1,2 @@
-The functions that were rewritten for each type of option are now a single function.
-
-This was made using a new interface called `Option<T>`, where `T` is the type of object the options will store
+Fix translations when using the CyanLibConfigCommands + the config screen for each mod now only has a 'Done' button,
+the options are automatically saved when exiting the screen

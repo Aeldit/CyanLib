@@ -60,7 +60,7 @@ modrinth {
     projectId = "cyanlib"
     versionName = "[$project.minecraft_version] CyanLib $project.mod_version"
     versionNumber = "$version"
-    versionType = "alpha"
+    versionType = "release"
 
     uploadFile = remapJar
     additionalFiles = [remapSourcesJar]

@@ -107,12 +107,10 @@ public class CyanLibConfigCommands
             if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
+                boolean value = BoolArgumentType.getBool(context, "booleanValue");
 
-                if (libUtils.getOptionsStorage().optionExists(option))
+                if (libUtils.getOptionsStorage().setOption(option, value, true))
                 {
-                    boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    libUtils.getOptionsStorage().setOption(option, value, true);
-
                     if (BoolArgumentType.getBool(context, "mode"))
                     {
                         source.getServer().getCommandManager().executeWithPrefix(
@@ -156,12 +154,10 @@ public class CyanLibConfigCommands
             if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
                 String option = StringArgumentType.getString(context, "optionName");
+                boolean value = BoolArgumentType.getBool(context, "booleanValue");
 
-                if (libUtils.getOptionsStorage().optionExists(option))
+                if (libUtils.getOptionsStorage().setOption(option, value, true))
                 {
-                    boolean value = BoolArgumentType.getBool(context, "booleanValue");
-                    libUtils.getOptionsStorage().setOption(option, value, true);
-
                     libUtils.getLanguageUtils().sendPlayerMessage(player,
                             "%s.msg.set.%s".formatted(modid, option),
                             value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
@@ -441,11 +437,13 @@ public class CyanLibConfigCommands
 
             if (libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
             {
-                libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                        player,
                         "cyanlib.msg.dashSeparation",
                         false
                 );
-                libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                        player,
                         "%s.msg.getCfg.header".formatted(modid),
                         false
                 );
@@ -458,7 +456,8 @@ public class CyanLibConfigCommands
 
                         if (value instanceof Boolean booleanValue)
                         {
-                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                                    player,
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     booleanValue ? Text.literal(Formatting.GREEN + "ON").
@@ -476,7 +475,8 @@ public class CyanLibConfigCommands
                         }
                         else if (value instanceof Integer integerValue)
                         {
-                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                            libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                                    player,
                                     "%s.msg.getCfg.%s".formatted(modid, option),
                                     false,
                                     Formatting.GOLD + integerValue.toString()
@@ -485,7 +485,8 @@ public class CyanLibConfigCommands
                     }
                 }
 
-                libUtils.getLanguageUtils().sendPlayerMessageActionBar(player,
+                libUtils.getLanguageUtils().sendPlayerMessageActionBar(
+                        player,
                         "cyanlib.msg.dashSeparation",
                         false
                 );

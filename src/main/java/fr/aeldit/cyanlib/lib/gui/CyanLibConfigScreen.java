@@ -13,7 +13,6 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -23,9 +22,6 @@ public class CyanLibConfigScreen extends Screen
     private final Screen parent;
     private final CyanLibConfig configOptionsClass;
     private OptionListWidget optionList;
-    // Used for when the player uses the escape key to exit the screen, which like the cancel button, reverts the
-    // modified but no saved options to their previous value
-    private boolean save = false;
 
     public CyanLibConfigScreen(
             @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, CyanLibConfig configOptionsClass
@@ -40,21 +36,6 @@ public class CyanLibConfigScreen extends Screen
     @Override
     public void close()
     {
-        if (!save)
-        {
-            if (!cyanLibOptionsStorage.getUnsavedChangedOptions().isEmpty())
-            {
-                for (Map.Entry<String, Object> entry : cyanLibOptionsStorage.getUnsavedChangedOptions().entrySet())
-                {
-                    Object value = entry.getValue();
-                    if (value instanceof Boolean || value instanceof Integer)
-                    {
-                        cyanLibOptionsStorage.setOption(entry.getKey(), value, false);
-                    }
-                }
-            }
-        }
-        save = false;
         cyanLibOptionsStorage.writeConfig();
         Objects.requireNonNull(client).setScreen(parent);
     }
@@ -81,10 +62,8 @@ public class CyanLibConfigScreen extends Screen
         addSelectableChild(optionList);
 
         addDrawableChild(
-                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button ->
-                        {
+                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button -> {
                             cyanLibOptionsStorage.resetOptions();
-                            save = true;
                             close();
                         })
                         .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.reset.tooltip")))
@@ -93,22 +72,8 @@ public class CyanLibConfigScreen extends Screen
         );
 
         addDrawableChild(
-                ButtonWidget.builder(ScreenTexts.CANCEL, button ->
-                        {
-                            save = false;
-                            close();
-                        })
-                        .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.cancel.tooltip")))
-                        .dimensions(width / 2 - 154, height - 28, 150, 20)
-                        .build()
-        );
-        addDrawableChild(
-                ButtonWidget.builder(Text.translatable("cyanlib.screen.config.save&quit"), button ->
-                        {
-                            save = true;
-                            close();
-                        })
-                        .dimensions(width / 2 + 4, height - 28, 150, 20)
+                ButtonWidget.builder(ScreenTexts.DONE, button -> close())
+                        .dimensions(width / 2 - 100, height - 28, 200, 20)
                         .build()
         );
     }

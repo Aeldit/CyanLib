@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO -> Add multi world support
 public class CyanLib
 {
     private final String modid;
@@ -90,6 +91,7 @@ public class CyanLib
      *                       where {@code MODID} is the modid of your mod and {@code OPTION} is the {@code
      *                       translationKey})
      */
+    @SuppressWarnings("unused")
     public boolean isOptionEnabled(ServerPlayerEntity player, boolean option, String translationKey)
     {
         if (!option)
