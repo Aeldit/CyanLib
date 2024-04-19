@@ -1,8 +1,6 @@
 package fr.aeldit.cyanlib.lib.config;
 
 import fr.aeldit.cyanlib.lib.utils.RULES;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -146,7 +144,6 @@ public class IntegerOption implements Option<Integer>
         this.value = defaultValue;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public SimpleOption<Integer> asConfigOption()
     {

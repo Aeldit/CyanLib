@@ -1,8 +1,6 @@
 package fr.aeldit.cyanlib.lib.config;
 
 import fr.aeldit.cyanlib.lib.utils.RULES;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 import org.jetbrains.annotations.Contract;
 
@@ -61,7 +59,6 @@ public class BooleanOption implements Option<Boolean>
         this.value = defaultValue;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public SimpleOption<Boolean> asConfigOption()
     {
