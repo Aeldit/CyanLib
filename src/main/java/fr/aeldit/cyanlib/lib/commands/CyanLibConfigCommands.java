@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-import static fr.aeldit.cyanlib.core.config.CoreCyanLibConfig.MIN_OP_LVL_EDIT_CONFIG;
+import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MIN_OP_LVL_EDIT_CONFIG;
 import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
 
 public class CyanLibConfigCommands

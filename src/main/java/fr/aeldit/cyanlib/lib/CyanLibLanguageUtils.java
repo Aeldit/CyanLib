@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.aeldit.cyanlib.core.config.CoreCyanLibConfig.MSG_TO_ACTION_BAR;
+import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MSG_TO_ACTION_BAR;
 
 public class CyanLibLanguageUtils
 {

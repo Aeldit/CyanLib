@@ -8,7 +8,7 @@ import fr.aeldit.cyanlib.lib.utils.RULES;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CoreCyanLibConfig implements CyanLibConfig
+public class CyanLibConfigImpl implements CyanLibConfig
 {
     public static final BooleanOption MSG_TO_ACTION_BAR = new BooleanOption("msgToActionBar", true);
     public static final IntegerOption MIN_OP_LVL_EDIT_CONFIG = new IntegerOption("minOpLvlEditConfig", 4,
