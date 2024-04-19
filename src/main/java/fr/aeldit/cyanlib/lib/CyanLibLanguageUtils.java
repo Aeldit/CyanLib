@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class CyanLibLanguageUtils
     // Map<translationKey, translation>
     private static final Map<String, String> translations = new HashMap<>(0);
 
+    @Contract(pure = true)
     public CyanLibLanguageUtils(String modid)
     {
         this.modid = modid;
