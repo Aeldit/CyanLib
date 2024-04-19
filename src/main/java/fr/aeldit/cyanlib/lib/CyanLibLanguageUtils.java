@@ -67,11 +67,7 @@ public class CyanLibLanguageUtils
 
     private String getTranslation(String translationKey)
     {
-        if (translations.containsKey(translationKey))
-        {
-            return translations.get(translationKey);
-        }
-        return "null";
+        return translations.getOrDefault(translationKey, "null");
     }
 
     /**

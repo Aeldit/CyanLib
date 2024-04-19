@@ -73,7 +73,6 @@ public class CyanLibOptionsStorage
         {
             try
             {
-                //options.add(((OptionConverter) field.get(null)).asConfigOption());
                 options.add(((Option<?>) field.get(null)).asConfigOption());
             }
             catch (IllegalAccessException e)

@@ -4,23 +4,18 @@ import fr.aeldit.cyanlib.lib.utils.RULES;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
+import org.jetbrains.annotations.Contract;
 
 public class BooleanOption implements Option<Boolean>
 {
     private final String optionName;
     private final boolean defaultValue;
-    private final RULES rule;
     private boolean value;
 
+    @Contract(pure = true)
     public BooleanOption(String optionName, boolean value)
     {
-        this(optionName, value, RULES.NONE);
-    }
-
-    public BooleanOption(String optionName, boolean value, RULES rule)
-    {
         this.optionName = optionName;
-        this.rule = rule;
         this.defaultValue = value;
         this.value = value;
     }
@@ -40,7 +35,7 @@ public class BooleanOption implements Option<Boolean>
     @Override
     public RULES getRule()
     {
-        return rule;
+        return RULES.NONE;
     }
 
     @Override

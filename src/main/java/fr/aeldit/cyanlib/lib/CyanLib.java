@@ -4,6 +4,7 @@ import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class CyanLib
      * @param modid          The modid of your mod
      * @param optionsStorage The instance of {@link CyanLibOptionsStorage}
      */
+    @Contract(pure = true)
     public CyanLib(String modid, CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
     {
         this.modid = modid;
