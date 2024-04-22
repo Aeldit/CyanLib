@@ -40,12 +40,6 @@ public class CyanLibModsScreen extends Screen
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
-    {
-        super.renderBackgroundTexture(context);
-    }
-
-    @Override
     protected void init()
     {
         int i = 0;
@@ -60,7 +54,7 @@ public class CyanLibModsScreen extends Screen
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
                                         button -> Objects.requireNonNull(client).setScreen(
-                                                new CyanLibConfigScreen(
+                                                new CyanLibConfigScreen(this,
                                                         CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage(),
                                                         parent,
                                                         CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage().getConfigClass()
@@ -76,7 +70,7 @@ public class CyanLibModsScreen extends Screen
                 addDrawableChild(
                         ButtonWidget.builder(Text.translatable("%s.cyanlib.screen".formatted(modId)),
                                         button -> Objects.requireNonNull(client).setScreen(
-                                                new CyanLibConfigScreen(
+                                                new CyanLibConfigScreen(this,
                                                         CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage(),
                                                         parent,
                                                         CONFIG_CLASS_INSTANCES.get(modId).getOptionsStorage().getConfigClass()

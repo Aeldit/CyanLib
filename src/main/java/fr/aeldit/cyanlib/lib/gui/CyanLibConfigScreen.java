@@ -4,8 +4,10 @@ import fr.aeldit.cyanlib.lib.config.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
@@ -16,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class CyanLibConfigScreen extends Screen
+public class CyanLibConfigScreen extends GameOptionsScreen
 {
     private final CyanLibOptionsStorage cyanLibOptionsStorage;
     private final Screen parent;
@@ -24,10 +26,13 @@ public class CyanLibConfigScreen extends Screen
     private OptionListWidget optionList;
 
     public CyanLibConfigScreen(
-            @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent, CyanLibConfig configOptionsClass
+            Screen previous, @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent,
+            CyanLibConfig configOptionsClass
     )
     {
-        super(Text.translatable("%s.screen.options.title".formatted(cyanLibOptionsStorage.getModid())));
+        super(previous, MinecraftClient.getInstance().options,
+                Text.translatable("%s.screen.options.title".formatted(cyanLibOptionsStorage.getModid()))
+        );
         this.cyanLibOptionsStorage = cyanLibOptionsStorage;
         this.parent = parent;
         this.configOptionsClass = configOptionsClass;
@@ -49,15 +54,9 @@ public class CyanLibConfigScreen extends Screen
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
-    {
-        super.renderBackgroundTexture(context);
-    }
-
-    @Override
     protected void init()
     {
-        optionList = new OptionListWidget(client, width, height - 66, 32, 32);
+        optionList = new OptionListWidget(client, width, height, this);
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 

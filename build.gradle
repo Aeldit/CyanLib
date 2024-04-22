@@ -1,10 +1,9 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version + "+" + project.minecraft_version
 
 repositories {
@@ -16,8 +15,6 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Fabric API
     modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
@@ -41,7 +38,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release.set(17)
+    it.options.release.set(21)
 }
 
 java {
@@ -49,9 +46,7 @@ java {
 }
 
 jar {
-    from("LICENSE") {
-        rename { "${it}_${archivesBaseName}" }
-    }
+    from("LICENSE")
 }
 
 modrinth {
@@ -65,7 +60,7 @@ modrinth {
     uploadFile = remapJar
     additionalFiles = [remapSourcesJar]
 
-    gameVersions = ["1.20.4"]
+    gameVersions = ["1.20.5"]
     loaders = ["fabric"]
 
     dependencies {
@@ -76,6 +71,6 @@ modrinth {
     changelog = file("changelogs/latest.md").exists() ? file("changelogs/latest.md").getText() : "No changelog provided"
     syncBodyFrom = rootProject.file("README.md").text
 
-    debugMode = false // Stops version from being published
+    debugMode = false
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
