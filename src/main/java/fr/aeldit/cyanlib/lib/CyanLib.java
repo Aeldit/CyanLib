@@ -24,7 +24,8 @@ public class CyanLib
      * Main class of this library
      *
      * @param modid          The modid of your mod
-     * @param optionsStorage The instance of {@link CyanLibOptionsStorage}
+     * @param optionsStorage The {@link CyanLibOptionsStorage} object
+     * @param languageUtils  The {@link CyanLibLanguageUtils} object
      */
     @Contract(pure = true)
     public CyanLib(String modid, CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)

@@ -12,7 +12,6 @@ public class CyanLibCore
     public static final String MODID = "cyanlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-    public static CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, new CyanLibConfigImpl());
-    public static CyanLibLanguageUtils CYANLIB_LANG_UTILS = new CyanLibLanguageUtils(MODID);
-    public static CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE, CYANLIB_LANG_UTILS);
+    public static final CyanLibOptionsStorage OPTS_STORAGE = new CyanLibOptionsStorage(MODID, new CyanLibConfigImpl());
+    public static final CyanLib LIB_UTILS = new CyanLib(MODID, OPTS_STORAGE, new CyanLibLanguageUtils(MODID));
 }
