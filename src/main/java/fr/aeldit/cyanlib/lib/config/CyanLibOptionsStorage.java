@@ -67,7 +67,7 @@ public class CyanLibOptionsStorage
     @Environment(EnvType.CLIENT)
     public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull ICyanLibConfig configClass)
     {
-        ArrayList<SimpleOption<?>> options = new ArrayList<>();
+        ArrayList<SimpleOption<?>> options = new ArrayList<>(configClass.getClass().getDeclaredFields().length);
 
         for (Field field : configClass.getClass().getDeclaredFields())
         {
@@ -83,36 +83,24 @@ public class CyanLibOptionsStorage
         return options.toArray(SimpleOption[]::new);
     }
 
-    @Nullable
-    public Object getOptionValue(String optionName)
+    public @Nullable Object getOptionValue(String optionName)
     {
-        for (IOption<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option.getValue();
-            }
-        }
-        return null;
+        IOption<?> option = getOption(optionName);
+        return option == null ? null : option.getValue();
     }
 
     public boolean setOption(String optionName, Object value, boolean save)
     {
-        boolean success = true;
-
-        for (IOption<?> option : optionsList)
+        IOption<?> option = getOption(optionName);
+        if (option != null)
         {
-            if (option.getOptionName().equals(optionName))
+            if (save)
             {
-                success = option.setValue(value);
+                writeConfig();
             }
+            return option.setValue(value);
         }
-
-        if (save)
-        {
-            writeConfig();
-        }
-        return success;
+        return false;
     }
 
     public void resetOptions()
@@ -122,14 +110,7 @@ public class CyanLibOptionsStorage
 
     public boolean optionExists(String optionName)
     {
-        for (IOption<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return true;
-            }
-        }
-        return false;
+        return getOption(optionName) != null;
     }
 
     /**
@@ -147,14 +128,20 @@ public class CyanLibOptionsStorage
 
     public boolean hasRule(String optionName, RULES rule)
     {
+        IOption<?> option = getOption(optionName);
+        return option != null && option.getRule() == rule;
+    }
+
+    private @Nullable IOption<?> getOption(String optionName)
+    {
         for (IOption<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
-                return option.getRule() == rule;
+                return option;
             }
         }
-        return false;
+        return null;
     }
 
     private void readConfig()
