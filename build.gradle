@@ -1,6 +1,6 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
-    id 'maven-publish'
+    id "fabric-loom" version "1.5-SNAPSHOT"
+    id "maven-publish"
     id "com.modrinth.minotaur" version "2.+"
 }
 
@@ -17,8 +17,6 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-
     // Fabric API
     modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
@@ -29,7 +27,7 @@ dependencies {
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation "com.google.code.gson:gson:2.10.1"
 }
 
 processResources {
@@ -49,9 +47,7 @@ java {
 }
 
 jar {
-    from("LICENSE") {
-        rename { "${it}_${archivesBaseName}" }
-    }
+    from("LICENSE")
 }
 
 modrinth {
@@ -76,6 +72,6 @@ modrinth {
     changelog = file("changelogs/latest.md").exists() ? file("changelogs/latest.md").getText() : "No changelog provided"
     syncBodyFrom = rootProject.file("README.md").text
 
-    debugMode = false // Stops version from being published
+    debugMode = false
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
