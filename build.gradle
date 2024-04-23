@@ -4,7 +4,6 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version + "+" + project.minecraft_version
 
 repositories {

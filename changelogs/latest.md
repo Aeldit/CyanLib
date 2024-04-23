@@ -1,1 +1,1 @@
-Fix config not being written from the chat
+Add the TPUtils#getRequiredXpLevelsToTp function
