@@ -5,7 +5,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-public class IntegerOption implements Option<Integer>
+public class IntegerOption implements IOption<Integer>
 {
     private final String optionName;
     private final int defaultValue;

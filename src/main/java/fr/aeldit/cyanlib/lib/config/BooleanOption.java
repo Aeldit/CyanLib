@@ -4,7 +4,7 @@ import fr.aeldit.cyanlib.lib.utils.RULES;
 import net.minecraft.client.option.SimpleOption;
 import org.jetbrains.annotations.Contract;
 
-public class BooleanOption implements Option<Boolean>
+public class BooleanOption implements IOption<Boolean>
 {
     private final String optionName;
     private final boolean defaultValue;

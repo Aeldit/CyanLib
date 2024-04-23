@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 
-public interface Option<T>
+public interface IOption<T>
 {
     String getOptionName();
 

@@ -1,7 +1,7 @@
 package fr.aeldit.cyanlib.lib.gui;
 
-import fr.aeldit.cyanlib.lib.config.CyanLibConfig;
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
+import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -22,12 +22,12 @@ public class CyanLibConfigScreen extends GameOptionsScreen
 {
     private final CyanLibOptionsStorage cyanLibOptionsStorage;
     private final Screen parent;
-    private final CyanLibConfig configOptionsClass;
+    private final ICyanLibConfig configOptionsClass;
     private OptionListWidget optionList;
 
     public CyanLibConfigScreen(
             Screen previous, @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent,
-            CyanLibConfig configOptionsClass
+            ICyanLibConfig configOptionsClass
     )
     {
         super(previous, MinecraftClient.getInstance().options,

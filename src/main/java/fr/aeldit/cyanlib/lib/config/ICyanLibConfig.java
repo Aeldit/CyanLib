@@ -2,7 +2,7 @@ package fr.aeldit.cyanlib.lib.config;
 
 import java.util.Map;
 
-public interface CyanLibConfig
+public interface ICyanLibConfig
 {
     /**
      * This is used because the mod being potentially server-side, the clients playing on the server wouldn't have

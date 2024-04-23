@@ -29,15 +29,15 @@ import static fr.aeldit.cyanlib.core.CyanLibCore.LOGGER;
 public class CyanLibOptionsStorage
 {
     private final String modid;
-    private final CyanLibConfig cyanLibConfigClass;
+    private final ICyanLibConfig cyanLibConfigClass;
     // Used for the auto-completion for commands
     private final ArrayList<String> optionsNames = new ArrayList<>();
     private boolean isEditingFile = false;
 
     // We use a synchronized list because 2 players can edit the config at the same time when in multiplayer
-    private final List<Option<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
+    private final List<IOption<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
-    public CyanLibOptionsStorage(String modid, CyanLibConfig configClass)
+    public CyanLibOptionsStorage(String modid, ICyanLibConfig configClass)
     {
         this.modid = modid;
         this.cyanLibConfigClass = configClass;
@@ -54,7 +54,7 @@ public class CyanLibOptionsStorage
         return modid;
     }
 
-    public CyanLibConfig getConfigClass()
+    public ICyanLibConfig getConfigClass()
     {
         return cyanLibConfigClass;
     }
@@ -65,7 +65,7 @@ public class CyanLibOptionsStorage
     }
 
     @Environment(EnvType.CLIENT)
-    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull CyanLibConfig configClass)
+    public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull ICyanLibConfig configClass)
     {
         ArrayList<SimpleOption<?>> options = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class CyanLibOptionsStorage
         {
             try
             {
-                options.add(((Option<?>) field.get(null)).asConfigOption());
+                options.add(((IOption<?>) field.get(null)).asConfigOption());
             }
             catch (IllegalAccessException e)
             {
@@ -86,7 +86,7 @@ public class CyanLibOptionsStorage
     @Nullable
     public Object getOptionValue(String optionName)
     {
-        for (Option<?> option : optionsList)
+        for (IOption<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -100,7 +100,7 @@ public class CyanLibOptionsStorage
     {
         boolean success = true;
 
-        for (Option<?> option : optionsList)
+        for (IOption<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -117,12 +117,12 @@ public class CyanLibOptionsStorage
 
     public void resetOptions()
     {
-        optionsList.forEach(Option::reset);
+        optionsList.forEach(IOption::reset);
     }
 
     public boolean optionExists(String optionName)
     {
-        for (Option<?> option : optionsList)
+        for (IOption<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -147,7 +147,7 @@ public class CyanLibOptionsStorage
 
     public boolean hasRule(String optionName, RULES rule)
     {
-        for (Option<?> option : optionsList)
+        for (IOption<?> option : optionsList)
         {
             if (option.getOptionName().equals(optionName))
             {
@@ -290,7 +290,7 @@ public class CyanLibOptionsStorage
     {
         Map<String, Object> config = new HashMap<>();
 
-        for (Option<?> option : optionsList)
+        for (IOption<?> option : optionsList)
         {
             config.put(option.getOptionName(), option.getValue());
         }
