@@ -94,11 +94,12 @@ public class CyanLibOptionsStorage
         IOption<?> option = getOption(optionName);
         if (option != null)
         {
+            boolean success = option.setValue(value);
             if (save)
             {
                 writeConfig();
             }
-            return option.setValue(value);
+            return success;
         }
         return false;
     }

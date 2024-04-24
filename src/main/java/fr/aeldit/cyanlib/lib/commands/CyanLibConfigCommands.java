@@ -17,6 +17,7 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class CyanLibConfigCommands
     private final String modid;
     private final CyanLib libUtils;
 
+    @Contract(pure = true)
     public CyanLibConfigCommands(String modid, CyanLib libUtils)
     {
         this.modid = modid;
@@ -319,8 +321,7 @@ public class CyanLibConfigCommands
                                         ) : Text.literal(Formatting.RED + "OFF (click to change)").
                                         setStyle(Style.EMPTY.withClickEvent(
                                                 new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set " +
-                                                        "true" +
-                                                        " false").formatted(modid, option)))
+                                                        "true false").formatted(modid, option)))
                                         )
                         );
                     }
@@ -342,32 +343,27 @@ public class CyanLibConfigCommands
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "0 false").formatted(modid, option)))
+                                                            " 0 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "1")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "1 false").formatted(modid, option)))
+                                                            " 1 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "2")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "2 false").formatted(modid, option)))
+                                                            " 2 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "3")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "3 false").formatted(modid, option)))
+                                                            " 3 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "4")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "4 false").formatted(modid, option)))
+                                                            " 4 false").formatted(modid, option)))
                                             )
                             );
                         }
@@ -383,32 +379,27 @@ public class CyanLibConfigCommands
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "8 false").formatted(modid, option)))
+                                                            " 8 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "16")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "16 false").formatted(modid, option)))
+                                                            " 16 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "32")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "32 false").formatted(modid, option)))
+                                                            " 32 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "64")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "64 false").formatted(modid, option)))
+                                                            " 64 false").formatted(modid, option)))
                                             ),
                                     Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "128")).
                                             setStyle(Style.EMPTY.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.RUN_COMMAND, ("/%s config %s set" +
-                                                            " " +
-                                                            "128 false").formatted(modid, option)))
+                                                            " 128 false").formatted(modid, option)))
                                             )
                             );
                         }
