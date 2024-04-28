@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.6-SNAPSHOT"
+    id "fabric-loom" version "1.5-SNAPSHOT"
     id "maven-publish"
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -39,7 +39,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release.set(21)
+    it.options.release.set(17)
 }
 
 java {
@@ -61,7 +61,7 @@ modrinth {
     uploadFile = remapJar
     additionalFiles = [remapSourcesJar]
 
-    gameVersions = ["1.20.5"]
+    gameVersions = ["1.20.4"]
     loaders = ["fabric"]
 
     dependencies {
