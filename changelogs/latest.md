@@ -1,1 +1,1 @@
-Fix config not being written from the chat
+Fix config not being written from the chat (second time)
