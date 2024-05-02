@@ -61,7 +61,7 @@ modrinth {
     uploadFile = remapJar
     additionalFiles = [remapSourcesJar]
 
-    gameVersions = ["1.20.5"]
+    gameVersions = ["$project.minecraft_version"]
     loaders = ["fabric"]
 
     dependencies {

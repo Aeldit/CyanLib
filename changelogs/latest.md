@@ -1,1 +1,1 @@
-Fix config not being written from the chat (second time)
+Update to 1.20.6
