@@ -5,13 +5,13 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class IntegerOption implements IOption<Integer>
 {
     private final String optionName;
     private final int defaultValue;
     private final RULES rule;
-    private final int min;
-    private final int max;
+    private final int min, max;
     private int value;
 
     /**
