@@ -1,14 +1,14 @@
 package fr.aeldit.cyanlib.lib.utils;
 
-import fr.aeldit.cyanlib.lib.config.IntegerOption;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class TPUtils
 {
     public static int getRequiredXpLevelsToTp(
-            @NotNull ServerPlayerEntity player, @NotNull BlockPos tpPos, IntegerOption opt
+            @NotNull ServerPlayerEntity player, @NotNull BlockPos tpPos, int opt
     )
     {
         double distanceX = player.getX() - tpPos.getX();
@@ -25,18 +25,10 @@ public class TPUtils
         }
         // Minecraft doesn't center the position to the middle of the block but in 1 corner,
         // so this allows for a better centering
-        distanceX += 1;
-        distanceZ += 1;
+        ++distanceX;
+        ++distanceZ;
 
         int coordinatesDistance = (int) (distanceX + distanceZ) / 2;
-
-        if (coordinatesDistance < opt.getValue())
-        {
-            return 1;
-        }
-        else
-        {
-            return 1 + coordinatesDistance / opt.getValue();
-        }
+        return coordinatesDistance < opt ? 1 : 1 + coordinatesDistance / opt;
     }
 }

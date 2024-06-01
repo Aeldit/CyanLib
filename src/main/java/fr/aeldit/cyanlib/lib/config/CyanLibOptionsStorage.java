@@ -46,7 +46,10 @@ public class CyanLibOptionsStorage
     public void init()
     {
         readConfig();
-        optionsList.forEach(option -> optionsNames.add(option.getOptionName()));
+        for (IOption<?> option : optionsList)
+        {
+            optionsNames.add(option.getOptionName());
+        }
     }
 
     public String getModid()
