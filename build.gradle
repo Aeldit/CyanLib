@@ -70,6 +70,6 @@ modrinth {
     changelog = file("changelogs/latest.md").exists() ? file("changelogs/latest.md").getText() : "No changelog provided"
     syncBodyFrom = rootProject.file("README.md").text
 
-    debugMode = true
+    debugMode = false
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
