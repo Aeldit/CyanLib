@@ -56,7 +56,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     @Override
     protected void init()
     {
-        optionList = new OptionListWidget(client, width, height, this);
+        optionList = new OptionListWidget(client, width, this);
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 
@@ -75,5 +75,10 @@ public class CyanLibConfigScreen extends GameOptionsScreen
                         .dimensions(width / 2 - 100, height - 28, 200, 20)
                         .build()
         );
+    }
+
+    @Override
+    protected void addOptions()
+    {
     }
 }
