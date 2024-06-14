@@ -2,6 +2,7 @@ package fr.aeldit.cyanlib.lib.gui;
 
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
+import fr.aeldit.cyanlib.lib.config.IOption;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -11,10 +12,13 @@ import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -57,7 +61,20 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     protected void init()
     {
         optionList = new OptionListWidget(client, width, this);
-        optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
+
+        ArrayList<SimpleOption<?>> options = new ArrayList<>(configOptionsClass.getClass().getDeclaredFields().length);
+        for (Field field : configOptionsClass.getClass().getDeclaredFields())
+        {
+            try
+            {
+                options.add(((IOption<?>) field.get(null)).asConfigOption());
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        optionList.addAll(options.toArray(SimpleOption[]::new));
         addSelectableChild(optionList);
 
         addDrawableChild(

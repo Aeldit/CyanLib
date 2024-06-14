@@ -6,10 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import fr.aeldit.cyanlib.lib.utils.RULES;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +64,7 @@ public class CyanLibOptionsStorage
         return optionsNames;
     }
 
-    @Environment(EnvType.CLIENT)
+    /*@Environment(EnvType.CLIENT)
     public static SimpleOption<?> @NotNull [] asConfigOptions(@NotNull ICyanLibConfig configClass)
     {
         ArrayList<SimpleOption<?>> options = new ArrayList<>(configClass.getClass().getDeclaredFields().length);
@@ -84,7 +81,7 @@ public class CyanLibOptionsStorage
             }
         }
         return options.toArray(SimpleOption[]::new);
-    }
+    }*/
 
     public @Nullable Object getOptionValue(String optionName)
     {
