@@ -61,20 +61,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     protected void init()
     {
         optionList = new OptionListWidget(client, width, this);
-
-        ArrayList<SimpleOption<?>> options = new ArrayList<>(configOptionsClass.getClass().getDeclaredFields().length);
-        for (Field field : configOptionsClass.getClass().getDeclaredFields())
-        {
-            try
-            {
-                options.add(((IOption<?>) field.get(null)).asConfigOption());
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-        optionList.addAll(options.toArray(SimpleOption[]::new));
+        optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 
         addDrawableChild(
