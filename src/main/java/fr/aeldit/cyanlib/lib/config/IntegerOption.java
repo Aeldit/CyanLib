@@ -152,7 +152,7 @@ public class IntegerOption implements IOption<Integer>
     {
         return new SimpleOption<>("cyanlib.config.option.%s".formatted(optionName),
                 SimpleOption.emptyTooltip(),
-                (optionText, value) -> Text.of(optionText.getString() + ": " + value),
+                (optionText, value) -> Text.of("%s: %s".formatted(optionText.getString(), value)),
                 new SimpleOption.ValidatingIntSliderCallbacks(min, max),
                 getValue(),
                 this::setValue
