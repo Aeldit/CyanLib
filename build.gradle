@@ -4,6 +4,36 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+// Code from ETF's gradle build file (https://github.com/Traben-0/Entity_Texture_Features/blob/ETF-Main/build.gradle)
+private void setupPreProcess(def index) {
+    println "Setting up preprocessor for version index $index"
+    new File(projectDir, "build.properties").text = """
+    MC_19_4 = 1
+    MC_20_2 = 2
+    MC_20_4 = 3
+    MC_20_6 = 4
+    MC_21   = 5
+    MC      = ${index}
+    """
+
+    File indexProps = new File(projectDir, "versions/${index}.properties")
+    println "Applying gradle.properties overrides: $indexProps.path"
+    Properties properties = new Properties()
+    properties.load(indexProps.newDataInputStream())
+
+    def maxKeyLength = properties.keySet().collect { it.toString().length() }.max()
+    properties.forEach { key, value ->
+        //set in each project scope
+        gradle.rootProject.setProperty(key as String, value)
+        project.setProperty(key as String, value)
+        subprojects.forEach { it.setProperty(key as String, value) }
+
+        println " - ${key.padRight(maxKeyLength)} = $value"
+    }
+}
+
+setupPreProcess(project.mc_build)
+
 version = project.mod_version + "+" + project.minecraft_version
 
 repositories {
@@ -49,7 +79,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
-    options.release = rootProject.java_version as int
+    options.release = project.java_version as int
 
     //pre processor args
     options.compilerArgs += ["-Xplugin:Manifold"]

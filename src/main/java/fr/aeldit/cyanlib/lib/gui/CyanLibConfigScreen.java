@@ -2,7 +2,6 @@ package fr.aeldit.cyanlib.lib.gui;
 
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
-import fr.aeldit.cyanlib.lib.config.IOption;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,13 +11,10 @@ import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -57,10 +53,28 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
 
+#if MC_1_20_2
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
+    {
+        super.renderBackgroundTexture(context);
+    }
+#endif
+
     @Override
     protected void init()
     {
-        optionList = new OptionListWidget(client, width, this);
+        #if MC_1_21
+            optionList = new OptionListWidget(client, width, this);
+        #elif MC_1_20_6
+            optionList = new OptionListWidget(client, width, height, this);
+        #elif MC_1_20_4
+            optionList = new OptionListWidget(client, width, height - 66, 32, 32);
+        #elif MC_1_20_2
+            optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);
+        #elif MC_1_19_4
+            optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);
+        #endif
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 
@@ -81,8 +95,10 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         );
     }
 
+#if MC_1_21
     @Override
     protected void addOptions()
     {
     }
+#endif
 }
