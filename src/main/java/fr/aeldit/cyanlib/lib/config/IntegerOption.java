@@ -11,9 +11,8 @@ import org.jetbrains.annotations.NotNull;
 public class IntegerOption implements IOption<Integer>
 {
     private final String optionName;
-    private final int defaultValue;
+    private final int defaultValue, min, max;
     private final RULES rule;
-    private final int min, max;
     private int value;
 
     /**

@@ -150,7 +150,7 @@ public class CyanLibOptionsStorage
 
     private void readConfig()
     {
-        Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
+        Path path = FabricLoader.getInstance().getConfigDir().resolve("%s.json".formatted(modid));
 
         // If the file does not exist, we simply load the class in memory
         if (!Files.exists(path))
@@ -189,7 +189,7 @@ public class CyanLibOptionsStorage
         // Otherwise, we load the config from the file
         else
         {
-            Map<String, Object> config = new HashMap<>();
+            Map<String, Object> config;
 
             try
             {
@@ -198,7 +198,7 @@ public class CyanLibOptionsStorage
                 TypeToken<Map<String, Object>> mapType = new TypeToken<>()
                 {
                 };
-                config.putAll(gson.fromJson(reader, mapType));
+                config = gson.fromJson(reader, mapType);
                 reader.close();
             }
             catch (IOException e)
@@ -206,7 +206,7 @@ public class CyanLibOptionsStorage
                 throw new RuntimeException(e);
             }
 
-            if (!config.isEmpty())
+            if (config != null && !config.isEmpty())
             {
                 for (Map.Entry<String, Object> entry : config.entrySet())
                 {
