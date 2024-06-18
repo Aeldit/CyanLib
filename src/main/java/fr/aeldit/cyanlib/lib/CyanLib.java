@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Map;
 
 // TODO -> Add multi world support
 public class CyanLib
@@ -18,7 +17,7 @@ public class CyanLib
     private final CyanLibLanguageUtils languageUtils;
     // This Map stores the CyanLib instance of each mod using this library, the key in the map being the modid
     // of the mod
-    public static final Map<String, CyanLib> CONFIG_CLASS_INSTANCES = new HashMap<>();
+    public static final HashMap<String, CyanLib> CONFIG_CLASS_INSTANCES = new HashMap<>();
 
     /**
      * Main class of this library
