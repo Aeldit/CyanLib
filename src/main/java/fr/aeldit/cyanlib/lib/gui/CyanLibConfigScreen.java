@@ -5,7 +5,11 @@ import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+#if MC_1_19_4
+import net.minecraft.client.util.math.MatrixStack;
+#else
 import net.minecraft.client.gui.DrawContext;
+#endif
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -45,6 +49,15 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         Objects.requireNonNull(client).setScreen(parent);
     }
 
+    #if MC_1_19_4
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    {
+        this.renderBackgroundTexture(matrices);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+        super.render(matrices, mouseX, mouseY, delta);
+    }
+    #else
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
@@ -52,20 +65,21 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         optionList.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
+    #endif
 
-#if MC_1_20_2
-    @Override
+    #if MC_1_20_2
+    /*@Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
     {
         super.renderBackgroundTexture(context);
-    }
-#endif
+    }*/
+    #endif
 
     @Override
     protected void init()
     {
         #if MC_1_21
-            optionList = new OptionListWidget(client, width, this);
+        optionList = new OptionListWidget(client, width, this);
         #elif MC_1_20_6
             optionList = new OptionListWidget(client, width, height, this);
         #elif MC_1_20_4
@@ -95,10 +109,10 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         );
     }
 
-#if MC_1_21
-    @Override
+    #if MC_1_21
+    /*@Override
     protected void addOptions()
     {
-    }
-#endif
+    }*/
+    #endif
 }
