@@ -21,7 +21,7 @@ public class CyanLibLanguageUtils
 {
     private final String modid;
     // Map<translationKey, translation>
-    private static final Map<String, String> translations = new HashMap<>(0);
+    private static Map<String, String> translations;
 
     @Contract(pure = true)
     public CyanLibLanguageUtils(String modid)
@@ -31,11 +31,12 @@ public class CyanLibLanguageUtils
 
     public void loadCustomLanguage(Map<String, String> defaultTranslations)
     {
-        Path customLangPath = FabricLoader.getInstance().getConfigDir().resolve(modid + "/custom_lang.json");
+        Path customLangPath =
+                FabricLoader.getInstance().getConfigDir().resolve(Path.of("%s/custom_lang.json".formatted(modid)));
 
         if (!Files.exists(customLangPath))
         {
-            translations.putAll(defaultTranslations);
+            translations = defaultTranslations;
         }
         else
         {
@@ -43,10 +44,18 @@ public class CyanLibLanguageUtils
             {
                 Gson gsonReader = new Gson();
                 Reader reader = Files.newBufferedReader(customLangPath);
-                TypeToken<Map<String, String>> mapType = new TypeToken<>()
+                TypeToken<HashMap<String, String>> mapType = new TypeToken<>()
                 {
                 };
-                translations.putAll(gsonReader.fromJson(reader, mapType));
+
+                if (translations == null)
+                {
+                    translations = gsonReader.fromJson(reader, mapType);
+                }
+                else
+                {
+                    translations.putAll(gsonReader.fromJson(reader, mapType));
+                }
                 reader.close();
             }
             catch (IOException e)
@@ -54,12 +63,19 @@ public class CyanLibLanguageUtils
                 throw new RuntimeException(e);
             }
 
-            // If there are missing translations in the provided one, we add them from the default translations
-            for (String key : defaultTranslations.keySet())
+            if (translations == null)
             {
-                if (!translations.containsKey(key))
+                translations = defaultTranslations;
+            }
+            else
+            {
+                // If there are missing translations in the provided one, we add them from the default translations
+                for (String key : defaultTranslations.keySet())
                 {
-                    translations.put(key, defaultTranslations.get(key));
+                    if (!translations.containsKey(key))
+                    {
+                        translations.put(key, defaultTranslations.get(key));
+                    }
                 }
             }
         }
@@ -67,7 +83,11 @@ public class CyanLibLanguageUtils
 
     private String getTranslation(String translationKey)
     {
-        return translations.getOrDefault(translationKey, "null");
+        if (translations == null || !translations.containsKey(translationKey))
+        {
+            return "null";
+        }
+        return translations.get(translationKey);
     }
 
     /**
