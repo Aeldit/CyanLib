@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    id("fabric-loom") version "1.7-SNAPSHOT"
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
 }
