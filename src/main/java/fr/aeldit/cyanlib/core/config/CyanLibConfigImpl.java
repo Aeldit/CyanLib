@@ -7,6 +7,8 @@ import fr.aeldit.cyanlib.lib.utils.RULES;
 
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 public class CyanLibConfigImpl implements ICyanLibConfig
 {
     public static final BooleanOption MSG_TO_ACTION_BAR = new BooleanOption("msgToActionBar", true);
@@ -19,36 +21,36 @@ public class CyanLibConfigImpl implements ICyanLibConfig
     {
         return Map.ofEntries(
                 // ERRORS
-                Map.entry("cyanlib.error.optionNotFound",
+                entry("cyanlib.error.optionNotFound",
                         "§cThis option does not exist or you tried to set it to the wrong type"
                 ),
-                Map.entry("cyanlib.error.optionNotFoundOrWrongInt",
+                entry("cyanlib.error.optionNotFoundOrWrongInt",
                         "§cThis option does not exist or you tried to set it to an invalid number"
                 ),
-                Map.entry("cyanlib.error.incorrectInteger", "§cThe number you entered is invalid for this option"),
+                entry("cyanlib.error.incorrectInteger", "§cThe number you entered is invalid for this option"),
                 // MESSAGES
-                Map.entry("cyanlib.msg.currentValue", "§7Current value , %s"),
-                Map.entry("cyanlib.msg.setValue", "§7Set value to , %s  %s  %s  %s  %s"),
-                Map.entry("cyanlib.msg.translationsReloaded", "§3Custom translations have been reloaded"),
+                entry("cyanlib.msg.currentValue", "§7Current value , %s"),
+                entry("cyanlib.msg.setValue", "§7Set value to , %s  %s  %s  %s  %s"),
+                entry("cyanlib.msg.translationsReloaded", "§3Custom translations have been reloaded"),
                 // SETS
-                Map.entry("cyanlib.msg.set.msgToActionBar", "§3Toggled messages to action bar %s"),
-                Map.entry("cyanlib.msg.set.minOpLvlEditConfig",
+                entry("cyanlib.msg.set.msgToActionBar", "§3Toggled messages to action bar %s"),
+                entry("cyanlib.msg.set.minOpLvlEditConfig",
                         "§3The minimum OP level required to edit the config is now %s"
                 ),
                 // SEPARATIONS
-                Map.entry("cyanlib.msg.dashSeparation", "§6------------------------------------"),
+                entry("cyanlib.msg.dashSeparation", "§6------------------------------------"),
                 // CONFIG
-                Map.entry("cyanlib.msg.getDesc.msgToActionBar",
+                entry("cyanlib.msg.getDesc.msgToActionBar",
                         "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar " +
                                 "or not"
                 ),
-                Map.entry("cyanlib.msg.getDesc.minOpLvlEditConfig",
+                entry("cyanlib.msg.getDesc.minOpLvlEditConfig",
                         "§3The §dminOpLevelExeEditConfig §3option defines the OP level required to edit the config"
                 ),
                 // GET_CFG
-                Map.entry("cyanlib.msg.getCfg.header", "§6CyanLib - OPTIONS\n"),
-                Map.entry("cyanlib.msg.getCfg.msgToActionBar", "§6- §3Messages to action bar : %s"),
-                Map.entry("cyanlib.msg.getCfg.minOpLvlEditConfig",
+                entry("cyanlib.msg.getCfg.header", "§6CyanLib - OPTIONS\n"),
+                entry("cyanlib.msg.getCfg.msgToActionBar", "§6- §3Messages to action bar : %s"),
+                entry("cyanlib.msg.getCfg.minOpLvlEditConfig",
                         "§6- §3Minimum OP level required to edit the config : %s"
                 )
         );

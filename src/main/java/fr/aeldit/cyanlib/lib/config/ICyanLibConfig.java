@@ -12,12 +12,14 @@ public interface ICyanLibConfig
      * @apiNote To add your translations, you can do as follows :
      *
      * <pre>{@code
+     *      import static java.util.Map.entry;
+     *      ...
      *      @Override
      *      public Map<String, String> getDefaultTranslations()
      *      {
      *          return Map.ofEntries(
-     *              Map.entry("path.to.translation.one", "Translation 1"),
-     *              Map.entry("path.to.translation.two", "Translation 2"),
+     *              entry("path.to.translation.one", "Translation 1"),
+     *              entry("path.to.translation.two", "Translation 2"),
      *              ...
      *          );
      *      }
