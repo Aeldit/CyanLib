@@ -2,11 +2,11 @@ package fr.aeldit.cyanlib.lib.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-#if MC_1_19_4
+//? if =1.19.4 {
 import net.minecraft.client.util.math.MatrixStack;
-#else
+//?} else {
 import net.minecraft.client.gui.DrawContext;
-#endif
+//?}
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
@@ -37,22 +37,22 @@ public class CyanLibModsScreen extends Screen
         Objects.requireNonNull(client).setScreen(parent);
     }
 
-    #if MC_1_19_4
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        this.renderBackgroundTexture(matrices);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-        super.render(matrices, mouseX, mouseY, delta);
-    }
-    #else
+    //? if >1.19.4 {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
-    #endif
+    //?} else {
+    /*@Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    {
+        this.renderBackgroundTexture(matrices);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+        super.render(matrices, mouseX, mouseY, delta);
+    }*/
+    //?}
 
     @Override
     protected void init()

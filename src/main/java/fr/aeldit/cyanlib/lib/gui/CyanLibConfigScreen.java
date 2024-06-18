@@ -5,11 +5,11 @@ import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-#if MC_1_19_4
+//? if =1.19.4 {
 import net.minecraft.client.util.math.MatrixStack;
-#else
+//?} else {
 import net.minecraft.client.gui.DrawContext;
-#endif
+//?}
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -49,15 +49,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         Objects.requireNonNull(client).setScreen(parent);
     }
 
-    #if MC_1_19_4
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        this.renderBackgroundTexture(matrices);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
-        super.render(matrices, mouseX, mouseY, delta);
-    }
-    #else
+    /*? if >1.19.4 {*/
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
@@ -65,30 +57,38 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         optionList.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
-    #endif
+    /*?} else {*/
+    /*@Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    {
+        this.renderBackgroundTexture(matrices);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
+        super.render(matrices, mouseX, mouseY, delta);
+    }*/
+    //?}
 
-    #if MC_1_20_2
+    //? if =1.19.4 {
     /*@Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta)
     {
         super.renderBackgroundTexture(context);
     }*/
-    #endif
+    //?}
 
     @Override
     protected void init()
     {
-        #if MC_1_21
+        //? if =1.21 {
         optionList = new OptionListWidget(client, width, this);
-        #elif MC_1_20_6
-            optionList = new OptionListWidget(client, width, height, this);
-        #elif MC_1_20_4
-            optionList = new OptionListWidget(client, width, height - 66, 32, 32);
-        #elif MC_1_20_2
-            optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);
-        #elif MC_1_19_4
-            optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);
-        #endif
+        //? elif =1.20.6 {
+        /*optionList = new OptionListWidget(client, width, height, this);*/
+        //? elif =1.20.4 {
+        /*optionList = new OptionListWidget(client, width, height - 66, 32, 32);*/
+        //? elif =1.20.2 {
+        /*optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);*/
+        //? elif =1.19.4 {
+        /*optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);*/
+        //?}
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
         addSelectableChild(optionList);
 
@@ -109,10 +109,10 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         );
     }
 
-    #if MC_1_21
-    /*@Override
+    //? if =1.21 {
+    @Override
     protected void addOptions()
     {
-    }*/
-    #endif
+    }
+    //?}
 }
