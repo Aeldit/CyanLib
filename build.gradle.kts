@@ -69,7 +69,6 @@ tasks {
 
     val releaseMod by registering {
         group = "mod"
-
         dependsOn("modrinth")
     }
 
@@ -121,9 +120,9 @@ modrinth {
             ?.readText()
             ?: "No changelog provided."
     )
-    if (file("README.md").exists()) {
+    if (rootProject.file("README.md").exists()) {
         syncBodyFrom.set(rootProject.file("README.md").readText())
     }
 
-    debugMode = true
+    debugMode = false
 }

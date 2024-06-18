@@ -6,7 +6,9 @@ pluginManagement {
         maven("https://maven.fabricmc.net/") {
             name = "Fabric"
         }
-        maven("https://maven.kikugie.dev/releases")
+        maven("https://maven.kikugie.dev/releases") {
+            name = "StoneCutter"
+        }
     }
 }
 
