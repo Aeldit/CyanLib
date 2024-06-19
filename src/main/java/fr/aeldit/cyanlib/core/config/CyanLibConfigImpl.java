@@ -41,9 +41,6 @@ public class CyanLibConfigImpl implements ICyanLibConfig
                         "§3The minimum OP level required to edit the config is now %s"
                 ),
 
-                // SEPARATIONS
-                entry("cyanlib.msg.dashSeparation", "§6------------------------------------"),
-
                 // CONFIG
                 entry("cyanlib.msg.getDesc.msgToActionBar",
                         "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar " +

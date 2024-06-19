@@ -17,11 +17,14 @@ import java.util.Map;
 
 import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MSG_TO_ACTION_BAR;
 
+@SuppressWarnings("unused")
 public class CyanLibLanguageUtils
 {
+    // Map<modKey, Map<translationKey, translation>>
+    // Contains for keys each mod that implements this Library using the CyanLibLanguageUtils,
+    // and for values the translations of each mod
+    private static final Map<String, Map<String, String>> modsTranslations = new HashMap<>();
     private final String modid;
-    // Map<translationKey, translation>
-    private Map<String, String> translations;
 
     @Contract(pure = true)
     public CyanLibLanguageUtils(String modid)
@@ -36,7 +39,7 @@ public class CyanLibLanguageUtils
 
         if (!Files.exists(customLangPath))
         {
-            translations = defaultTranslations;
+            modsTranslations.put(modid, defaultTranslations);
         }
         else
         {
@@ -47,15 +50,7 @@ public class CyanLibLanguageUtils
                 TypeToken<HashMap<String, String>> mapType = new TypeToken<>()
                 {
                 };
-
-                if (translations == null)
-                {
-                    translations = gsonReader.fromJson(reader, mapType);
-                }
-                else
-                {
-                    translations.putAll(gsonReader.fromJson(reader, mapType));
-                }
+                modsTranslations.put(modid, gsonReader.fromJson(reader, mapType));
                 reader.close();
             }
             catch (IOException e)
@@ -63,18 +58,18 @@ public class CyanLibLanguageUtils
                 throw new RuntimeException(e);
             }
 
-            if (translations == null)
+            if (!modsTranslations.containsKey(modid) || modsTranslations.get(modid).isEmpty())
             {
-                translations = defaultTranslations;
+                modsTranslations.put(modid, defaultTranslations);
             }
             else
             {
                 // If there are missing translations in the provided one, we add them from the default translations
                 for (String key : defaultTranslations.keySet())
                 {
-                    if (!translations.containsKey(key))
+                    if (!modsTranslations.get(modid).containsKey(key))
                     {
-                        translations.put(key, defaultTranslations.get(key));
+                        modsTranslations.get(modid).put(key, defaultTranslations.get(key));
                     }
                 }
             }
@@ -83,11 +78,20 @@ public class CyanLibLanguageUtils
 
     private String getTranslation(String translationKey)
     {
-        if (translations == null || !translations.containsKey(translationKey))
+        if (!modsTranslations.containsKey(modid) || !modsTranslations.get(modid).containsKey(translationKey))
         {
             return "The translation key '%s' doesn't exist".formatted(translationKey);
         }
-        return translations.get(translationKey);
+        return modsTranslations.get(modid).get(translationKey);
+    }
+
+    private String getTranslation(String modKey, String translationKey)
+    {
+        if (!modsTranslations.containsKey(modKey) || !modsTranslations.get(modKey).containsKey(translationKey))
+        {
+            return "The translation key '%s' doesn't exist for the mod %s".formatted(translationKey, modKey);
+        }
+        return modsTranslations.get(modKey).get(translationKey);
     }
 
     /**
@@ -95,8 +99,21 @@ public class CyanLibLanguageUtils
      * otherwise
      *
      * @param player          The player to whom the message will be sent
+     * @param modKey          The modid of the mod of which we want the translation
      * @param translationPath The translation key (ex: "cyanlib.error.notOp")
      * @param args            The arguments to pass to the message (can be omitted). (You can put more than 1 arg)
+     */
+    public void sendPlayerMessage(
+            @NotNull ServerPlayerEntity player, String modKey, String translationPath, Object... args
+    )
+    {
+        player.sendMessage(Text.translatable(getTranslation(modKey, translationPath), args),
+                MSG_TO_ACTION_BAR.getValue()
+        );
+    }
+
+    /**
+     * @see #sendPlayerMessage(ServerPlayerEntity, String, String, Object...)
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String translationPath, Object... args)
     {
@@ -112,9 +129,21 @@ public class CyanLibLanguageUtils
      * option
      *
      * @param player          the player to whom the message will be sent
+     * @param modKey          The modid of the mod of which we want the translation
      * @param translationPath the translation key
      * @param toActionBar     whether the message will be sent in the action bar or not
      * @param args            the arguments to pass to the message (can be null). (You can put more than 1 arg)
+     */
+    public void sendPlayerMessageActionBar(
+            @NotNull ServerPlayerEntity player, String modKey, String translationPath, boolean toActionBar,
+            Object... args
+    )
+    {
+        player.sendMessage(Text.translatable(getTranslation(modKey, translationPath), args), toActionBar);
+    }
+
+    /**
+     * @see #sendPlayerMessageActionBar(ServerPlayerEntity, String, String, boolean, Object...)
      */
     public void sendPlayerMessageActionBar(
             @NotNull ServerPlayerEntity player, String translationPath, boolean toActionBar, Object... args
