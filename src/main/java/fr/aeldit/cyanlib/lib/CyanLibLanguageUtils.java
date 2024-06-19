@@ -80,7 +80,7 @@ public class CyanLibLanguageUtils
     {
         if (!modsTranslations.containsKey(modid) || !modsTranslations.get(modid).containsKey(translationKey))
         {
-            return "The translation key '%s' doesn't exist".formatted(translationKey);
+            return "The translation key '%s§r' doesn't exist".formatted(translationKey);
         }
         return modsTranslations.get(modid).get(translationKey);
     }
@@ -103,7 +103,7 @@ public class CyanLibLanguageUtils
      * @param translationPath The translation key (ex: "cyanlib.error.notOp")
      * @param args            The arguments to pass to the message (can be omitted). (You can put more than 1 arg)
      */
-    public void sendPlayerMessage(
+    public void sendPlayerMessageMod(
             @NotNull ServerPlayerEntity player, String modKey, String translationPath, Object... args
     )
     {
@@ -113,7 +113,7 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * @see #sendPlayerMessage(ServerPlayerEntity, String, String, Object...)
+     * @see #sendPlayerMessageMod(ServerPlayerEntity, String, String, Object...)
      */
     public void sendPlayerMessage(@NotNull ServerPlayerEntity player, String translationPath, Object... args)
     {
@@ -134,7 +134,7 @@ public class CyanLibLanguageUtils
      * @param toActionBar     whether the message will be sent in the action bar or not
      * @param args            the arguments to pass to the message (can be null). (You can put more than 1 arg)
      */
-    public void sendPlayerMessageActionBar(
+    public void sendPlayerMessageActionBarMod(
             @NotNull ServerPlayerEntity player, String modKey, String translationPath, boolean toActionBar,
             Object... args
     )
@@ -143,7 +143,7 @@ public class CyanLibLanguageUtils
     }
 
     /**
-     * @see #sendPlayerMessageActionBar(ServerPlayerEntity, String, String, boolean, Object...)
+     * @see #sendPlayerMessageActionBarMod(ServerPlayerEntity, String, String, boolean, Object...)
      */
     public void sendPlayerMessageActionBar(
             @NotNull ServerPlayerEntity player, String translationPath, boolean toActionBar, Object... args
