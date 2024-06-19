@@ -1,1 +1,4 @@
-Change the way of registering the default translations + remove the isPlayer function+ misc code changes
+- Change the way of registering the default translations
+- Remove the `isPlayer` function
+- Fix missing translation
+- Misc code changes

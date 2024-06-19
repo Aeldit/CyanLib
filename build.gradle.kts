@@ -115,9 +115,9 @@ tasks {
 
 publishMods {
     modrinth {
-        accessToken = providers.gradleProperty("MODRINTH_TOKEN")
+        accessToken = System.getenv("MODRINTH_TOKEN")
 
-        projectId = archivesBaseName
+        projectId = "WwacPCzw"
         displayName = "[${mcVersion}] CyanLib $modVersion"
         version = fullVersion
         type = STABLE
@@ -128,21 +128,15 @@ publishMods {
         minecraftVersions.add(mcVersion)
         modLoaders.add("fabric")
 
-        requires {
-            slug = "fabric-api"
-            version = fabricVersion
-        }
-        requires {
-            slug = "modmenu"
-            version = modmenuVersion
-        }
+        requires("fabric-api")
+        requires("modmenu")
 
         changelog = rootProject.file("changelogs/latest.md")
             .takeIf { it.exists() }
             ?.readText()
             ?: "No changelog provided."
 
-        dryRun = true
+        dryRun = false
     }
 }
 
