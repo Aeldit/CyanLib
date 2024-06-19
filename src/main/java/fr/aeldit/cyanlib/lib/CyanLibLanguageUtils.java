@@ -21,7 +21,7 @@ public class CyanLibLanguageUtils
 {
     private final String modid;
     // Map<translationKey, translation>
-    private static Map<String, String> translations;
+    private Map<String, String> translations;
 
     @Contract(pure = true)
     public CyanLibLanguageUtils(String modid)
