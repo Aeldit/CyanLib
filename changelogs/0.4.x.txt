@@ -49,3 +49,9 @@
 0.4.10+1.21 :
     Fix server unable to launch
 
+0.4.11 :
+    - Change the way of registering the default translations
+    - Remove the `isPlayer` function
+    - Fix missing translation
+    - Misc code changes
+

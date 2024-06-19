@@ -1,4 +1,1 @@
-- Change the way of registering the default translations
-- Remove the `isPlayer` function
-- Fix missing translation
-- Misc code changes
+Make the translations map not static (was causing issues with translations when paired with other mods)
