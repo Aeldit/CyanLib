@@ -55,3 +55,5 @@
     - Fix missing translation
     - Misc code changes
 
+0.4.12 :
+    Make the translations map not static (was causing issues with translations when paired with other mods)
