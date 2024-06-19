@@ -45,3 +45,7 @@
 
 0.4.7 :
     Fix config not being written from the chat
+
+0.4.10+1.21 :
+    Fix server unable to launch
+

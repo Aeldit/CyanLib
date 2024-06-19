@@ -1,1 +1,1 @@
-Fix server unable to launch
+Change the way of registering the default translations + remove the isPlayer function+ misc code changes

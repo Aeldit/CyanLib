@@ -3,6 +3,7 @@ plugins {
     id("fabric-loom") version "1.7-SNAPSHOT"
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
+    id("me.modmuss50.mod-publish-plugin") version "0.5.+"
 }
 
 repositories {
@@ -14,6 +15,7 @@ repositories {
     }
 }
 
+val archivesBaseName = property("archives_base_name").toString()
 val modVersion = property("mod_version").toString()
 
 val mcVersion = property("minecraft_version").toString()
@@ -24,6 +26,13 @@ val fabricVersion = property("fabric_version").toString()
 val modmenuVersion = property("modmenu_version").toString()
 
 val fullVersion = "${modVersion}+${mcVersion}"
+
+val isj21 = javaVersion == "1.21"
+
+// Sets the name of the output jar files
+base {
+    archivesName.set("${property("archives_base_name")}-${fullVersion}")
+}
 
 dependencies {
     minecraft("com.mojang:minecraft:${mcVersion}")
@@ -48,6 +57,33 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 }
 
+loom {
+    runConfigs.all {
+        ideConfigGenerated(true) // Run configurations are not created for subprojects by default
+        runDir = "../../run" // Use a shared run folder and just create separate worlds
+    }
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = if (isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    targetCompatibility = if (isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+}
+
+val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
+    group = "build"
+    from(tasks.remapJar.get().archiveFile)
+    into(rootProject.layout.buildDirectory.file("libs/${archivesBaseName}-${fullVersion}"))
+    dependsOn("build")
+}
+
+if (stonecutter.current.isActive) {
+    rootProject.tasks.register("buildActive") {
+        group = "project"
+        dependsOn(buildAndCollect)
+    }
+}
+
 tasks {
     processResources {
         inputs.property("version", fullVersion)
@@ -67,59 +103,53 @@ tasks {
         }
     }
 
-    val releaseMod by registering {
-        group = "mod"
-        dependsOn("modrinth")
-    }
-
     jar {
         from("LICENSE")
     }
-}
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-}
-
-loom {
-    runConfigs.all {
-        ideConfigGenerated(true) // Run configurations are not created for subprojects by default
-        runDir = "../../run" // Use a shared run folder and just create separate worlds
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.release = if (isj21) 21 else 17
     }
 }
 
-java {
-    withSourcesJar()
-    val is21 = javaVersion == "21"
-    sourceCompatibility = if (is21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
-    targetCompatibility = if (is21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+publishMods {
+    modrinth {
+        accessToken = providers.gradleProperty("MODRINTH_TOKEN")
+
+        projectId = archivesBaseName
+        displayName = "[${mcVersion}] CyanLib $modVersion"
+        version = fullVersion
+        type = STABLE
+
+        file = tasks.remapJar.get().archiveFile
+        additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
+
+        minecraftVersions.add(mcVersion)
+        modLoaders.add("fabric")
+
+        requires {
+            slug = "fabric-api"
+            version = fabricVersion
+        }
+        requires {
+            slug = "modmenu"
+            version = modmenuVersion
+        }
+
+        changelog = rootProject.file("changelogs/latest.md")
+            .takeIf { it.exists() }
+            ?.readText()
+            ?: "No changelog provided."
+
+        dryRun = true
+    }
 }
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
 
     projectId.set("${property("archives_base_name")}")
-    versionName.set("[${mcVersion}] CyanLib $modVersion")
-    versionNumber.set(fullVersion)
-    versionType.set("release")
-
-    uploadFile.set(tasks.remapJar.get().archiveFile)
-    additionalFiles.addAll(tasks.remapSourcesJar.get().archiveFile)
-
-    gameVersions.addAll(mcVersion)
-    loaders.add("fabric")
-
-    dependencies {
-        required.version("fabric-api", fabricVersion)
-        required.version("modmenu", modmenuVersion)
-    }
-
-    changelog.set(
-        rootProject.file("changelogs/latest.md")
-            .takeIf { it.exists() }
-            ?.readText()
-            ?: "No changelog provided."
-    )
     if (rootProject.file("README.md").exists()) {
         syncBodyFrom.set(rootProject.file("README.md").readText())
     }

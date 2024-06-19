@@ -81,7 +81,7 @@ public class CyanLibConfigCommands
                 libUtils.getOptionsStorage().getConfigClass().getDefaultTranslations()
         );
 
-        if (libUtils.isPlayer(context.getSource()))
+        if (context.getSource().getPlayer() != null)
         {
             libUtils.getLanguageUtils().sendPlayerMessage(context.getSource().getPlayer(),
                     "cyanlib.msg.translationsReloaded"
@@ -101,8 +101,7 @@ public class CyanLibConfigCommands
     public int setBoolOption(@NotNull CommandContext<ServerCommandSource> context)
     {
         ServerCommandSource source = context.getSource();
-
-        if (libUtils.isPlayer(source))
+        if (source.getPlayer() != null)
         {
             ServerPlayerEntity player = source.getPlayer();
 
@@ -134,6 +133,10 @@ public class CyanLibConfigCommands
                 }
             }
         }
+        else
+        {
+            source.getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+        }
         return Command.SINGLE_SUCCESS;
     }
 
@@ -149,7 +152,7 @@ public class CyanLibConfigCommands
      */
     public int setBoolOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
     {
-        if (libUtils.isPlayer(context.getSource()))
+        if (context.getSource().getPlayer() != null)
         {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -171,6 +174,10 @@ public class CyanLibConfigCommands
                 }
             }
         }
+        else
+        {
+            context.getSource().getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+        }
         return Command.SINGLE_SUCCESS;
     }
 
@@ -185,8 +192,7 @@ public class CyanLibConfigCommands
     public int setIntOption(@NotNull CommandContext<ServerCommandSource> context)
     {
         ServerCommandSource source = context.getSource();
-
-        if (libUtils.isPlayer(source))
+        if (source.getPlayer() != null)
         {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -226,6 +232,10 @@ public class CyanLibConfigCommands
                 }
             }
         }
+        else
+        {
+            source.getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+        }
         return Command.SINGLE_SUCCESS;
     }
 
@@ -242,7 +252,7 @@ public class CyanLibConfigCommands
      */
     public int setIntOptionFromCommand(@NotNull CommandContext<ServerCommandSource> context)
     {
-        if (libUtils.isPlayer(context.getSource()))
+        if (context.getSource().getPlayer() != null)
         {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -273,6 +283,10 @@ public class CyanLibConfigCommands
                 }
             }
         }
+        else
+        {
+            context.getSource().getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+        }
         return Command.SINGLE_SUCCESS;
     }
 
@@ -289,7 +303,7 @@ public class CyanLibConfigCommands
      */
     public int getOptionChatConfig(@NotNull CommandContext<ServerCommandSource> context)
     {
-        if (libUtils.isPlayer(context.getSource()))
+        if (context.getSource().getPlayer() != null)
         {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -412,6 +426,10 @@ public class CyanLibConfigCommands
                 }
             }
         }
+        else
+        {
+            context.getSource().getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
+        }
         return Command.SINGLE_SUCCESS;
     }
 
@@ -422,7 +440,7 @@ public class CyanLibConfigCommands
      */
     public int getConfigOptions(@NotNull CommandContext<ServerCommandSource> context)
     {
-        if (libUtils.isPlayer(context.getSource()))
+        if (context.getSource().getPlayer() != null)
         {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -482,6 +500,10 @@ public class CyanLibConfigCommands
                         false
                 );
             }
+        }
+        else
+        {
+            context.getSource().getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
         }
         return Command.SINGLE_SUCCESS;
     }

@@ -85,7 +85,7 @@ public class CyanLibLanguageUtils
     {
         if (translations == null || !translations.containsKey(translationKey))
         {
-            return "null";
+            return "The translation key '%s' doesn't exist".formatted(translationKey);
         }
         return translations.get(translationKey);
     }

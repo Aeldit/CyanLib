@@ -1,9 +1,7 @@
 package fr.aeldit.cyanlib.lib;
 
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,21 +47,6 @@ public class CyanLib
     public CyanLibLanguageUtils getLanguageUtils()
     {
         return languageUtils;
-    }
-
-    /**
-     * Returns whether the source is a player or not, and sends a message if this condition is {@code false}
-     *
-     * @param source the source of the command (usually {@code context.getSource()})
-     */
-    public boolean isPlayer(@NotNull ServerCommandSource source)
-    {
-        if (source.getPlayer() == null)
-        {
-            source.getServer().sendMessage(Text.of("§cThis command can only be executed by a player"));
-            return false;
-        }
-        return true;
     }
 
     /**

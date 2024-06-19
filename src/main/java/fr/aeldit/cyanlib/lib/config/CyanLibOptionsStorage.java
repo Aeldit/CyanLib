@@ -280,14 +280,12 @@ public class CyanLibOptionsStorage
     public void writeConfig()
     {
         Map<String, Object> config = new HashMap<>();
-
         for (IOption<?> option : optionsList)
         {
             config.put(option.getOptionName(), option.getValue());
         }
 
-        Path path = FabricLoader.getInstance().getConfigDir().resolve(modid + ".json");
-
+        Path path = FabricLoader.getInstance().getConfigDir().resolve("%s.json".formatted(modid));
         if (!Files.exists(path))
         {
             try
@@ -350,8 +348,7 @@ public class CyanLibOptionsStorage
             if (!couldWrite)
             {
                 LOGGER.info(("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
-                        " " +
-                        "than 1 sec)").formatted(path.getFileName().toString()));
+                        " than 1 sec)").formatted(path.getFileName().toString()));
             }
         }
     }

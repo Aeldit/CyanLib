@@ -21,6 +21,7 @@ public class CyanLibConfigImpl implements ICyanLibConfig
     {
         return Map.ofEntries(
                 // ERRORS
+                entry("cyanlib.msg.notOp", "§cYou don't have the required permission to execute this command"),
                 entry("cyanlib.error.optionNotFound",
                         "§cThis option does not exist or you tried to set it to the wrong type"
                 ),
