@@ -57,3 +57,8 @@
 
 0.4.12 :
     Make the translations map not static (was causing issues with translations when paired with other mods)
+
+0.4.13 :
+    Make the translations of each mod available to every other mod using the CyanLib.
+
+    This fixes many issues where the config commands were not working properly

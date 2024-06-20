@@ -1,3 +1,1 @@
-Make the translations of each mod available to every other mod using the CyanLib.
-
-This fixes many issues where the config commands were not working properly
+Remove the screen with the list of all mods using the CyanLib, as there is already ModMenu
