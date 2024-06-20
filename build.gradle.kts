@@ -15,33 +15,40 @@ repositories {
     }
 }
 
-val archivesBaseName = property("archives_base_name").toString()
-val modVersion = property("mod_version").toString()
+object Constants {
+    const val ARCHIVES_BASE_NAME: String = "cyanlib"
+    const val MOD_VERSION: String = "0.4.14"
+    const val LOADER_VERSION: String = "0.15.11"
+}
 
-val mcVersion = property("minecraft_version").toString()
-val loaderVersion = property("loader_version").toString()
-val javaVersion = property("java_version").toString()
+class ModData {
+    val mcVersion = property("minecraft_version").toString()
+    val javaVersion = property("java_version").toString()
 
-val fabricVersion = property("fabric_version").toString()
-val modmenuVersion = property("modmenu_version").toString()
+    val fabricVersion = property("fabric_version").toString()
+    val modmenuVersion = property("modmenu_version").toString()
 
-val fullVersion = "${modVersion}+${mcVersion}"
+    val fullVersion = "${Constants.MOD_VERSION}+${mcVersion}"
 
-val isj21 = javaVersion == "1.21"
+    val isj21 = javaVersion == "1.21"
+}
+
+val mod = ModData()
 
 // Sets the name of the output jar files
 base {
-    archivesName.set("${property("archives_base_name")}-${fullVersion}")
+    archivesName = "${Constants.ARCHIVES_BASE_NAME}-${mod.fullVersion}"
+    group = "fr.aeldit.cyanlib"
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${mcVersion}")
+    minecraft("com.mojang:minecraft:${mod.mcVersion}")
     mappings("net.fabricmc:yarn:${property("yarn_mappings")}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
+    modImplementation("net.fabricmc:fabric-loader:${Constants.LOADER_VERSION}")
 
     // Fabric API
     fun addFabricModule(name: String) {
-        val module = fabricApi.module(name, fabricVersion)
+        val module = fabricApi.module(name, mod.fabricVersion)
         modImplementation(module)
     }
     addFabricModule("fabric-resource-loader-v0")
@@ -51,7 +58,7 @@ dependencies {
     addFabricModule("fabric-screen-api-v1")
 
     // ModMenu
-    modImplementation("com.terraformersmc:modmenu:${modmenuVersion}")
+    modImplementation("com.terraformersmc:modmenu:${mod.modmenuVersion}")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -66,14 +73,14 @@ loom {
 
 java {
     withSourcesJar()
-    sourceCompatibility = if (isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
-    targetCompatibility = if (isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    sourceCompatibility = if (mod.isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    targetCompatibility = if (mod.isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
 }
 
 val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
     group = "build"
     from(tasks.remapJar.get().archiveFile)
-    into(rootProject.layout.buildDirectory.file("libs/${archivesBaseName}-${fullVersion}"))
+    into(rootProject.layout.buildDirectory.file("libs/${Constants.ARCHIVES_BASE_NAME}-${mod.fullVersion}"))
     dependsOn("build")
 }
 
@@ -86,18 +93,18 @@ if (stonecutter.current.isActive) {
 
 tasks {
     processResources {
-        inputs.property("version", fullVersion)
-        inputs.property("loader_version", loaderVersion)
-        inputs.property("mc_version", mcVersion)
-        inputs.property("java_version", javaVersion)
+        inputs.property("version", mod.fullVersion)
+        inputs.property("loader_version", Constants.LOADER_VERSION)
+        inputs.property("mc_version", mod.mcVersion)
+        inputs.property("java_version", mod.javaVersion)
 
         filesMatching("fabric.mod.json") {
             expand(
                 mapOf(
-                    "version" to fullVersion,
-                    "loader_version" to loaderVersion,
-                    "mc_version" to mcVersion,
-                    "java_version" to javaVersion
+                    "version" to mod.fullVersion,
+                    "loader_version" to Constants.LOADER_VERSION,
+                    "mc_version" to mod.mcVersion,
+                    "java_version" to mod.javaVersion
                 )
             )
         }
@@ -109,7 +116,7 @@ tasks {
 
     withType<JavaCompile> {
         options.encoding = "UTF-8"
-        options.release = if (isj21) 21 else 17
+        options.release = if (mod.isj21) 21 else 17
     }
 }
 
@@ -118,18 +125,17 @@ publishMods {
         accessToken = System.getenv("MODRINTH_TOKEN")
 
         projectId = "WwacPCzw"
-        displayName = "[${mcVersion}] CyanLib $modVersion"
-        version = fullVersion
+        displayName = "[${mod.mcVersion}] CyanLib ${Constants.MOD_VERSION}"
+        version = mod.fullVersion
         type = STABLE
 
         file = tasks.remapJar.get().archiveFile
         additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
 
-        minecraftVersions.add(mcVersion)
+        minecraftVersions.add(mod.mcVersion)
         modLoaders.add("fabric")
 
-        requires("fabric-api")
-        requires("modmenu")
+        requires("fabric-api", "modmenu")
 
         changelog = rootProject.file("changelogs/latest.md")
             .takeIf { it.exists() }
@@ -143,7 +149,7 @@ publishMods {
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
 
-    projectId.set("${property("archives_base_name")}")
+    projectId.set(Constants.ARCHIVES_BASE_NAME)
     if (rootProject.file("README.md").exists()) {
         syncBodyFrom.set(rootProject.file("README.md").readText())
     }

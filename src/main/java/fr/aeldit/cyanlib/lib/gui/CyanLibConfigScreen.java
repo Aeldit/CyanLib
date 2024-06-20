@@ -17,9 +17,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static fr.aeldit.cyanlib.lib.CyanLib.CONFIG_CLASS_INSTANCES;
 
 @Environment(EnvType.CLIENT)
 public class CyanLibConfigScreen extends GameOptionsScreen
@@ -29,17 +30,14 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     private final ICyanLibConfig configOptionsClass;
     private OptionListWidget optionList;
 
-    public CyanLibConfigScreen(
-            Screen previous, @NotNull CyanLibOptionsStorage cyanLibOptionsStorage, Screen parent,
-            ICyanLibConfig configOptionsClass
-    )
+    public CyanLibConfigScreen(Screen previous, Screen parent, String modid)
     {
         super(previous, MinecraftClient.getInstance().options,
-                Text.translatable("%s.screen.options.title".formatted(cyanLibOptionsStorage.getModid()))
+                Text.translatable("%s.screen.options.title".formatted(modid))
         );
-        this.cyanLibOptionsStorage = cyanLibOptionsStorage;
         this.parent = parent;
-        this.configOptionsClass = configOptionsClass;
+        this.cyanLibOptionsStorage = CONFIG_CLASS_INSTANCES.get(modid).getOptionsStorage();
+        this.configOptionsClass = this.cyanLibOptionsStorage.getConfigClass();
     }
 
     @Override
@@ -83,7 +81,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         optionList = new OptionListWidget(client, width, this);
         //?} elif =1.20.6 {
         /*optionList = new OptionListWidget(client, width, height, this);
-        *///?} elif =1.20.4 {
+         *///?} elif =1.20.4 {
         /*optionList = new OptionListWidget(client, width, height - 66, 32, 32);
          *///?} elif =1.20.2 {
         /*optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);
