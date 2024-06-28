@@ -60,7 +60,7 @@ public class CyanLib
     {
         if (!player.hasPermissionLevel(permission))
         {
-            languageUtils.sendPlayerMessage(player, "cyanlib", "cyanlib.msg.notOp");
+            languageUtils.sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
             return false;
         }
         return true;

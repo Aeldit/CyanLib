@@ -17,7 +17,7 @@ repositories {
 
 object Constants {
     const val ARCHIVES_BASE_NAME: String = "cyanlib"
-    const val MOD_VERSION: String = "0.4.14"
+    const val MOD_VERSION: String = "0.4.15"
     const val LOADER_VERSION: String = "0.15.11"
 }
 
@@ -51,10 +51,12 @@ dependencies {
         val module = fabricApi.module(name, mod.fabricVersion)
         modImplementation(module)
     }
+    // ModMenu dependencies
     addFabricModule("fabric-resource-loader-v0")
+    addFabricModule("fabric-key-binding-api-v1")
+    // CyanLib dependencies
     addFabricModule("fabric-command-api-v2")
     addFabricModule("fabric-lifecycle-events-v1")
-    addFabricModule("fabric-key-binding-api-v1")
     addFabricModule("fabric-screen-api-v1")
 
     // ModMenu

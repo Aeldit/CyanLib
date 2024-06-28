@@ -1,1 +1,1 @@
-Remove the screen with the list of all mods using the CyanLib, as there is already ModMenu
+Fix error where the user would get the following error message : `The translation key 'cyanlib' doesn't exist`
