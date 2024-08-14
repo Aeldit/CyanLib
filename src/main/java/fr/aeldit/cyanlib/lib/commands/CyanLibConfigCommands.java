@@ -41,60 +41,78 @@ public class CyanLibConfigCommands
     {
         dispatcher.register(
                 CommandManager.literal(modid).then(
-                                CommandManager.literal("config").then(
-                                        CommandManager.argument("optionName", StringArgumentType.string())
-                                                .suggests((context, builder) -> getOptionsSuggestions(
-                                                                  builder,
-                                                                  libUtils.getOptionsStorage()
-                                                          )
-                                                )
-                                                .then(CommandManager.literal("set")
-                                                              .then(CommandManager.argument(
-                                                                                    "booleanValue",
-                                                                                    BoolArgumentType.bool()
-                                                                            )
-                                                                            .then(CommandManager.argument(
-                                                                                                  "mode",
-                                                                                                  BoolArgumentType.bool()
-                                                                                          )
-                                                                                          .executes(this::setBoolOption)
-                                                                            )
-                                                                            .executes(this::setBoolOptionFromCommand)
-                                                              )
-                                                              .then(CommandManager.argument(
-                                                                                    "integerValue",
-                                                                                    IntegerArgumentType.integer()
-                                                                            )
-                                                                            .suggests((
-                                                                                              context,
-                                                                                              builder
-                                                                                      ) -> CommandSource.suggestMatching(
-                                                                                              Arrays.asList(
-                                                                                                      "0", "1", "2",
-                                                                                                      "3", "4"
-                                                                                              ),
-                                                                                              builder
-                                                                                      )
-                                                                            )
-                                                                            .then(CommandManager.argument(
-                                                                                                  "mode",
-                                                                                                  BoolArgumentType.bool()
-                                                                                          )
-                                                                                          .executes(this::setIntOption)
-                                                                            )
-                                                                            .executes(this::setIntOptionFromCommand)
-                                                              )
-                                                )
-                                                .executes(this::getOptionChatConfig)
-                                )
+                        CommandManager.literal("config").then(
+                                CommandManager.argument("optionName", StringArgumentType.string())
+                                        .suggests((context, builder) -> getOptionsSuggestions(
+                                                          builder,
+                                                          libUtils.getOptionsStorage()
+                                                  )
+                                        )
+                                        .executes(this::getOptionChatConfig)
                         )
-                        .then(CommandManager.literal("get-config")
-                                      .executes(this::getConfigOptions)
+                )
+        );
+        dispatcher.register(
+                CommandManager.literal(modid).then(
+                        CommandManager.literal("config").then(
+                                CommandManager.argument("optionName", StringArgumentType.string())
+                                        .suggests((context, builder) -> getOptionsSuggestions(
+                                                          builder,
+                                                          libUtils.getOptionsStorage()
+                                                  )
+                                        )
+                                        .then(CommandManager.literal("set").then(
+                                                CommandManager.argument("boolVal", BoolArgumentType.bool())
+                                                        .then(CommandManager.argument(
+                                                                              "mode",
+                                                                              BoolArgumentType.bool()
+                                                                      )
+                                                                      .executes(this::setBoolOption)
+                                                        )
+                                                        .executes(this::setBoolOptionFromCommand)
+                                        ))
                         )
-
-                        .then(CommandManager.literal("reloadTranslations")
-                                      .executes(this::reloadTranslations)
+                )
+        );
+        dispatcher.register(
+                CommandManager.literal(modid).then(
+                        CommandManager.literal("config").then(
+                                CommandManager.argument("optionName", StringArgumentType.string())
+                                        .suggests((context, builder) -> getOptionsSuggestions(
+                                                          builder,
+                                                          libUtils.getOptionsStorage()
+                                                  )
+                                        )
+                                        .then(CommandManager.literal("set").then(
+                                                CommandManager.argument("intVal", IntegerArgumentType.integer())
+                                                        .suggests(
+                                                                (context, builder) -> CommandSource.suggestMatching(
+                                                                        Arrays.asList("0", "1", "2", "3", "4"),
+                                                                        builder
+                                                                )
+                                                        )
+                                                        .then(CommandManager.argument(
+                                                                              "mode",
+                                                                              BoolArgumentType.bool()
+                                                                      )
+                                                                      .executes(this::setIntOption)
+                                                        )
+                                                        .executes(this::setIntOptionFromCommand)
+                                        ))
                         )
+                )
+        );
+        dispatcher.register(
+                CommandManager.literal(modid).then(
+                        CommandManager.literal("get-config")
+                                .executes(this::getConfigOptions)
+                )
+        );
+        dispatcher.register(
+                CommandManager.literal(modid).then(
+                        CommandManager.literal("reloadTranslations")
+                                .executes(this::reloadTranslations)
+                )
         );
     }
 
@@ -114,7 +132,7 @@ public class CyanLibConfigCommands
     }
 
     /**
-     * Called by the command {@code /modid <optionName> set [booleanValue] [mode]}
+     * Called by the command {@code /modid <optionName> set [boolVal] [mode]}
      * <p>
      * Sets the value of the given {@code boolean option} to the given {@code boolean value} and executes the
      * {@code /modid get-config} command if {@code [mode]} is true, and the command {@code /modid config
@@ -147,7 +165,7 @@ public class CyanLibConfigCommands
             return 0;
         }
 
-        boolean value = BoolArgumentType.getBool(context, "booleanValue");
+        boolean value = BoolArgumentType.getBool(context, "boolVal");
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
@@ -208,7 +226,7 @@ public class CyanLibConfigCommands
             return 0;
         }
 
-        boolean value = BoolArgumentType.getBool(context, "booleanValue");
+        boolean value = BoolArgumentType.getBool(context, "boolVal");
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
@@ -258,7 +276,7 @@ public class CyanLibConfigCommands
             return 0;
         }
 
-        int value = IntegerArgumentType.getInteger(context, "integerValue");
+        int value = IntegerArgumentType.getInteger(context, "intVal");
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
@@ -320,7 +338,7 @@ public class CyanLibConfigCommands
             return 0;
         }
 
-        int value = IntegerArgumentType.getInteger(context, "integerValue");
+        int value = IntegerArgumentType.getInteger(context, "intVal");
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
@@ -549,13 +567,13 @@ public class CyanLibConfigCommands
 
             Object value = libUtils.getOptionsStorage().getOptionValue(option);
 
-            if (value instanceof Boolean booleanValue)
+            if (value instanceof Boolean boolVal)
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(
                         player,
                         "%s.msg.getCfg.%s".formatted(modid, option),
                         false,
-                        booleanValue ? Text.literal(Formatting.GREEN + "ON").
+                        boolVal ? Text.literal(Formatting.GREEN + "ON").
                                 setStyle(Style.EMPTY.withClickEvent(
                                         new ClickEvent(
                                                 ClickEvent.Action.RUN_COMMAND,
@@ -570,13 +588,13 @@ public class CyanLibConfigCommands
                                 )
                 );
             }
-            else if (value instanceof Integer integerValue)
+            else if (value instanceof Integer intVal)
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(
                         player,
                         "%s.msg.getCfg.%s".formatted(modid, option),
                         false,
-                        Formatting.GOLD + integerValue.toString()
+                        Formatting.GOLD + intVal.toString()
                 );
             }
         }
