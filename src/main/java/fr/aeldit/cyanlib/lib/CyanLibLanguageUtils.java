@@ -107,7 +107,8 @@ public class CyanLibLanguageUtils
             @NotNull ServerPlayerEntity player, String modKey, String translationPath, Object... args
     )
     {
-        player.sendMessage(Text.translatable(getTranslation(modKey, translationPath), args),
+        player.sendMessage(
+                Text.translatable(getTranslation(modKey, translationPath), args),
                 MSG_TO_ACTION_BAR.getValue()
         );
     }
