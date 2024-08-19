@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import static fr.aeldit.cyanlib.core.CyanLibCore.CYANLIB_MODID;
 import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MIN_OP_LVL_EDIT_CONFIG;
 import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
 
@@ -124,8 +125,10 @@ public class CyanLibConfigCommands
 
         if (context.getSource().getPlayer() != null)
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(context.getSource().getPlayer(), "cyanlib",
-                                                             "cyanlib.msg.translationsReloaded"
+            libUtils.getLanguageUtils().sendPlayerMessageMod(
+                    context.getSource().getPlayer(),
+                    CYANLIB_MODID,
+                    "msg.translationsReloaded"
             );
         }
         return Command.SINGLE_SUCCESS;
@@ -153,7 +156,7 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
@@ -161,7 +164,7 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (!libUtils.getOptionsStorage().optionExists(option))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
@@ -169,7 +172,7 @@ public class CyanLibConfigCommands
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
@@ -214,7 +217,7 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
@@ -222,7 +225,7 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (!libUtils.getOptionsStorage().optionExists(option))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
@@ -230,13 +233,13 @@ public class CyanLibConfigCommands
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
         libUtils.getLanguageUtils().sendPlayerMessage(
                 player,
-                "%s.msg.set.%s".formatted(modid, option),
+                "msg.set.%s".formatted(option),
                 value ? Formatting.GREEN + "ON" : Formatting.RED + "OFF"
         );
         return Command.SINGLE_SUCCESS;
@@ -264,7 +267,7 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
@@ -272,7 +275,7 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (!libUtils.getOptionsStorage().optionExists(option))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
@@ -280,7 +283,7 @@ public class CyanLibConfigCommands
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.incorrectInteger");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.incorrectInteger");
             return 0;
         }
 
@@ -326,7 +329,7 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
@@ -334,7 +337,7 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (!libUtils.getOptionsStorage().optionExists(option))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
@@ -342,13 +345,13 @@ public class CyanLibConfigCommands
         // An error occurred while changing the option
         if (!libUtils.getOptionsStorage().setOption(option, value, true))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.incorrectInteger");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.incorrectInteger");
             return 0;
         }
 
         libUtils.getLanguageUtils().sendPlayerMessage(
                 player,
-                "%s.msg.set.%s".formatted(modid, option),
+                "msg.set.%s".formatted(option),
                 Formatting.GOLD + String.valueOf(value)
         );
         return Command.SINGLE_SUCCESS;
@@ -379,7 +382,7 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
@@ -388,22 +391,18 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (value == null)
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "msg.optionNotFound");
             return 0;
         }
 
         player.sendMessage(Text.of("§6------------------------------------"), false);
-        libUtils.getLanguageUtils().sendPlayerMessageActionBar(
-                player,
-                "%s.msg.getDesc.%s".formatted(modid, option),
-                false
-        );
+        libUtils.getLanguageUtils().sendPlayerMessageActionBar(player, "msg.getDesc.%s".formatted(option), false);
 
         if (value instanceof Boolean)
         {
             libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                    player, "cyanlib",
-                    "cyanlib.msg.currentValue",
+                    player, CYANLIB_MODID,
+                    "msg.currentValue",
                     false,
                     (Boolean) value
                     ? Text.literal(Formatting.GREEN + "ON (click to change)").
@@ -425,8 +424,8 @@ public class CyanLibConfigCommands
         else if (value instanceof Integer)
         {
             libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                    player, "cyanlib",
-                    "cyanlib.msg.currentValue",
+                    player, CYANLIB_MODID,
+                    "msg.currentValue",
                     false,
                     Formatting.GOLD + String.valueOf(value)
             );
@@ -436,8 +435,8 @@ public class CyanLibConfigCommands
             if (optionsStorage.hasRule(option, RULES.OP_LEVELS))
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                        player, "cyanlib",
-                        "cyanlib.msg.setValue",
+                        player, CYANLIB_MODID,
+                        "msg.setValue",
                         false,
                         Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                                 setStyle(Style.EMPTY.withClickEvent(
@@ -482,9 +481,8 @@ public class CyanLibConfigCommands
             )
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                        player,
-                        "cyanlib",
-                        "cyanlib.msg.setValue",
+                        player, CYANLIB_MODID,
+                        "msg.setValue",
                         false,
                         Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                                 setStyle(Style.EMPTY.withClickEvent(
@@ -547,16 +545,12 @@ public class CyanLibConfigCommands
         // Player has insufficient permissions
         if (!libUtils.hasPermission(player, MIN_OP_LVL_EDIT_CONFIG.getValue()))
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return 0;
         }
 
         player.sendMessage(Text.of("§6------------------------------------"), false);
-        libUtils.getLanguageUtils().sendPlayerMessageActionBar(
-                player,
-                "%s.msg.getCfg.header".formatted(modid),
-                false
-        );
+        libUtils.getLanguageUtils().sendPlayerMessageActionBar(player, "msg.getCfg.header", false);
 
         for (String option : libUtils.getOptionsStorage().getOptionsNames())
         {
@@ -571,7 +565,7 @@ public class CyanLibConfigCommands
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(
                         player,
-                        "%s.msg.getCfg.%s".formatted(modid, option),
+                        "msg.getCfg.%s".formatted(option),
                         false,
                         boolVal ? Text.literal(Formatting.GREEN + "ON").
                                 setStyle(Style.EMPTY.withClickEvent(
@@ -592,7 +586,7 @@ public class CyanLibConfigCommands
             {
                 libUtils.getLanguageUtils().sendPlayerMessageActionBar(
                         player,
-                        "%s.msg.getCfg.%s".formatted(modid, option),
+                        "msg.getCfg.%s".formatted(option),
                         false,
                         Formatting.GOLD + intVal.toString()
                 );

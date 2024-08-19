@@ -11,10 +11,10 @@ public class CyanLibServerCore implements DedicatedServerModInitializer
     @Override
     public void onInitializeServer()
     {
-        LIB_UTILS.init(MODID, OPTS_STORAGE);
+        LIB_UTILS.init(CYANLIB_MODID, OPTS_STORAGE);
 
         CommandRegistrationCallback.EVENT.register(
-                (dispatcher, dedicated, environment) -> new CyanLibConfigCommands(MODID, LIB_UTILS).register(dispatcher)
+                (dispatcher, dedicated, environment) -> new CyanLibConfigCommands(CYANLIB_MODID, LIB_UTILS).register(dispatcher)
         );
         LOGGER.info("[CyanLib] Successfully initialized");
     }

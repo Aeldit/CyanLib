@@ -78,11 +78,7 @@ public class CyanLibLanguageUtils
 
     private String getTranslation(String translationKey)
     {
-        if (!modsTranslations.containsKey(modid) || !modsTranslations.get(modid).containsKey(translationKey))
-        {
-            return "The translation key '%s§r' doesn't exist".formatted(translationKey);
-        }
-        return modsTranslations.get(modid).get(translationKey);
+        return getTranslation(modid, translationKey);
     }
 
     private String getTranslation(String modKey, String translationKey)
