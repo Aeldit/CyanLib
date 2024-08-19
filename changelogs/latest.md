@@ -1,1 +1,1 @@
-Fix error where the user would get the following error message : `The translation key 'cyanlib' doesn't exist`
+The translations paths no longer need to be prefixed by the modid, it is now handled automatically

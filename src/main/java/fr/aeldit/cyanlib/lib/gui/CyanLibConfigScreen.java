@@ -33,7 +33,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     public CyanLibConfigScreen(Screen previous, Screen parent, String modid)
     {
         super(previous, MinecraftClient.getInstance().options,
-                Text.translatable("%s.screen.options.title".formatted(modid))
+              Text.translatable("%s.screen.options.title".formatted(modid))
         );
         this.parent = parent;
         this.cyanLibOptionsStorage = CONFIG_CLASS_INSTANCES.get(modid).getOptionsStorage();
@@ -77,7 +77,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     @Override
     protected void init()
     {
-        //? if =1.21 {
+        //? if >=1.21 {
         optionList = new OptionListWidget(client, width, this);
         //?} elif =1.20.6 {
         /*optionList = new OptionListWidget(client, width, height, this);
@@ -108,7 +108,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         );
     }
 
-    //? if =1.21 {
+    //? if >=1.21 {
     @Override
     protected void addOptions()
     {

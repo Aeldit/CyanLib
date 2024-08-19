@@ -17,20 +17,20 @@ repositories {
 
 object Constants {
     const val ARCHIVES_BASE_NAME: String = "cyanlib"
-    const val MOD_VERSION: String = "0.4.15"
-    const val LOADER_VERSION: String = "0.15.11"
+    const val MOD_VERSION: String = "0.5.0"
+    const val LOADER_VERSION: String = "0.16.2"
 }
 
 class ModData {
     val mcVersion = property("minecraft_version").toString()
-    val javaVersion = property("java_version").toString()
-
     val fabricVersion = property("fabric_version").toString()
     val modmenuVersion = property("modmenu_version").toString()
 
     val fullVersion = "${Constants.MOD_VERSION}+${mcVersion}"
 
-    val isj21 = javaVersion == "1.21"
+    val isj21 = mcVersion !in listOf("1.19.4", "1.20.2", "1.20.4")
+
+    val javaVersion = if (isj21) "21" else "17"
 }
 
 val mod = ModData()
@@ -51,13 +51,19 @@ dependencies {
         val module = fabricApi.module(name, mod.fabricVersion)
         modImplementation(module)
     }
-    // ModMenu dependencies
-    addFabricModule("fabric-resource-loader-v0")
-    addFabricModule("fabric-key-binding-api-v1")
-    // CyanLib dependencies
-    addFabricModule("fabric-command-api-v2")
-    addFabricModule("fabric-lifecycle-events-v1")
-    addFabricModule("fabric-screen-api-v1")
+
+    for (name in listOf(
+        // ModMenu dependencies
+        "fabric-resource-loader-v0",
+        "fabric-key-binding-api-v1",
+        // CyanLib dependencies
+        "fabric-command-api-v2",
+        "fabric-lifecycle-events-v1",
+        "fabric-screen-api-v1"
+    )) {
+        val module = fabricApi.module(name, mod.fabricVersion)
+        modImplementation(module)
+    }
 
     // ModMenu
     modImplementation("com.terraformersmc:modmenu:${mod.modmenuVersion}")
