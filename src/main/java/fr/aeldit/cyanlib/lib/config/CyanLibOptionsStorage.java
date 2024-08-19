@@ -52,11 +52,6 @@ public class CyanLibOptionsStorage
         }
     }
 
-    public String getModid()
-    {
-        return modid;
-    }
-
     public ICyanLibConfig getConfigClass()
     {
         return cyanLibConfigClass;
