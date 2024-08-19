@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MSG_TO_ACTION_BAR;
 
@@ -23,7 +24,7 @@ public class CyanLibLanguageUtils
     // Map<modKey, Map<translationKey, translation>>
     // Contains for keys each mod that implements this Library using the CyanLibLanguageUtils,
     // and for values the translations of each mod
-    private static final Map<String, Map<String, String>> modsTranslations = new HashMap<>();
+    private static final ConcurrentHashMap<String, Map<String, String>> modsTranslations = new ConcurrentHashMap<>();
     private final String modid;
 
     @Contract(pure = true)
