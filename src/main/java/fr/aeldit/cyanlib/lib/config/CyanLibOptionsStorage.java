@@ -220,6 +220,68 @@ public class CyanLibOptionsStorage
                     }
                 }
 
+                // Remove options present in the config file but not in the code
+                ArrayList<String> toRemove = new ArrayList<>();
+                for (String option : config.keySet())
+                {
+                    boolean exists = false;
+
+                    for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
+                    {
+                        if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+                        {
+                            if (BooleanOption.class.isAssignableFrom(field.getType()))
+                            {
+                                try
+                                {
+                                    if (((BooleanOption) field.get(null)).getOptionName().equals(option))
+                                    {
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                                catch (IllegalAccessException e)
+                                {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            else if (IntegerOption.class.isAssignableFrom(field.getType()))
+                            {
+                                try
+                                {
+                                    if (((IntegerOption) field.get(null)).getOptionName().equals(option))
+                                    {
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                                catch (IllegalAccessException e)
+                                {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    }
+
+                    if (!exists)
+                    {
+                        toRemove.add(option);
+                    }
+                }
+
+                for (String option : toRemove)
+                {
+                    config.remove(option);
+                }
+
+                if (!toRemove.isEmpty())
+                {
+                    fileNeedsUpdate = true;
+                    toRemove.clear();
+                }
+
+                // For each option found in the config file, update the value of the option object
+                // If an option object is not present in the file, it is added to the options and the file is updated
                 for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
                 {
                     if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
