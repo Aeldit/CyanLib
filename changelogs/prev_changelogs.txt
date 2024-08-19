@@ -1,3 +1,25 @@
+0.3.2 :
+    ✏️ Added :
+    - The possibility to instantiate the CyanLib class without the language utils
+
+    🚧 Fixed :
+    - Some typos in the javadocs
+    - A translation issue
+
+0.3.3 :
+    ✏️ Added :
+    - Rules for options, like a minimum and / or maximum value for the integer options
+
+    🚧 Fixed :
+    - Translation errors + some typos in javadocs
+    - Translation path to get the options descriptions was missing 'getDesc' in CyanLibCommands#getOptionChatConfig()
+
+0.3.5 :
+    ✏️ Added :
+    - The coreConfig commands are now instanciated in this library instead of in each mod
+    - The rule `LOAD_CUSTOM_TRANSLATIONS`, which can be held by only 1 option and will tell
+      the mod when to load / unload the custom translations (when this option is changed)
+
 0.4.0 :
     ✏️ Added :
     - A screen for the configuration (only works for the client options, but a screen will come to edit the server's options)
@@ -68,3 +90,6 @@
 
 0.4.15 :
     Fix error where the user would get the following error message : `The translation key 'cyanlib' doesn't exist`
+
+0.5.0 :
+    The translations paths no longer need to be prefixed by the modid, it is now handled automatically
