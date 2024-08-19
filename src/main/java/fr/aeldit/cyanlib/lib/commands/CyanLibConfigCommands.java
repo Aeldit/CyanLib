@@ -404,21 +404,7 @@ public class CyanLibConfigCommands
                     player, CYANLIB_MODID,
                     "msg.currentValue",
                     false,
-                    (Boolean) value
-                    ? Text.literal(Formatting.GREEN + "ON (click to change)").
-                            setStyle(Style.EMPTY.withClickEvent(
-                                    new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
-                                            "/%s config %s set false false".formatted(modid, option)
-                                    ))
-                            )
-                    : Text.literal(Formatting.RED + "OFF (click to change)").
-                            setStyle(Style.EMPTY.withClickEvent(
-                                    new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
-                                            "/%s config %s set true false".formatted(modid, option)
-                                    ))
-                            )
+                    getBooleanMessage((Boolean) value, option)
             );
         }
         else if (value instanceof Integer)
@@ -434,96 +420,125 @@ public class CyanLibConfigCommands
 
             if (optionsStorage.hasRule(option, RULES.OP_LEVELS))
             {
-                libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                        player, CYANLIB_MODID,
-                        "msg.setValue",
-                        false,
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 0 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "1")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 1 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "2")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 2 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "3")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 3 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "4")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 4 false".formatted(modid, option)
-                                        ))
-                                )
-                );
+                sendIntSmallMessage(player, option);
             }
             else if (!optionsStorage.hasRule(option, RULES.MAX_VALUE)
                     && !optionsStorage.hasRule(option, RULES.MIN_VALUE)
                     && !optionsStorage.hasRule(option, RULES.NEGATIVE_VALUE)
             )
             {
-                libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
-                        player, CYANLIB_MODID,
-                        "msg.setValue",
-                        false,
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 8 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "16")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 16 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "32")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 32 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "64")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 64 false".formatted(modid, option)
-                                        ))
-                                ),
-                        Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "128")).
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set 128 false".formatted(modid, option)
-                                        ))
-                                )
-                );
+                sendIntBigMessage(player, option);
             }
         }
         player.sendMessage(Text.of("§6------------------------------------"), false);
         return Command.SINGLE_SUCCESS;
+    }
+
+    private Text getBooleanMessage(boolean value, String option)
+    {
+        return value
+               ? Text.literal(Formatting.GREEN + "ON (click to change)").
+                       setStyle(Style.EMPTY.withClickEvent(
+                               new ClickEvent(
+                                       ClickEvent.Action.RUN_COMMAND,
+                                       "/%s config %s set false false".formatted(modid, option)
+                               ))
+                       )
+               : Text.literal(Formatting.RED + "OFF (click to change)").
+                       setStyle(Style.EMPTY.withClickEvent(
+                               new ClickEvent(
+                                       ClickEvent.Action.RUN_COMMAND,
+                                       "/%s config %s set true false".formatted(modid, option)
+                               ))
+                       );
+    }
+
+    private void sendIntSmallMessage(ServerPlayerEntity player, String option)
+    {
+        libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
+                player, CYANLIB_MODID,
+                "msg.setValue",
+                false,
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 0 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "1")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 1 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "2")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 2 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "3")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 3 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "4")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 4 false".formatted(modid, option)
+                                ))
+                        )
+        );
+    }
+
+    private void sendIntBigMessage(ServerPlayerEntity player, String option)
+    {
+        libUtils.getLanguageUtils().sendPlayerMessageActionBarMod(
+                player, CYANLIB_MODID,
+                "msg.setValue",
+                false,
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 8 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "16")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 16 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "32")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 32 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "64")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 64 false".formatted(modid, option)
+                                ))
+                        ),
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "128")).
+                        setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(
+                                        ClickEvent.Action.RUN_COMMAND,
+                                        "/%s config %s set 128 false".formatted(modid, option)
+                                ))
+                        )
+        );
     }
 
     /**
