@@ -208,6 +208,10 @@ public class CyanLibOptionsStorage
 
             if (config != null && !config.isEmpty())
             {
+                // If there are options present in teh code but not in the config file, we need to save the new options
+                boolean fileNeedsUpdate = false;
+
+                // Puts doubles with 0 as decimal as integers
                 for (Map.Entry<String, Object> entry : config.entrySet())
                 {
                     if (entry.getValue() instanceof Double)
@@ -240,8 +244,12 @@ public class CyanLibOptionsStorage
                                     {
                                         booleanOption.setValue(configFileValue);
                                     }
-                                    optionsList.add(booleanOption);
                                 }
+                                else
+                                {
+                                    fileNeedsUpdate = true;
+                                }
+                                optionsList.add(booleanOption);
                             }
                             catch (IllegalAccessException e)
                             {
@@ -263,8 +271,12 @@ public class CyanLibOptionsStorage
                                     {
                                         integerOption.setValue(configFileValue);
                                     }
-                                    optionsList.add(integerOption);
                                 }
+                                else
+                                {
+                                    fileNeedsUpdate = true;
+                                }
+                                optionsList.add(integerOption);
                             }
                             catch (IllegalAccessException e)
                             {
@@ -272,6 +284,11 @@ public class CyanLibOptionsStorage
                             }
                         }
                     }
+                }
+
+                if (fileNeedsUpdate)
+                {
+                    writeConfig();
                 }
             }
         }
