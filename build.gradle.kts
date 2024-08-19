@@ -16,8 +16,7 @@ repositories {
 }
 
 object Constants {
-    const val ARCHIVES_BASE_NAME: String = "cyanlib"
-    const val MOD_VERSION: String = "0.5.0"
+    const val MOD_VERSION: String = "0.5.1"
     const val LOADER_VERSION: String = "0.16.2"
 }
 
@@ -37,7 +36,7 @@ val mod = ModData()
 
 // Sets the name of the output jar files
 base {
-    archivesName = "${Constants.ARCHIVES_BASE_NAME}-${mod.fullVersion}"
+    archivesName = "${rootProject.name}-${mod.fullVersion}"
     group = "fr.aeldit.cyanlib"
 }
 
@@ -47,11 +46,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${Constants.LOADER_VERSION}")
 
     // Fabric API
-    fun addFabricModule(name: String) {
-        val module = fabricApi.module(name, mod.fabricVersion)
-        modImplementation(module)
-    }
-
     for (name in listOf(
         // ModMenu dependencies
         "fabric-resource-loader-v0",
@@ -80,15 +74,15 @@ loom {
 }
 
 java {
-    withSourcesJar()
     sourceCompatibility = if (mod.isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
     targetCompatibility = if (mod.isj21) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
+    withSourcesJar()
 }
 
 val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
     group = "build"
     from(tasks.remapJar.get().archiveFile)
-    into(rootProject.layout.buildDirectory.file("libs/${Constants.ARCHIVES_BASE_NAME}-${mod.fullVersion}"))
+    into(rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${mod.fullVersion}"))
     dependsOn("build")
 }
 
@@ -157,7 +151,7 @@ publishMods {
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
 
-    projectId.set(Constants.ARCHIVES_BASE_NAME)
+    projectId.set(rootProject.name)
     if (rootProject.file("README.md").exists()) {
         syncBodyFrom.set(rootProject.file("README.md").readText())
     }

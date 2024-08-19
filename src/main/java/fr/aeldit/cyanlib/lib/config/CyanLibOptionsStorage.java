@@ -421,8 +421,10 @@ public class CyanLibOptionsStorage
 
             if (!couldWrite)
             {
-                LOGGER.info(("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
-                        " than 1 sec)").formatted(path.getFileName().toString()));
+                LOGGER.error(
+                        ("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
+                                " than 1 sec)").formatted(path.getFileName().toString())
+                );
             }
         }
     }
