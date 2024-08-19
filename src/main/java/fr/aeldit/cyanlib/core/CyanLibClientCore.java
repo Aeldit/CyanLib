@@ -11,8 +11,6 @@ public class CyanLibClientCore implements ClientModInitializer
     @Override
     public void onInitializeClient()
     {
-        LIB_UTILS.init(CYANLIB_MODID, OPTS_STORAGE);
-
         CommandRegistrationCallback.EVENT.register(
                 (dispatcher, dedicated, environment) -> new CyanLibConfigCommands(CYANLIB_MODID, LIB_UTILS).register(dispatcher)
         );

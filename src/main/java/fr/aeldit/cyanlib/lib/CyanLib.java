@@ -1,16 +1,17 @@
 package fr.aeldit.cyanlib.lib;
 
 import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
+import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+import static fr.aeldit.cyanlib.core.CyanLibCore.CYANLIB_MODID;
+
 // TODO -> Add multi world support
 public class CyanLib
 {
-    private final String modid;
     private final CyanLibOptionsStorage optionsStorage;
     private final CyanLibLanguageUtils languageUtils;
     // This Map stores the CyanLib instance of each mod using this library, the key in the map being the modid
@@ -20,23 +21,17 @@ public class CyanLib
     /**
      * Main class of this library
      *
-     * @param modid          The modid of your mod
-     * @param optionsStorage The {@link CyanLibOptionsStorage} object
-     * @param languageUtils  The {@link CyanLibLanguageUtils} object
+     * @param modid             The modid of your mod
+     * @param cyanLibConfigImpl The {@link ICyanLibConfig} implementation
      */
-    @Contract(pure = true)
-    public CyanLib(String modid, CyanLibOptionsStorage optionsStorage, CyanLibLanguageUtils languageUtils)
+    public CyanLib(String modid, ICyanLibConfig cyanLibConfigImpl)
     {
-        this.modid = modid;
-        this.optionsStorage = optionsStorage;
-        this.languageUtils = languageUtils;
-    }
+        this.optionsStorage = new CyanLibOptionsStorage(modid, cyanLibConfigImpl);
+        this.languageUtils = new CyanLibLanguageUtils(modid);
 
-    public void init(String modid, @NotNull CyanLibOptionsStorage optionsStorageInstance)
-    {
         CONFIG_CLASS_INSTANCES.put(modid, this);
-        optionsStorageInstance.init();
-        languageUtils.loadCustomLanguage(optionsStorage.getConfigClass().getDefaultTranslations());
+        this.optionsStorage.init();
+        languageUtils.loadCustomLanguage(this.optionsStorage.getConfigClass().getDefaultTranslations());
     }
 
     public CyanLibOptionsStorage getOptionsStorage()
@@ -60,7 +55,7 @@ public class CyanLib
     {
         if (!player.hasPermissionLevel(permission))
         {
-            languageUtils.sendPlayerMessageMod(player, "cyanlib", "cyanlib.msg.notOp");
+            languageUtils.sendPlayerMessageMod(player, CYANLIB_MODID, "error.notOp");
             return false;
         }
         return true;
@@ -81,7 +76,7 @@ public class CyanLib
     {
         if (!option)
         {
-            languageUtils.sendPlayerMessage(player, "%s.error.%s".formatted(modid, translationKey));
+            languageUtils.sendPlayerMessage(player, "error.%s".formatted(translationKey));
         }
         return option;
     }
