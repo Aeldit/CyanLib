@@ -5,7 +5,6 @@ import fr.aeldit.cyanlib.lib.config.ICyanLibConfig;
 import fr.aeldit.cyanlib.lib.config.IntegerOption;
 import fr.aeldit.cyanlib.lib.utils.RULES;
 
-import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -43,12 +42,12 @@ public class CyanLibConfigImpl implements ICyanLibConfig
                 // CONFIG
                 entry(
                         "msg.getDesc.msgToActionBar",
-                        "§3The §dmsgToActionBar §3option defines whether the messages will be sent to the action bar "
+                        "§3The§d msgToActionBar §3option defines whether the messages will be sent to the action bar "
                                 + "or not"
                 ),
                 entry(
                         "msg.getDesc.minOpLvlEditConfig",
-                        "§3The §dminOpLevelExeEditConfig §3option defines the OP level required to edit the config"
+                        "§3The§d minOpLevelExeEditConfig §3option defines the OP level required to edit the config"
                 ),
 
                 // GET_CFG
