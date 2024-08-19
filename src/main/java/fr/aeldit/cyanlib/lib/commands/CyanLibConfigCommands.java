@@ -391,7 +391,7 @@ public class CyanLibConfigCommands
         // The option doesn't exist
         if (value == null)
         {
-            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "msg.optionNotFound");
+            libUtils.getLanguageUtils().sendPlayerMessageMod(player, CYANLIB_MODID, "error.optionNotFound");
             return 0;
         }
 
