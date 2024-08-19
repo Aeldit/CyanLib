@@ -2,8 +2,6 @@ package fr.aeldit.cyanlib.core;
 
 import fr.aeldit.cyanlib.core.config.CyanLibConfigImpl;
 import fr.aeldit.cyanlib.lib.CyanLib;
-import fr.aeldit.cyanlib.lib.CyanLibLanguageUtils;
-import fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
