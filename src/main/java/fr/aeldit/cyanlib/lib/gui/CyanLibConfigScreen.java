@@ -56,15 +56,23 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xffffff);
         super.render(matrices, mouseX, mouseY, delta);
     }
-    *///?} else {
+    *///?} elif =1.20.1 {
     @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta)
+    {
+        optionList.render(context, mouseX, mouseY, delta);
+        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
+        super.render(context, mouseX, mouseY, delta);
+    }
+    //?} else {
+    /*@Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta)
     {
         super.render(context, mouseX, mouseY, delta);
         optionList.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 5, 0xffffff);
     }
-    //?}
+    *///?}
 
     //? if =1.20.2 {
     /*@Override
@@ -78,14 +86,14 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     protected void init()
     {
         //? if >=1.21 {
-        optionList = new OptionListWidget(client, width, this);
-        //?} elif =1.20.6 {
+        /*optionList = new OptionListWidget(client, width, this);
+         *///?} elif =1.20.6 {
         /*optionList = new OptionListWidget(client, width, height, this);
          *///?} elif =1.20.4 {
         /*optionList = new OptionListWidget(client, width, height - 66, 32, 32);
-         *///?} elif =1.20.2 {
-        /*optionList = new OptionListWidget(client, width, height, 32, height - 66, 32);
-         *///?} elif =1.19.4 {
+         *///?} elif =1.20.2 || =1.20.1 {
+        optionList = new OptionListWidget(client, width, height, 32, height - 32, 32);
+        //?} elif =1.19.4 {
         /*optionList = new OptionListWidget(client, width, height, 32, height - 32, 25);
          *///?}
         optionList.addAll(CyanLibOptionsStorage.asConfigOptions(configOptionsClass));
@@ -109,9 +117,9 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     }
 
     //? if >=1.21 {
-    @Override
+    /*@Override
     protected void addOptions()
     {
     }
-    //?}
+    *///?}
 }
