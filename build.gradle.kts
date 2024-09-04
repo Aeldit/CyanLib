@@ -31,7 +31,7 @@ class ModData {
     val fabricVersion = property("fabric_version").toString()
     val modmenuVersion = property("modmenu_version").toString()
 
-    val fullVersion = "${Constants.MOD_VERSION}+${if (hasVersionRange) rangedName else mcVersion}"
+    val fullVersion = "${Constants.MOD_VERSION}+${rangedName}"
 
     val isj21 = mcVersion !in listOf("1.19.4", "1.20.1", "1.20.2", "1.20.4")
 
