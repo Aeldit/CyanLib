@@ -25,9 +25,12 @@ class ModData {
 
     val mcVersion = property("minecraft_version").toString()
     val rangedName = if (hasVersionRange) property("range_name").toString() else mcVersion
-    val min = if (hasVersionRange) property("min").toString() else mcVersion
-    val max = if (hasVersionRange) property("max").toString() else mcVersion
-    val fabricRange = if (hasVersionRange) property("fabric_range") else mcVersion
+
+    private val modrinthVersions = if (hasVersionRange) property("modrinth_versions") else mcVersion
+    val versionsList = modrinthVersions.toString().split(" ")
+    val min = if (hasVersionRange) versionsList[0] else mcVersion
+    val max = if (hasVersionRange) versionsList[versionsList.size - 1] else mcVersion
+
     val fabricVersion = property("fabric_version").toString()
     val modmenuVersion = property("modmenu_version").toString()
 
@@ -39,8 +42,6 @@ class ModData {
 }
 
 val mod = ModData()
-
-println(mod.fabricRange.toString().split(" "))
 
 // Sets the name of the output jar files
 base {
@@ -145,7 +146,7 @@ publishMods {
         additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
 
         if (mod.hasVersionRange) {
-            minecraftVersions.addAll(mod.fabricRange.toString().split(" "))
+            minecraftVersions.addAll(mod.versionsList)
         } else {
             minecraftVersions.add(mod.mcVersion)
         }
