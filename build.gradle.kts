@@ -21,12 +21,13 @@ object Constants {
 }
 
 class ModData {
-    private val hasVersionRange = properties.containsKey("range_name")
+    val hasVersionRange = properties.containsKey("range_name")
 
     val mcVersion = property("minecraft_version").toString()
     val rangedName = if (hasVersionRange) property("range_name").toString() else mcVersion
     val min = if (hasVersionRange) property("min").toString() else mcVersion
     val max = if (hasVersionRange) property("max").toString() else mcVersion
+    val fabricRange = if (hasVersionRange) property("fabric_range") else mcVersion
     val fabricVersion = property("fabric_version").toString()
     val modmenuVersion = property("modmenu_version").toString()
 
@@ -38,6 +39,8 @@ class ModData {
 }
 
 val mod = ModData()
+
+println(mod.fabricRange.toString().split(" "))
 
 // Sets the name of the output jar files
 base {
@@ -141,7 +144,11 @@ publishMods {
         file = tasks.remapJar.get().archiveFile
         additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
 
-        minecraftVersions.add(mod.mcVersion)
+        if (mod.hasVersionRange) {
+            minecraftVersions.addAll(mod.fabricRange.toString().split(" "))
+        } else {
+            minecraftVersions.add(mod.mcVersion)
+        }
         modLoaders.add("fabric")
 
         requires("fabric-api", "modmenu")
