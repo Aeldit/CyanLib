@@ -24,15 +24,12 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static fr.aeldit.cyanlib.core.CyanLibCore.LOGGER;
-
 public class CyanLibOptionsStorage
 {
     private final String modid;
     private final ICyanLibConfig cyanLibConfigClass;
     // Used for the auto-completion for commands
     private final ArrayList<String> optionsNames = new ArrayList<>();
-    private boolean isEditingFile = false;
 
     // We use a synchronized list because 2 players can edit the config at the same time when in multiplayer
     private final List<IOption<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
@@ -152,7 +149,8 @@ public class CyanLibOptionsStorage
         {
             for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
             {
-                if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+                if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers())
+                    && Modifier.isFinal(field.getModifiers()))
                 {
                     if (BooleanOption.class.isAssignableFrom(field.getType()))
                     {
@@ -228,7 +226,8 @@ public class CyanLibOptionsStorage
 
                     for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
                     {
-                        if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+                        if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers())
+                            && Modifier.isFinal(field.getModifiers()))
                         {
                             if (BooleanOption.class.isAssignableFrom(field.getType()))
                             {
@@ -284,7 +283,8 @@ public class CyanLibOptionsStorage
                 // If an option object is not present in the file, it is added to the options and the file is updated
                 for (Field field : cyanLibConfigClass.getClass().getDeclaredFields())
                 {
-                    if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+                    if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers())
+                        && Modifier.isFinal(field.getModifiers()))
                     {
                         if (BooleanOption.class.isAssignableFrom(field.getType()))
                         {
@@ -372,60 +372,16 @@ public class CyanLibOptionsStorage
             }
         }
 
-        if (!this.isEditingFile)
+        try
         {
-            this.isEditingFile = true;
-
-            try
-            {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                Writer writer = Files.newBufferedWriter(path);
-                gson.toJson(config, writer);
-                writer.close();
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-
-            this.isEditingFile = false;
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Writer writer = Files.newBufferedWriter(path);
+            gson.toJson(config, writer);
+            writer.close();
         }
-        else
+        catch (IOException e)
         {
-            long end = System.currentTimeMillis() + 1000; // 1 s
-            boolean couldWrite = false;
-
-            while (System.currentTimeMillis() < end)
-            {
-                if (!this.isEditingFile)
-                {
-                    this.isEditingFile = true;
-
-                    try
-                    {
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        Writer writer = Files.newBufferedWriter(path);
-                        gson.toJson(config, writer);
-                        writer.close();
-                    }
-                    catch (IOException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-
-                    couldWrite = true;
-                    this.isEditingFile = false;
-                    break;
-                }
-            }
-
-            if (!couldWrite)
-            {
-                LOGGER.error(
-                        ("[CyanLibCore] Could not write the file %s because it is already being written (for more" +
-                                " than 1 sec)").formatted(path.getFileName().toString())
-                );
-            }
+            throw new RuntimeException(e);
         }
     }
 }
