@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("fabric-loom") version "1.7-SNAPSHOT"
+    id("fabric-loom") version "1.8-SNAPSHOT"
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
     id("me.modmuss50.mod-publish-plugin") version "0.5.+"
@@ -17,7 +17,7 @@ repositories {
 
 object Constants {
     const val MOD_VERSION: String = "0.5.1"
-    const val LOADER_VERSION: String = "0.16.2"
+    const val LOADER_VERSION: String = "0.16.7"
 }
 
 class ModData {
@@ -159,7 +159,7 @@ publishMods {
             ?.readText()
             ?: "No changelog provided."
 
-        dryRun = false
+        dryRun = true
     }
 }
 

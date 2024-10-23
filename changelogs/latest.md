@@ -1,3 +1,1 @@
-- Fix bugs with the config not detecting new options when the config file was present
-- Remove options that are in the config file but not in the code
-- Make the library initialization a lot simpler
+Add support for 1.21.2
