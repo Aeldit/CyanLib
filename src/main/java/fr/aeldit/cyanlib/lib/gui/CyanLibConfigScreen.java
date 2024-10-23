@@ -101,22 +101,22 @@ public class CyanLibConfigScreen extends GameOptionsScreen
 
         addDrawableChild(
                 ButtonWidget.builder(Text.translatable("cyanlib.screen.config.reset"), button -> {
-                            cyanLibOptionsStorage.resetOptions();
-                            close();
-                        })
-                        .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.reset.tooltip")))
-                        .dimensions(10, 6, 100, 20)
-                        .build()
+                                cyanLibOptionsStorage.resetOptions();
+                                close();
+                            })
+                            .tooltip(Tooltip.of(Text.translatable("cyanlib.screen.config.reset.tooltip")))
+                            .dimensions(10, 6, 100, 20)
+                            .build()
         );
 
         addDrawableChild(
                 ButtonWidget.builder(ScreenTexts.DONE, button -> close())
-                        .dimensions(width / 2 - 100, height - 28, 200, 20)
-                        .build()
+                            .dimensions(width / 2 - 100, height - 28, 200, 20)
+                            .build()
         );
     }
 
-    //? if =1.21.0 {
+    //? if >=1.21.0 {
     @Override
     protected void addOptions()
     {
