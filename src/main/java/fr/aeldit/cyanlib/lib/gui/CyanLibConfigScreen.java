@@ -85,7 +85,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
     @Override
     protected void init()
     {
-        //? if >=1.21 {
+        //? if >=1.21-1.21.1 {
         optionList = new OptionListWidget(client, width, this);
         //?} elif =1.20.6 {
         /*optionList = new OptionListWidget(client, width, height, this);
@@ -116,7 +116,7 @@ public class CyanLibConfigScreen extends GameOptionsScreen
         );
     }
 
-    //? if >=1.21.0 {
+    //? if >=1.21-1.21.1 {
     @Override
     protected void addOptions()
     {

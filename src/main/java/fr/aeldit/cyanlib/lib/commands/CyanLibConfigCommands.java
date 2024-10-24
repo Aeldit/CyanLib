@@ -26,30 +26,20 @@ import static fr.aeldit.cyanlib.core.CyanLibCore.CYANLIB_MODID;
 import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MIN_OP_LVL_EDIT_CONFIG;
 import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
 
-public class CyanLibConfigCommands
+public record CyanLibConfigCommands(String modid, CyanLib libUtils)
 {
-    private final String modid;
-    private final CyanLib libUtils;
-
-    @Contract(pure = true)
-    public CyanLibConfigCommands(String modid, CyanLib libUtils)
-    {
-        this.modid = modid;
-        this.libUtils = libUtils;
-    }
-
     public void register(@NotNull CommandDispatcher<ServerCommandSource> dispatcher)
     {
         dispatcher.register(
                 CommandManager.literal(modid).then(
                         CommandManager.literal("config").then(
                                 CommandManager.argument("optionName", StringArgumentType.string())
-                                        .suggests((context, builder) -> getOptionsSuggestions(
-                                                          builder,
-                                                          libUtils.getOptionsStorage()
-                                                  )
-                                        )
-                                        .executes(this::getOptionChatConfig)
+                                              .suggests((context, builder) -> getOptionsSuggestions(
+                                                                builder,
+                                                                libUtils.getOptionsStorage()
+                                                        )
+                                              )
+                                              .executes(this::getOptionChatConfig)
                         )
                 )
         );
@@ -57,21 +47,21 @@ public class CyanLibConfigCommands
                 CommandManager.literal(modid).then(
                         CommandManager.literal("config").then(
                                 CommandManager.argument("optionName", StringArgumentType.string())
-                                        .suggests((context, builder) -> getOptionsSuggestions(
-                                                          builder,
-                                                          libUtils.getOptionsStorage()
-                                                  )
-                                        )
-                                        .then(CommandManager.literal("set").then(
-                                                CommandManager.argument("boolVal", BoolArgumentType.bool())
-                                                        .then(CommandManager.argument(
-                                                                              "mode",
-                                                                              BoolArgumentType.bool()
-                                                                      )
-                                                                      .executes(this::setBoolOption)
+                                              .suggests((context, builder) -> getOptionsSuggestions(
+                                                                builder,
+                                                                libUtils.getOptionsStorage()
                                                         )
-                                                        .executes(this::setBoolOptionFromCommand)
-                                        ))
+                                              )
+                                              .then(CommandManager.literal("set").then(
+                                                      CommandManager.argument("boolVal", BoolArgumentType.bool())
+                                                                    .then(CommandManager.argument(
+                                                                                                "mode",
+                                                                                                BoolArgumentType.bool()
+                                                                                        )
+                                                                                        .executes(this::setBoolOption)
+                                                                    )
+                                                                    .executes(this::setBoolOptionFromCommand)
+                                              ))
                         )
                 )
         );
@@ -79,40 +69,41 @@ public class CyanLibConfigCommands
                 CommandManager.literal(modid).then(
                         CommandManager.literal("config").then(
                                 CommandManager.argument("optionName", StringArgumentType.string())
-                                        .suggests((context, builder) -> getOptionsSuggestions(
-                                                          builder,
-                                                          libUtils.getOptionsStorage()
-                                                  )
-                                        )
-                                        .then(CommandManager.literal("set").then(
-                                                CommandManager.argument("intVal", IntegerArgumentType.integer())
-                                                        .suggests(
-                                                                (context, builder) -> CommandSource.suggestMatching(
-                                                                        Arrays.asList("0", "1", "2", "3", "4"),
-                                                                        builder
-                                                                )
+                                              .suggests((context, builder) -> getOptionsSuggestions(
+                                                                builder,
+                                                                libUtils.getOptionsStorage()
                                                         )
-                                                        .then(CommandManager.argument(
-                                                                              "mode",
-                                                                              BoolArgumentType.bool()
-                                                                      )
-                                                                      .executes(this::setIntOption)
-                                                        )
-                                                        .executes(this::setIntOptionFromCommand)
-                                        ))
+                                              )
+                                              .then(CommandManager.literal("set").then(
+                                                      CommandManager.argument("intVal", IntegerArgumentType.integer())
+                                                                    .suggests(
+                                                                            (context, builder) -> CommandSource.suggestMatching(
+                                                                                    Arrays.asList(
+                                                                                            "0", "1", "2", "3", "4"),
+                                                                                    builder
+                                                                            )
+                                                                    )
+                                                                    .then(CommandManager.argument(
+                                                                                                "mode",
+                                                                                                BoolArgumentType.bool()
+                                                                                        )
+                                                                                        .executes(this::setIntOption)
+                                                                    )
+                                                                    .executes(this::setIntOptionFromCommand)
+                                              ))
                         )
                 )
         );
         dispatcher.register(
                 CommandManager.literal(modid).then(
                         CommandManager.literal("get-config")
-                                .executes(this::getConfigOptions)
+                                      .executes(this::getConfigOptions)
                 )
         );
         dispatcher.register(
                 CommandManager.literal(modid).then(
                         CommandManager.literal("reloadTranslations")
-                                .executes(this::reloadTranslations)
+                                      .executes(this::reloadTranslations)
                 )
         );
     }
@@ -423,8 +414,8 @@ public class CyanLibConfigCommands
                 sendIntSmallMessage(player, option);
             }
             else if (!optionsStorage.hasRule(option, RULES.MAX_VALUE)
-                    && !optionsStorage.hasRule(option, RULES.MIN_VALUE)
-                    && !optionsStorage.hasRule(option, RULES.NEGATIVE_VALUE)
+                     && !optionsStorage.hasRule(option, RULES.MIN_VALUE)
+                     && !optionsStorage.hasRule(option, RULES.NEGATIVE_VALUE)
             )
             {
                 sendIntBigMessage(player, option);
@@ -438,19 +429,19 @@ public class CyanLibConfigCommands
     {
         return value
                ? Text.literal(Formatting.GREEN + "ON (click to change)").
-                       setStyle(Style.EMPTY.withClickEvent(
-                               new ClickEvent(
-                                       ClickEvent.Action.RUN_COMMAND,
-                                       "/%s config %s set false false".formatted(modid, option)
-                               ))
-                       )
+                     setStyle(Style.EMPTY.withClickEvent(
+                             new ClickEvent(
+                                     ClickEvent.Action.RUN_COMMAND,
+                                     "/%s config %s set false false".formatted(modid, option)
+                             ))
+                     )
                : Text.literal(Formatting.RED + "OFF (click to change)").
-                       setStyle(Style.EMPTY.withClickEvent(
-                               new ClickEvent(
-                                       ClickEvent.Action.RUN_COMMAND,
-                                       "/%s config %s set true false".formatted(modid, option)
-                               ))
-                       );
+                     setStyle(Style.EMPTY.withClickEvent(
+                             new ClickEvent(
+                                     ClickEvent.Action.RUN_COMMAND,
+                                     "/%s config %s set true false".formatted(modid, option)
+                             ))
+                     );
     }
 
     private void sendIntSmallMessage(ServerPlayerEntity player, String option)
@@ -460,40 +451,40 @@ public class CyanLibConfigCommands
                 "msg.setValue",
                 false,
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 0 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 0 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "1")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 1 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 1 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "2")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 2 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 2 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "3")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 3 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 3 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "4")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 4 false".formatted(modid, option)
-                                ))
-                        )
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 4 false".formatted(modid, option)
+                            ))
+                    )
         );
     }
 
@@ -504,40 +495,40 @@ public class CyanLibConfigCommands
                 "msg.setValue",
                 false,
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 8 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 8 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "16")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 16 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 16 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "32")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 32 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 32 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "64")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 64 false".formatted(modid, option)
-                                ))
-                        ),
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 64 false".formatted(modid, option)
+                            ))
+                    ),
                 Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "128")).
-                        setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/%s config %s set 128 false".formatted(modid, option)
-                                ))
-                        )
+                    setStyle(Style.EMPTY.withClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/%s config %s set 128 false".formatted(modid, option)
+                            ))
+                    )
         );
     }
 
@@ -583,18 +574,18 @@ public class CyanLibConfigCommands
                         "msg.getCfg.%s".formatted(option),
                         false,
                         boolVal ? Text.literal(Formatting.GREEN + "ON").
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set false true".formatted(modid, option)
-                                        ))
-                                ) : Text.literal(Formatting.RED + "OFF").
-                                setStyle(Style.EMPTY.withClickEvent(
-                                        new ClickEvent(
-                                                ClickEvent.Action.RUN_COMMAND,
-                                                "/%s config %s set true true".formatted(modid, option)
-                                        ))
-                                )
+                                      setStyle(Style.EMPTY.withClickEvent(
+                                              new ClickEvent(
+                                                      ClickEvent.Action.RUN_COMMAND,
+                                                      "/%s config %s set false true".formatted(modid, option)
+                                              ))
+                                      ) : Text.literal(Formatting.RED + "OFF").
+                                              setStyle(Style.EMPTY.withClickEvent(
+                                                      new ClickEvent(
+                                                              ClickEvent.Action.RUN_COMMAND,
+                                                              "/%s config %s set true true".formatted(modid, option)
+                                                      ))
+                                              )
                 );
             }
             else if (value instanceof Integer intVal)
