@@ -15,8 +15,9 @@ repositories {
     }
 }
 
+// TODO -> Centralize versions of CyanLib
 object Constants {
-    const val MOD_VERSION: String = "0.5.1"
+    const val MOD_VERSION: String = "0.5.2"
     const val LOADER_VERSION: String = "0.16.7"
 }
 
