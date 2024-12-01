@@ -1,2 +1,2 @@
-Add support for 1.21.3 + make all the 1.21.x versions a single file (the CyanLib doesn't use things that changed between
-the different 1.21 versions, so separating each version is not needed)
+- Revert the change that made all 1.21.x versions a single file, as it seems to be causing crashes
+- Switch semver versioning system

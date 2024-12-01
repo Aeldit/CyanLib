@@ -16,8 +16,8 @@ repositories {
 }
 
 object Constants {
-    const val MOD_VERSION: String = "0.5.2"
-    const val LOADER_VERSION: String = "0.16.7"
+    const val MOD_VERSION: String = "1.0.0"
+    const val LOADER_VERSION: String = "0.16.9"
 }
 
 class ModData {
@@ -68,10 +68,8 @@ dependencies {
         modImplementation(module)
     }
 
-    // ModMenu
     modImplementation("com.terraformersmc:modmenu:${mod.modmenuVersion}")
 
-    // Gson
     implementation("com.google.code.gson:gson:2.10.1")
 }
 
