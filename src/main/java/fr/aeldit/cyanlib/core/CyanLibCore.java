@@ -5,7 +5,7 @@ import fr.aeldit.cyanlib.lib.CyanLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CyanLibCore
+public abstract class CyanLibCore
 {
     public static final String CYANLIB_MODID = "cyanlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(CYANLIB_MODID);

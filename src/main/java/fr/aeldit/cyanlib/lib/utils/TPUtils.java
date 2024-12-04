@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
-public class TPUtils
+public abstract class TPUtils
 {
     public static int getRequiredXpLevelsToTp(
             @NotNull ServerPlayerEntity player, @NotNull BlockPos tpPos, int opt
