@@ -1,2 +1,1 @@
-- Revert the change that made all 1.21.x versions a single file, as it seems to be causing crashes
-- Switch semver versioning system
+Add 1.21.4 support

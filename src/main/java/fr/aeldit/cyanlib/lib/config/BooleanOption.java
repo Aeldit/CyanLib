@@ -4,7 +4,6 @@ import fr.aeldit.cyanlib.lib.utils.RULES;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
-import org.jetbrains.annotations.Contract;
 
 public class BooleanOption implements IOption<Boolean>
 {
@@ -12,12 +11,11 @@ public class BooleanOption implements IOption<Boolean>
     private final boolean defaultValue;
     private boolean value;
 
-    @Contract(pure = true)
     public BooleanOption(String optionName, boolean value)
     {
-        this.optionName = optionName;
+        this.optionName   = optionName;
         this.defaultValue = value;
-        this.value = value;
+        this.value        = value;
     }
 
     @Override
@@ -65,7 +63,8 @@ public class BooleanOption implements IOption<Boolean>
     @Environment(EnvType.CLIENT)
     public SimpleOption<Boolean> asConfigOption()
     {
-        return SimpleOption.ofBoolean("cyanlib.config.option.%s".formatted(optionName),
+        return SimpleOption.ofBoolean(
+                "cyanlib.config.option.%s".formatted(optionName),
                 getValue(),
                 this::setValue
         );
