@@ -34,7 +34,7 @@ class ModData {
     val fabricVersion = property("fabric_version").toString()
     val modmenuVersion = property("modmenu_version").toString()
 
-    val fullVersion = "${Constants.MOD_VERSION}+${rangedName}"
+    val fullVersion = "${Constants.MOD_VERSION}+$rangedName"
 
     val isj21 = mcVersion !in listOf("1.19.4", "1.20.1", "1.20.2", "1.20.4")
 
@@ -55,17 +55,16 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${Constants.LOADER_VERSION}")
 
     // Fabric API
-    for (name in listOf(
+    setOf(
         // ModMenu dependencies
         "fabric-resource-loader-v0",
         "fabric-key-binding-api-v1",
         // CyanLib dependencies
         "fabric-command-api-v2",
         "fabric-lifecycle-events-v1",
-        "fabric-screen-api-v1"
-    )) {
-        val module = fabricApi.module(name, mod.fabricVersion)
-        modImplementation(module)
+        "fabric-screen-api-v1",
+    ).forEach {
+        modImplementation(fabricApi.module(it, mod.fabricVersion))
     }
 
     modImplementation("com.terraformersmc:modmenu:${mod.modmenuVersion}")
@@ -86,12 +85,13 @@ java {
     withSourcesJar()
 }
 
-val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
-    group = "build"
-    from(tasks.remapJar.get().archiveFile)
-    into(rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${mod.fullVersion}"))
-    dependsOn("build")
-}
+val buildAndCollect =
+    tasks.register<Copy>("buildAndCollect") {
+        group = "build"
+        from(tasks.remapJar.get().archiveFile)
+        into(rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${mod.fullVersion}"))
+        dependsOn("build")
+    }
 
 if (stonecutter.current.isActive) {
     rootProject.tasks.register("buildActive") {
@@ -107,6 +107,7 @@ tasks {
         inputs.property("min", mod.min)
         inputs.property("max", mod.max)
         inputs.property("java_version", mod.javaVersion)
+        inputs.property("modmenu_version", mod.modmenuVersion)
 
         filesMatching("fabric.mod.json") {
             expand(
@@ -115,8 +116,9 @@ tasks {
                     "loader_version" to Constants.LOADER_VERSION,
                     "min" to mod.min,
                     "max" to mod.max,
-                    "java_version" to mod.javaVersion
-                )
+                    "java_version" to mod.javaVersion,
+                    "modmenu_version" to mod.modmenuVersion,
+                ),
             )
         }
     }
@@ -152,7 +154,8 @@ publishMods {
 
         requires("fabric-api", "modmenu")
 
-        changelog = rootProject.file("changelogs/latest.md")
+        changelog = rootProject
+            .file("changelogs/latest.md")
             .takeIf { it.exists() }
             ?.readText()
             ?: "No changelog provided."
