@@ -426,9 +426,9 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
 
     private Text getBooleanMessage(boolean value, String option)
     {
-        return value
+        return value ?
                //? if =1.21.5 {
-               /*? Text.literal(Formatting.GREEN + "ON (click to change)")
+               Text.literal(Formatting.GREEN + "ON (click to change)")
                      .setStyle(Style.EMPTY.withClickEvent(
                              new ClickEvent.RunCommand("/%s config %s set false false".formatted(modid, option))
                      ))
@@ -436,22 +436,22 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                      .setStyle(Style.EMPTY.withClickEvent(
                              new ClickEvent.RunCommand("/%s config %s set true false".formatted(modid, option)))
                      );
-                *///?} else {
-               ? Text.literal(Formatting.GREEN + "ON (click to change)")
-                     .setStyle(Style.EMPTY.withClickEvent(
-                             new ClickEvent(
-                                     ClickEvent.Action.RUN_COMMAND,
-                                     "/%s config %s set false false".formatted(modid, option)
-                             )
-                     ))
-               : Text.literal(Formatting.RED + "OFF (click to change)")
-                     .setStyle(Style.EMPTY.withClickEvent(
-                             new ClickEvent(
-                                     ClickEvent.Action.RUN_COMMAND,
-                                     "/%s config %s set true false".formatted(modid, option)
-                             ))
-                     );
-        //?}
+                //?} else {
+               /*Text.literal(Formatting.GREEN + "ON (click to change)")
+                   .setStyle(Style.EMPTY.withClickEvent(
+                           new ClickEvent(
+                                   ClickEvent.Action.RUN_COMMAND,
+                                   "/%s config %s set false false".formatted(modid, option)
+                           )
+                   ))
+                     : Text.literal(Formatting.RED + "OFF (click to change)")
+                           .setStyle(Style.EMPTY.withClickEvent(
+                                   new ClickEvent(
+                                           ClickEvent.Action.RUN_COMMAND,
+                                           "/%s config %s set true false".formatted(modid, option)
+                                   ))
+                           );
+        *///?}
     }
 
     private void sendIntSmallMessage(ServerPlayerEntity player, String option)
@@ -461,7 +461,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                 "msg.setValue",
                 false,
                 //? if =1.21.5 {
-                /*Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent.RunCommand("/%s config %s set 0 false".formatted(modid, option)))
                     ),
@@ -481,8 +481,8 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent.RunCommand("/%s config %s set 4 false".formatted(modid, option)))
                     )
-                *///?} else {
-                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
+                //?} else {
+                /*Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "0")).
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
@@ -517,7 +517,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                                     "/%s config %s set 4 false".formatted(modid, option)
                             ))
                     )
-                //?}
+                *///?}
         );
     }
 
@@ -528,7 +528,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                 "msg.setValue",
                 false,
                 //? if =1.21.5 {
-                /*Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
+                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent.RunCommand("/%s config %s set 8 false".formatted(modid, option)))
                     ),
@@ -548,8 +548,8 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent.RunCommand("/%s config %s set 128 false".formatted(modid, option)))
                     )
-                *///?} else {
-                Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
+                //?} else {
+                /*Text.literal(Formatting.DARK_GREEN + (Formatting.BOLD + "8")).
                     setStyle(Style.EMPTY.withClickEvent(
                             new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
@@ -584,7 +584,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                                     "/%s config %s set 128 false".formatted(modid, option)
                             ))
                     )
-                //?}
+                *///?}
         );
     }
 
@@ -631,7 +631,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                         false,
                         boolVal ?
                         //? if =1.21.5 {
-                        /*Text.literal(Formatting.GREEN + "ON").
+                        Text.literal(Formatting.GREEN + "ON").
                             setStyle(Style.EMPTY.withClickEvent(
                                     new ClickEvent.RunCommand(
                                             "/%s config %s set false true".formatted(modid, option)
@@ -642,8 +642,8 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                                                     "/%s config %s set true true".formatted(modid, option)
                                             ))
                                     )
-                        *///?} else {
-                        Text.literal(Formatting.GREEN + "ON").
+                        //?} else {
+                        /*Text.literal(Formatting.GREEN + "ON").
                             setStyle(Style.EMPTY.withClickEvent(
                                     new ClickEvent(
                                             ClickEvent.Action.RUN_COMMAND,
@@ -656,7 +656,7 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
                                                     "/%s config %s set true true".formatted(modid, option)
                                             ))
                                     )
-                        //?}
+                        *///?}
                 );
             }
             else if (value instanceof Integer intVal)
