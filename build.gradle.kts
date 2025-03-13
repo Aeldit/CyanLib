@@ -69,7 +69,7 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${mod.modmenuVersion}")
 
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.12.1")
 }
 
 loom {
