@@ -1,1 +1,2 @@
-Add 1.21.4 support
+- Remove unnecessary code
+- Use the stream API where possible
