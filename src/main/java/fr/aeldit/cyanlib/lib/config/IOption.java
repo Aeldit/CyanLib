@@ -8,7 +8,7 @@ import net.minecraft.client.option.SimpleOption;
 @SuppressWarnings("unused")
 public interface IOption<T>
 {
-    String getOptionName();
+    String getName();
 
     T getDefaultValue();
 

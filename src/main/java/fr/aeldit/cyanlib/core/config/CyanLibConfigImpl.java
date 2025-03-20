@@ -13,8 +13,7 @@ public class CyanLibConfigImpl implements ICyanLibConfig
 {
     public static final BooleanOption MSG_TO_ACTION_BAR = new BooleanOption("msgToActionBar", true);
     public static final IntegerOption MIN_OP_LVL_EDIT_CONFIG = new IntegerOption(
-            "minOpLvlEditConfig", 4,
-            RULES.OP_LEVELS
+            "minOpLvlEditConfig", 4, RULES.OP_LEVELS
     );
 
     @Override
@@ -43,7 +42,7 @@ public class CyanLibConfigImpl implements ICyanLibConfig
                 entry(
                         "msg.getDesc.msgToActionBar",
                         "§3The§d msgToActionBar §3option defines whether the messages will be sent to the action bar "
-                                + "or not"
+                        + "or not"
                 ),
                 entry(
                         "msg.getDesc.minOpLvlEditConfig",

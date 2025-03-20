@@ -23,30 +23,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class CyanLibOptionsStorage
 {
     private final String modid;
     private final ICyanLibConfig cyanLibConfigClass;
-    // Used for the auto-completion for commands
-    private final ArrayList<String> optionsNames = new ArrayList<>();
-
     // We use a synchronized list because 2 players can edit the config at the same time when in multiplayer
     private final List<IOption<?>> optionsList = Collections.synchronizedList(new ArrayList<>());
 
     public CyanLibOptionsStorage(String modid, ICyanLibConfig configClass)
     {
-        this.modid = modid;
+        this.modid              = modid;
         this.cyanLibConfigClass = configClass;
-    }
-
-    public void init()
-    {
         readConfig();
-        for (IOption<?> option : optionsList)
-        {
-            optionsNames.add(option.getOptionName());
-        }
     }
 
     public ICyanLibConfig getConfigClass()
@@ -54,9 +44,9 @@ public class CyanLibOptionsStorage
         return cyanLibConfigClass;
     }
 
-    public ArrayList<String> getOptionsNames()
+    public List<String> getOptionsNames()
     {
-        return optionsNames;
+        return optionsList.stream().map(IOption::getName).toList();
     }
 
     @Environment(EnvType.CLIENT)
@@ -80,13 +70,17 @@ public class CyanLibOptionsStorage
 
     public @Nullable Object getOptionValue(String optionName)
     {
-        IOption<?> option = getOption(optionName);
-        return option == null ? null : option.getValue();
+        return optionsList.stream()
+                          .filter(option -> optionName.equals(option.getName()))
+                          .map(IOption::getValue)
+                          .findFirst()
+                          .orElse(null);
     }
 
     public boolean setOption(String optionName, Object value, boolean save)
     {
-        IOption<?> option = getOption(optionName);
+        IOption<?> option = optionsList.stream().filter(opt -> opt.getName().equals(optionName))
+                                       .findFirst().orElse(null);
         if (option != null)
         {
             boolean success = option.setValue(value);
@@ -106,7 +100,7 @@ public class CyanLibOptionsStorage
 
     public boolean optionExists(String optionName)
     {
-        return getOption(optionName) != null;
+        return optionsList.stream().anyMatch(option -> optionName.equals(option.getName()));
     }
 
     /**
@@ -124,20 +118,7 @@ public class CyanLibOptionsStorage
 
     public boolean hasRule(String optionName, RULES rule)
     {
-        IOption<?> option = getOption(optionName);
-        return option != null && option.getRule() == rule;
-    }
-
-    private @Nullable IOption<?> getOption(String optionName)
-    {
-        for (IOption<?> option : optionsList)
-        {
-            if (option.getOptionName().equals(optionName))
-            {
-                return option;
-            }
-        }
-        return null;
+        return optionsList.stream().anyMatch(option -> option.getName().equals(optionName) && option.getRule() == rule);
     }
 
     private void readConfig()
@@ -233,7 +214,7 @@ public class CyanLibOptionsStorage
                             {
                                 try
                                 {
-                                    if (((BooleanOption) field.get(null)).getOptionName().equals(option))
+                                    if (((BooleanOption) field.get(null)).getName().equals(option))
                                     {
                                         exists = true;
                                         break;
@@ -248,7 +229,7 @@ public class CyanLibOptionsStorage
                             {
                                 try
                                 {
-                                    if (((IntegerOption) field.get(null)).getOptionName().equals(option))
+                                    if (((IntegerOption) field.get(null)).getName().equals(option))
                                     {
                                         exists = true;
                                         break;
@@ -292,9 +273,9 @@ public class CyanLibOptionsStorage
                             {
                                 BooleanOption booleanOption = (BooleanOption) field.get(null);
 
-                                if (config.containsKey(booleanOption.getOptionName()))
+                                if (config.containsKey(booleanOption.getName()))
                                 {
-                                    boolean configFileValue = (Boolean) config.get(booleanOption.getOptionName());
+                                    boolean configFileValue = (Boolean) config.get(booleanOption.getName());
                                     // If the value in the config file is different from the default one, we change
                                     // its value in the class
                                     if (configFileValue != booleanOption.getValue())
@@ -319,9 +300,9 @@ public class CyanLibOptionsStorage
                             {
                                 IntegerOption integerOption = (IntegerOption) field.get(null);
 
-                                if (config.containsKey(integerOption.getOptionName()))
+                                if (config.containsKey(integerOption.getName()))
                                 {
-                                    int configFileValue = (Integer) config.get(integerOption.getOptionName());
+                                    int configFileValue = (Integer) config.get(integerOption.getName());
                                     // If the value in the config file is different from the default one, we change
                                     // its value in the class
                                     if (configFileValue != integerOption.getValue())
@@ -353,11 +334,8 @@ public class CyanLibOptionsStorage
 
     public void writeConfig()
     {
-        Map<String, Object> config = new HashMap<>();
-        for (IOption<?> option : optionsList)
-        {
-            config.put(option.getOptionName(), option.getValue());
-        }
+        Map<String, Object> config = optionsList.stream()
+                                                .collect(Collectors.toMap(IOption::getName, IOption::getValue));
 
         Path path = FabricLoader.getInstance().getConfigDir().resolve("%s.json".formatted(modid));
         if (!Files.exists(path))

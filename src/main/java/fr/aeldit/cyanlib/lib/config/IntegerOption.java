@@ -55,7 +55,7 @@ public class IntegerOption implements IOption<Integer>
             this.min = 0;
             this.max = 4;
         }
-        this.rule = rule;
+        this.rule         = rule;
         this.defaultValue = value;
         setValue(value);
     }
@@ -69,7 +69,8 @@ public class IntegerOption implements IOption<Integer>
      */
     public IntegerOption(String optionName, int value, @NotNull RULES rule, int minOrMax)
     {
-        this(optionName, value, rule,
+        this(
+                optionName, value, rule,
                 rule.equals(RULES.MIN_VALUE) ? minOrMax : -512, rule.equals(RULES.MIN_VALUE) ? 512 : minOrMax
         );
     }
@@ -84,17 +85,17 @@ public class IntegerOption implements IOption<Integer>
      */
     public IntegerOption(String optionName, int value, RULES rule, int min, int max)
     {
-        this.optionName = optionName;
-        this.min = min;
-        this.max = max;
-        this.rule = rule;
+        this.optionName   = optionName;
+        this.min          = min;
+        this.max          = max;
+        this.rule         = rule;
         this.defaultValue = value;
-        this.value = value;
+        this.value        = value;
         setValue(value);
     }
 
     @Override
-    public String getOptionName()
+    public String getName()
     {
         return optionName;
     }
@@ -124,12 +125,12 @@ public class IntegerOption implements IOption<Integer>
         {
             int value = (Integer) valueArg;
             if (rule.equals(RULES.NONE)
-                    || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
-                    || (rule.equals(RULES.NEGATIVE_VALUE) && value < 0)
-                    || (rule.equals(RULES.OP_LEVELS) && value >= 0 && value <= 4)
-                    || (rule.equals(RULES.MAX_VALUE) && value <= max)
-                    || (rule.equals(RULES.MIN_VALUE) && value >= min)
-                    || (rule.equals(RULES.RANGE) && value >= min && value <= max)
+                || (rule.equals(RULES.POSITIVE_VALUE) && value > 0)
+                || (rule.equals(RULES.NEGATIVE_VALUE) && value < 0)
+                || (rule.equals(RULES.OP_LEVELS) && value >= 0 && value <= 4)
+                || (rule.equals(RULES.MAX_VALUE) && value <= max)
+                || (rule.equals(RULES.MIN_VALUE) && value >= min)
+                || (rule.equals(RULES.RANGE) && value >= min && value <= max)
             )
             {
                 this.value = value;
@@ -149,7 +150,8 @@ public class IntegerOption implements IOption<Integer>
     @Environment(EnvType.CLIENT)
     public SimpleOption<Integer> asConfigOption()
     {
-        return new SimpleOption<>("cyanlib.config.option.%s".formatted(optionName),
+        return new SimpleOption<>(
+                "cyanlib.config.option.%s".formatted(optionName),
                 SimpleOption.emptyTooltip(),
                 (optionText, value) -> Text.of("%s: %s".formatted(optionText.getString(), value)),
                 new SimpleOption.ValidatingIntSliderCallbacks(min, max),

@@ -19,7 +19,7 @@ public class BooleanOption implements IOption<Boolean>
     }
 
     @Override
-    public String getOptionName()
+    public String getName()
     {
         return optionName;
     }
