@@ -1,0 +1,259 @@
+package fr.aeldit.cyanlib.lib.config;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+@SuppressWarnings("UnnecessaryLocalVariable")
+class CyanLibOptionsStorageTest
+{
+    private static final CyanLibOptionsStorage getOptions = new CyanLibOptionsStorage(
+            "get", new GetTestingCyanLibConfigImpl()
+    );
+    private static final CyanLibOptionsStorage setOptions = new CyanLibOptionsStorage(
+            "set", new SetTestingCyanLibConfigImpl()
+    );
+
+    @Test
+    void getOptionsNames()
+    {
+        Assertions.assertEquals(
+                List.of("true", "op", "maxVal", "minVal", "posVal", "negVal", "range", "false"),
+                getOptions.getOptionsNames()
+        );
+    }
+
+    @Test
+    void getOptionValueTrue()
+    {
+        Assertions.assertEquals(true, getOptions.getOptionValue("true"));
+    }
+
+    @Test
+    void getOptionValueOp()
+    {
+        Assertions.assertEquals(4, getOptions.getOptionValue("op"));
+    }
+
+    @Test
+    void getOptionValueMaxVal()
+    {
+        Assertions.assertEquals(28, getOptions.getOptionValue("maxVal"));
+    }
+
+    @Test
+    void getOptionValueMinVal()
+    {
+        Assertions.assertEquals(90, getOptions.getOptionValue("minVal"));
+    }
+
+    @Test
+    void getOptionValuePosVal()
+    {
+        Assertions.assertEquals(0, getOptions.getOptionValue("posVal"));
+    }
+
+    @Test
+    void getOptionValueNegVal()
+    {
+        Assertions.assertEquals(-50, getOptions.getOptionValue("negVal"));
+    }
+
+    @Test
+    void getOptionValueRange()
+    {
+        Assertions.assertEquals(125, getOptions.getOptionValue("range"));
+    }
+
+    @Test
+    void getOptionValueFalse()
+    {
+        Assertions.assertEquals(false, getOptions.getOptionValue("false"));
+    }
+
+    @Test
+    void setOptionBoolean()
+    {
+        String option = "true";
+        boolean setValue = true;
+        boolean expectedValue = (Boolean) setOptions.getOptionValue(option);
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntOpTooHigh()
+    {
+        String option = "op";
+        int setValue = 6;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntOpOk()
+    {
+        String option = "op";
+        int setValue = 2;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntMaxValTooBig()
+    {
+        String option = "maxVal";
+        int setValue = 58;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntMaxValOk()
+    {
+        String option = "maxVal";
+        int setValue = 50;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntMinValTooSmall()
+    {
+        String option = "minVal";
+        int setValue = -10;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntMinValOk()
+    {
+        String option = "minVal";
+        int setValue = -7;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntPosValNeg()
+    {
+        String option = "posVal";
+        int setValue = -1;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntPosValOk()
+    {
+        String option = "posVal";
+        int setValue = 5;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntNegValPos()
+    {
+        String option = "negVal";
+        int setValue = 20;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntNegValOk()
+    {
+        String option = "negVal";
+        int setValue = -3;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntRangeTooHigh()
+    {
+        String option = "range";
+        int setValue = 256;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntRangeOkTop()
+    {
+        String option = "range";
+        int setValue = 127;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntRangeTooLow()
+    {
+        String option = "range";
+        int setValue = -200;
+        int expectedValue = (Integer) setOptions.getOptionValue(option);
+
+        Assertions.assertFalse(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void setOptionIntRangeOkBottom()
+    {
+        String option = "range";
+        int setValue = -128;
+        int expectedValue = setValue;
+
+        Assertions.assertTrue(setOptions.setOption(option, setValue, false));
+        Assertions.assertEquals(expectedValue, setOptions.getOptionValue(option));
+    }
+
+    @Test
+    void resetOptions()
+    {
+    }
+
+    @Test
+    void optionExists()
+    {
+    }
+
+    @Test
+    void getOptionsSuggestions()
+    {
+    }
+
+    @Test
+    void hasRule()
+    {
+    }
+}
