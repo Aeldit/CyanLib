@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 class CyanLibOptionsStorageTest
@@ -13,6 +15,9 @@ class CyanLibOptionsStorageTest
     );
     private static final CyanLibOptionsStorage setOptions = new CyanLibOptionsStorage(
             "set", new SetTestingCyanLibConfigImpl()
+    );
+    private static final Map<String, Object> initialValues = setOptions.getOptionsNames().stream().collect(
+            Collectors.toMap(opt -> opt, setOptions::getOptionValue, (a, b) -> b)
     );
 
     @Test
@@ -240,15 +245,15 @@ class CyanLibOptionsStorageTest
     @Test
     void resetOptions()
     {
+        setOptions.resetOptions();
+        for (Map.Entry<String, Object> e : initialValues.entrySet())
+        {
+            Assertions.assertEquals(e.getValue(), setOptions.getOptionValue(e.getKey()));
+        }
     }
 
     @Test
     void optionExists()
-    {
-    }
-
-    @Test
-    void getOptionsSuggestions()
     {
     }
 
