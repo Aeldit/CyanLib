@@ -2,9 +2,8 @@ package fr.aeldit.cyanlib.lib.config;
 
 import fr.aeldit.cyanlib.lib.utils.RULES;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import static java.util.Map.entry;
 
 @SuppressWarnings("unused")
 public class GetTestingCyanLibConfigImpl implements ICyanLibConfig
@@ -21,14 +20,6 @@ public class GetTestingCyanLibConfigImpl implements ICyanLibConfig
     @Override
     public Map<String, String> getDefaultTranslations()
     {
-        return Map.ofEntries(
-                entry("error.notOp", "§cYou don't have the required permission to execute this command"),
-                entry("error.optionNotFound", "§cThis option does not exist or you tried to set it to the wrong type"),
-                entry(
-                        "error.optionNotFoundOrWrongInt",
-                        "§cThis option does not exist or you tried to set it to an invalid number"
-                ),
-                entry("error.incorrectInteger", "§cThe number you entered is invalid for this option")
-        );
+        return new HashMap<>(0);
     }
 }

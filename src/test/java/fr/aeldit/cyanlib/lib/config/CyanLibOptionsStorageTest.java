@@ -1,5 +1,6 @@
 package fr.aeldit.cyanlib.lib.config;
 
+import fr.aeldit.cyanlib.lib.utils.RULES;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -253,12 +254,104 @@ class CyanLibOptionsStorageTest
     }
 
     @Test
-    void optionExists()
+    void optionExistsTrue()
     {
+        Assertions.assertTrue(getOptions.optionExists("true"));
     }
 
     @Test
-    void hasRule()
+    void optionExistsFalse()
     {
+        Assertions.assertTrue(getOptions.optionExists("false"));
+    }
+
+    @Test
+    void optionExistsOp()
+    {
+        Assertions.assertTrue(getOptions.optionExists("op"));
+    }
+
+    @Test
+    void optionExistsMaxVal()
+    {
+        Assertions.assertTrue(getOptions.optionExists("maxVal"));
+    }
+
+    @Test
+    void optionExistsMinVal()
+    {
+        Assertions.assertTrue(getOptions.optionExists("minVal"));
+    }
+
+    @Test
+    void optionExistsPosVal()
+    {
+        Assertions.assertTrue(getOptions.optionExists("posVal"));
+    }
+
+    @Test
+    void optionExistsNegVal()
+    {
+        Assertions.assertTrue(getOptions.optionExists("negVal"));
+    }
+
+    @Test
+    void optionExistsRange()
+    {
+        Assertions.assertTrue(getOptions.optionExists("range"));
+    }
+
+    @Test
+    void optionDoesNotExist()
+    {
+        Assertions.assertFalse(getOptions.optionExists("notAnOption"));
+    }
+
+    @Test
+    void hasRuleTrue()
+    {
+        Assertions.assertTrue(getOptions.hasRule("true", RULES.NONE));
+    }
+
+    @Test
+    void hasRuleFalse()
+    {
+        Assertions.assertTrue(getOptions.hasRule("false", RULES.NONE));
+    }
+
+    @Test
+    void hasRuleOp()
+    {
+        Assertions.assertTrue(getOptions.hasRule("op", RULES.OP_LEVELS));
+    }
+
+    @Test
+    void hasRuleMaxVal()
+    {
+        Assertions.assertTrue(getOptions.hasRule("maxVal", RULES.MAX_VALUE));
+    }
+
+    @Test
+    void hasRuleMinVal()
+    {
+        Assertions.assertTrue(getOptions.hasRule("minVal", RULES.MIN_VALUE));
+    }
+
+    @Test
+    void hasRulePosVal()
+    {
+        Assertions.assertTrue(getOptions.hasRule("posVal", RULES.POSITIVE_VALUE));
+    }
+
+    @Test
+    void hasRuleNegVal()
+    {
+        Assertions.assertTrue(getOptions.hasRule("negVal", RULES.NEGATIVE_VALUE));
+    }
+
+    @Test
+    void hasRuleRange()
+    {
+        Assertions.assertTrue(getOptions.hasRule("range", RULES.RANGE));
     }
 }
