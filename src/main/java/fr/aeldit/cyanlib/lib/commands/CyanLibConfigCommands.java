@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import static fr.aeldit.cyanlib.core.CyanLibCore.CYANLIB_MODID;
 import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MIN_OP_LVL_EDIT_CONFIG;
+import static fr.aeldit.cyanlib.core.config.CyanLibConfigImpl.MSG_TO_ACTION_BAR;
 import static fr.aeldit.cyanlib.lib.config.CyanLibOptionsStorage.getOptionsSuggestions;
 
 public record CyanLibConfigCommands(String modid, CyanLib libUtils)
@@ -429,14 +430,14 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
         return value ?
                //? if =1.21.5 {
                Text.literal(Formatting.GREEN + "ON (click to change)")
-                     .setStyle(Style.EMPTY.withClickEvent(
-                             new ClickEvent.RunCommand("/%s config %s set false false".formatted(modid, option))
-                     ))
-               : Text.literal(Formatting.RED + "OFF (click to change)")
-                     .setStyle(Style.EMPTY.withClickEvent(
-                             new ClickEvent.RunCommand("/%s config %s set true false".formatted(modid, option)))
-                     );
-                //?} else {
+                   .setStyle(Style.EMPTY.withClickEvent(
+                           new ClickEvent.RunCommand("/%s config %s set false false".formatted(modid, option))
+                   ))
+                     : Text.literal(Formatting.RED + "OFF (click to change)")
+                           .setStyle(Style.EMPTY.withClickEvent(
+                                   new ClickEvent.RunCommand("/%s config %s set true false".formatted(modid, option)))
+                           );
+        //?} else {
                /*Text.literal(Formatting.GREEN + "ON (click to change)")
                    .setStyle(Style.EMPTY.withClickEvent(
                            new ClickEvent(
@@ -616,11 +617,6 @@ public record CyanLibConfigCommands(String modid, CyanLib libUtils)
 
         for (String option : libUtils.getOptionsStorage().getOptionsNames())
         {
-            if (!libUtils.getOptionsStorage().optionExists(option))
-            {
-                continue;
-            }
-
             Object value = libUtils.getOptionsStorage().getOptionValue(option);
 
             if (value instanceof Boolean boolVal)
