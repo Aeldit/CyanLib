@@ -5,12 +5,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 
-@SuppressWarnings("unused")
 public interface IOption<T>
 {
     String getName();
-
-    T getDefaultValue();
 
     RULES getRule();
 

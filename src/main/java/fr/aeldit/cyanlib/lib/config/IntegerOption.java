@@ -101,12 +101,6 @@ public class IntegerOption implements IOption<Integer>
     }
 
     @Override
-    public Integer getDefaultValue()
-    {
-        return defaultValue;
-    }
-
-    @Override
     public RULES getRule()
     {
         return rule;

@@ -25,12 +25,6 @@ public class BooleanOption implements IOption<Boolean>
     }
 
     @Override
-    public Boolean getDefaultValue()
-    {
-        return defaultValue;
-    }
-
-    @Override
     public RULES getRule()
     {
         return RULES.NONE;
