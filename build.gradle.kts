@@ -113,7 +113,6 @@ tasks {
         inputs.property("min", mod.min)
         inputs.property("max", mod.max)
         inputs.property("java_version", mod.javaVersion)
-        inputs.property("modmenu_version", mod.modmenuVersion)
 
         filesMatching("fabric.mod.json") {
             expand(
@@ -123,7 +122,6 @@ tasks {
                     "min" to mod.min,
                     "max" to mod.max,
                     "java_version" to mod.javaVersion,
-                    "modmenu_version" to mod.modmenuVersion,
                 ),
             )
         }
@@ -158,7 +156,8 @@ publishMods {
         }
         modLoaders.add("fabric")
 
-        requires("fabric-api", "modmenu")
+        requires("fabric-api")
+        optional("modmenu")
 
         changelog = rootProject
             .file("changelogs/latest.md")
