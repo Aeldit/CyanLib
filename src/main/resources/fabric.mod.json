@@ -26,6 +26,9 @@
       "fr.aeldit.cyanlib.core.config.ModMenuApiImpl"
     ]
   },
+  "mixins": [
+    "cyanlib.mixins.json"
+  ],
   "depends": {
     "minecraft": ">=${min} <=${max}",
     "java": ">=${java_version}",

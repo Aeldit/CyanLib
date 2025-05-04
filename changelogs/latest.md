@@ -1,3 +1,1 @@
-- Put dependencies in `fabric.mod.json` so that when one is missing, the fabric loader writes a clear message of what
-  is missing instead of just a ClassNotFoundException
-- Bump versions
+- Add the missing AFTER_DAMAGE LivingEntityEvent from fabric-api 1.21 and above to versions 1.20.6 and below
