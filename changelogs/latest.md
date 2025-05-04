@@ -1,1 +1,1 @@
-- Add the missing AFTER_DAMAGE LivingEntityEvent from fabric-api 1.21 and above to versions 1.20.6 and below
+Fix build issues
