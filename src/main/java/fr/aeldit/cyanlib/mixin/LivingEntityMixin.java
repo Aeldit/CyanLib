@@ -1,6 +1,6 @@
 package fr.aeldit.cyanlib.mixin;
 
-import fr.aeldit.cyanlib.lib.events.MissingLivingEntityEvent;
+import fr.aeldit.cyanlib.events.MissingLivingEntityEvent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;

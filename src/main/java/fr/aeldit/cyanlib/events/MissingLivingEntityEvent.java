@@ -1,4 +1,4 @@
-package fr.aeldit.cyanlib.lib.events;
+package fr.aeldit.cyanlib.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
