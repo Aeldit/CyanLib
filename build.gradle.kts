@@ -13,7 +13,7 @@ repositories {
 }
 
 object C {
-    const val MOD_VERSION: String = "1.0.5"
+    const val MOD_VERSION: String = "1.0.6"
     const val LOADER_VERSION: String = "0.16.13"
     val YARN_MAPPINGS: HashMap<String, String> = hashMapOf(
         "1.19.4" to "1.19.4+build.2",
