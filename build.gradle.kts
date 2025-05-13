@@ -182,7 +182,7 @@ publishMods {
         optional("modmenu")
 
         changelog = rootProject
-            .file("changelogs/latest.md")
+            .file("changelog.md")
             .takeIf { it.exists() }
             ?.readText()
             ?: "No changelog provided."
