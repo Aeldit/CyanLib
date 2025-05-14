@@ -16,11 +16,8 @@
   "icon": "assets/cyanlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "fr.aeldit.cyanlib.core.CyanLibClientCore"
-    ],
-    "server": [
-      "fr.aeldit.cyanlib.core.CyanLibServerCore"
+    "main": [
+      "fr.aeldit.cyanlib.core.CyanLibCore"
     ],
     "modmenu": [
       "fr.aeldit.cyanlib.core.config.ModMenuApiImpl"
